@@ -13,8 +13,7 @@ import java.util.Map;
 public class TestController {
 
 
-    final
-    private UserRepository userRepository;
+    final private UserRepository userRepository;
 
 //    private HashData hashData = new HashData();
 
