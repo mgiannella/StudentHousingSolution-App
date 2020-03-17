@@ -34,9 +34,6 @@ public class User {
     @Column(name="countrycode")
     private String phoneCode;
 
-    @Column(name="photoid")
-    private int photoID;
-
     @Column(name="usertypeid")
     private int userTypeID;
 
@@ -95,15 +92,6 @@ public class User {
     public void setPhone(String phoneNumber){
         this.phone = phoneNumber.substring(3);
         this.phoneCode = phoneNumber.substring(0,3);
-    }
-
-    public int getPhotoID(){
-        return photoID;
-    }
-
-    public void setPhotoID(int photoID){
-        // create new photo and then setID, this is placeholder rn
-        this.photoID = photoID;
     }
 
     public User(String username, String password, String email, String firstName, String lastName, String phone, String phoneCode) {
