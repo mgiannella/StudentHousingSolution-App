@@ -14,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import javax.validation.Valid;
+import java.util.Map;
+
 @Component
 public class UserService {
 
@@ -37,7 +40,21 @@ public class UserService {
         userRepository.save(new User(username, encodedPassword, email, firstName, lastName, phone, phoneCode,type));
     }
 
-    public void deleteUser(User user) throws NotFoundException{
-        
+    public void deleteUser(User user) throws ValidationException{
+        if (!userRepository.existsByUsername(user.getUsername())){
+            throw new ValidationException("User doesn't exist");
+        }
+        userRepository.deleteById(user.getId());
+    }
+
+    public void updateUser(User user, RegisterRequest changes){
+        user.setEmail(changes.getEmail());
+        user.setFullname(changes.getFirstName(), changes.getLastName());
+        String encodedPassword = new BCryptPasswordEncoder().encode(changes.getPassword());
+        user.setPassword(encodedPassword);
+        user.setPhone(changes.getPhoneCode() + changes.getPhone());
+        UserType type = userTypeRepository.findByType(changes.getUserType());
+        user.setType(type);
+        userRepository.save(user);
     }
 }
