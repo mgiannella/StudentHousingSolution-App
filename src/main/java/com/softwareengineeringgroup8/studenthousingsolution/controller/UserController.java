@@ -9,6 +9,7 @@ import com.softwareengineeringgroup8.studenthousingsolution.repository.UserRepos
 import com.softwareengineeringgroup8.studenthousingsolution.repository.UserTypeRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.service.JwtUserDetailsService;
 import com.softwareengineeringgroup8.studenthousingsolution.service.UserPermissionService;
+import com.softwareengineeringgroup8.studenthousingsolution.service.UserService;
 import javassist.NotFoundException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,18 +23,15 @@ import java.util.Map;
 @RequestMapping("/user")
 public class UserController {
 
-
-    final private UserRepository userRepository;
-    final private UserTypeRepository userTypeRepository;
     final private JwtUserDetailsService jwtUserDetailsService;
     final private UserPermissionService userPermissionService;
+    final private UserService userService;
 //    private HashData hashData = new HashData();
 
-    public UserController(UserRepository userRepository, UserTypeRepository userTypeRepository, JwtUserDetailsService jwtUserDetailsService, UserPermissionService userPermissionService) {
-        this.userRepository = userRepository;
-        this.userTypeRepository = userTypeRepository;
+    public UserController(JwtUserDetailsService jwtUserDetailsService, UserPermissionService userPermissionService, UserService userService) {
         this.jwtUserDetailsService = jwtUserDetailsService;
         this.userPermissionService = userPermissionService;
+        this.userService = userService;
     }
 
     @GetMapping("/testauth")
@@ -51,20 +49,13 @@ public class UserController {
 
     @PostMapping("/register")
     public Boolean register(@RequestBody RegisterRequest registerRequest) throws NoSuchAlgorithmException {
-        String username = registerRequest.getUsername();
-        if (userRepository.existsByUsername(registerRequest.getUsername())){
-            throw new ValidationException("Username exists");
-
+        try {
+            userService.createUser(registerRequest);
+            return true;
+        }catch(Error e){
+            System.out.println(e);
+            return false;
         }
-        String encodedPassword = new BCryptPasswordEncoder().encode(registerRequest.getPassword());
-        String firstName = registerRequest.getFirstName();
-        String lastName = registerRequest.getLastName();
-        String phone = registerRequest.getPhone();
-        String phoneCode = registerRequest.getPhoneCode();
-        String email = registerRequest.getEmail();
-        UserType type = userTypeRepository.findByType(registerRequest.getUserType());
-        userRepository.save(new User(username, encodedPassword, email, firstName, lastName, phone, phoneCode,type));
-        return true;
     }
 
 }

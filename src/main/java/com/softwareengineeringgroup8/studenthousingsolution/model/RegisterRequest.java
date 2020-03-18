@@ -1,25 +1,38 @@
 package com.softwareengineeringgroup8.studenthousingsolution.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
+@ApiModel(description = "Contains the information to register a user")
 public class RegisterRequest implements Serializable {
 
     private static final long serialVersionUID = 5926468583005150707L;
-
+    @Size(min=6, max=25)
+    @ApiModelProperty(notes="username", example="testuser", required = true)
     private String username;
-
+    @Size(min=8, max=30)
+    @ApiModelProperty(notes="Password, must contain at least 1 capital letter and 1 number", example="Secretword1", required = true)
     private String password;
-
+    @Size(max=100)
+    @ApiModelProperty(notes="Email address", example="testuser@gmail.com", required = true)
     private String email;
-
+    @Size(min=10, max=10)
+    @ApiModelProperty(notes="Phone Number, with no dashes or spaces", example="5555555555", required = true)
     private String phone;
-
+    @Size(min=2, max=2)
+    @ApiModelProperty(notes="Two digit country code", example="01", required = true)
     private String phoneCode;
-
+    @Size(min=1, max=50)
+    @ApiModelProperty(notes="First Name", example="Test", required = true)
     private String firstName;
-
+    @Size(min=1, max=50)
+    @ApiModelProperty(notes="Last Name", example="User", required = true)
     private String lastName;
-
+    @Size(min=6, max=8)
+    @ApiModelProperty(notes="Type of User", example="Tenant", required = true)
     private String userType;
 
     public RegisterRequest() {
