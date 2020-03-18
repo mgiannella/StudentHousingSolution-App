@@ -34,7 +34,7 @@ public class User {
     @Column(name="countrycode")
     private String phoneCode;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="usertypeid")
     private UserType type;
 
