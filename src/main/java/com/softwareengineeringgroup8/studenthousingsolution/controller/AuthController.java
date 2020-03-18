@@ -15,6 +15,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 
 @RestController
 @CrossOrigin
+@RequestMapping("/auth")
 public class AuthController {
 
     @Autowired

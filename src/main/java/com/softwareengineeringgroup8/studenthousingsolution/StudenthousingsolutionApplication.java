@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import com.softwareengineeringgroup8.studenthousingsolution.controller.*;
 
 @SpringBootApplication
+
 public class StudenthousingsolutionApplication {
 
     public static void main(String[] args) {
