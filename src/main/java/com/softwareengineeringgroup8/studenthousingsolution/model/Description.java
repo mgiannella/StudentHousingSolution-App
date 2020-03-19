@@ -2,13 +2,11 @@ package com.softwareengineeringgroup8.studenthousingsolution.model;
 
 import org.hibernate.annotations.ColumnDefault;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
+@Entity
+@Table(name="PropertyDescriptions")
 public class Description {
-    @Entity
-    @Table(name="PropertyDescriptions")
 
     @Column(name="descriptionid")
     private int descriptionID;
@@ -16,4 +14,25 @@ public class Description {
     @Column(name="desccontent")
     private int descContent;
 
+    public Description(){
+    }
+    public int getDescriptionID() {
+        return descriptionID;
+    }
+
+    public void setDescriptionID(int descriptionID) {
+        this.descriptionID = descriptionID;
+    }
+
+    public int getDescContent() {
+        return descContent;
+    }
+
+    public void setDescContent(int descContent) {
+        this.descContent = descContent;
+    }
+
+    public Description(int descContent) {
+        this.descContent = descContent;
+    }
 }
