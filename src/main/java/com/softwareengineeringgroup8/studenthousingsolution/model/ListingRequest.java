@@ -5,51 +5,157 @@ import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-@ApiModel(description="How a user's username and password are sent to the application")
+
+//@ApiModel(description="How a user's username and password are sent to the application")
 public class ListingRequest implements Serializable {
 
-    private static final long serialVersionUID = 5926468583005150707L;
-    @ApiModelProperty(notes="Username", example="testuser", required = true)
-    @Size(min=1, max=25)
-    private String username;
-    @ApiModelProperty(notes="Password", example="Secretword1", required = true)
-    @Size(min=1, max=30)
-    private String password;
+    //@ApiModelProperty(notes="Username", example="testuser", required = true)
+    //@Size(min=1, max=25)
+    private String title;
+    private String address;
+    private String city;
+    private String state;
+    private String zipCode;
+    private int price;
+    private int numBedrooms;
+    private int numBathrooms;
+    //dateTime
+    private boolean hasAC;
+    private int parkingspots;
+    private boolean hasLaundry;
+
+    public ListingRequest(String title, String address, String city, String state, String zipCode, int price, int numBedrooms, int numBathrooms, boolean hasAC, int parkingspots, boolean hasLaundry, boolean allowPets, boolean allowSmoking) {
+        this.title = title;
+        this.address = address;
+        this.city = city;
+        this.state = state;
+        this.zipCode = zipCode;
+        this.price = price;
+        this.numBedrooms = numBedrooms;
+        this.numBathrooms = numBathrooms;
+        this.hasAC = hasAC;
+        this.parkingspots = parkingspots;
+        this.hasLaundry = hasLaundry;
+        this.allowPets = allowPets;
+        this.allowSmoking = allowSmoking;
+    }
+
+    private boolean allowPets;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public int getNumBedrooms() {
+        return numBedrooms;
+    }
+
+    public void setNumBedrooms(int numBedrooms) {
+        this.numBedrooms = numBedrooms;
+    }
+
+    public int getNumBathrooms() {
+        return numBathrooms;
+    }
+
+    public void setNumBathrooms(int numBathrooms) {
+        this.numBathrooms = numBathrooms;
+    }
+
+    public boolean isHasAC() {
+        return hasAC;
+    }
+
+    public void setHasAC(boolean hasAC) {
+        this.hasAC = hasAC;
+    }
+
+    public int getParkingspots() {
+        return parkingspots;
+    }
+
+    public void setParkingspots(int parkingspots) {
+        this.parkingspots = parkingspots;
+    }
+
+    public boolean isHasLaundry() {
+        return hasLaundry;
+    }
+
+    public void setHasLaundry(boolean hasLaundry) {
+        this.hasLaundry = hasLaundry;
+    }
+
+    public boolean isAllowPets() {
+        return allowPets;
+    }
+
+    public void setAllowPets(boolean allowPets) {
+        this.allowPets = allowPets;
+    }
+
+    public boolean isAllowSmoking() {
+        return allowSmoking;
+    }
+
+    public void setAllowSmoking(boolean allowSmoking) {
+        this.allowSmoking = allowSmoking;
+    }
+
+    private boolean allowSmoking;
+
+    //@ApiModelProperty(notes="Password", example="Secretword1", required = true)
+    //@Size(min=1, max=30)
+    //private String password;
 
     public ListingRequest()
     {
     }
 
-    public ListingRequest(String username, String password) {
 
-        this.setUsername(username);
-
-        this.setPassword(password);
-
-    }
-
-    public String getUsername() {
-
-        return this.username;
-
-    }
-
-    public void setUsername(String username) {
-
-        this.username = username;
-
-    }
-
-    public String getPassword() {
-
-        return this.password;
-
-    }
-
-    public void setPassword(String password) {
-
-        this.password = password;
-
-    }
 
 }
