@@ -1,6 +1,7 @@
 package com.softwareengineeringgroup8.studenthousingsolution.model;
 
 import org.hibernate.annotations.ColumnDefault;
+ 
 
 import javax.persistence.*;
 
