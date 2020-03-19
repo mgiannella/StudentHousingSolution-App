@@ -57,8 +57,7 @@ public class UserService {
     }
 
     public boolean changePassword(User user, String oldPass, String newPass){
-        String encodedPass = new BCryptPasswordEncoder().encode(oldPass);
-        if(encodedPass != user.getPassword()){
+        if(!new BCryptPasswordEncoder().matches(oldPass, user.getPassword())){
             return false;
         }
         user.setPassword(new BCryptPasswordEncoder().encode(newPass));

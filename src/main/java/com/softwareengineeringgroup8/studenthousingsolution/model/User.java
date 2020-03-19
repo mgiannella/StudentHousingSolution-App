@@ -31,7 +31,7 @@ public class User {
     @Column(name="phone")
     private String phone;
 
-    @Column(name="countrycode")
+    @Column(name="countrycode", length=2)
     private String phoneCode;
 
     @ManyToOne
@@ -91,7 +91,7 @@ public class User {
 
     public void setPhone(String phoneNumber){
         this.phone = phoneNumber.substring(3);
-        this.phoneCode = phoneNumber.substring(0,3);
+        this.phoneCode = phoneNumber.substring(0,2);
     }
     public UserType getType(){ return this.type; }
 
