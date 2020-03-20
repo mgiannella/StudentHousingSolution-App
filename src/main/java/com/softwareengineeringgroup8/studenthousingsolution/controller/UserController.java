@@ -18,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
+import javax.validation.Validation;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
@@ -58,6 +59,58 @@ public class UserController {
         }catch(Error e){
             System.out.println(e);
             return false;
+        }
+    }
+
+    @GetMapping("/")
+    @ApiOperation(value="My Account", notes="Returns all information about a user")
+    public User myAccount(@RequestHeader("Authorization") String authString) throws ValidationException {
+        try{
+            User x = userPermissionService.loadUserByJWT(authString);
+            if(x == null) {
+                throw new ValidationException("No user with this JWT");
+            }
+            x.setPassword(""); // clears password, so that the bcrypted password isn't sent to user
+            return x;
+        }catch(NotFoundException e){
+            throw new ValidationException("Invalid JWT Token, re-authenticate");
+        }
+    }
+
+    @PutMapping("/{id}")
+    @ApiOperation(value="Update Account Information", notes="Updates information about a user, not including password")
+    public User updateAccount(@PathVariable("id") int id, @RequestHeader("Authorization") String authString, @RequestBody RegisterRequest registerRequest) throws ValidationException {
+        try{
+            User x = userPermissionService.loadUserByJWT(authString);
+            User y = userService.getUserById(id);
+            if(y == null || x == null || !y.getUsername().equals(x.getUsername())){
+                throw new ValidationException("JWT does not match ID, check ID/JWT");
+            }
+            userService.updateUser(y, registerRequest);
+            y = userService.getUserById(id);
+            y.setPassword("");
+            return y;
+        }catch(NotFoundException e){
+            throw new ValidationException("Invalid JWT Token, re-authenticate");
+        }
+
+    }
+
+    @PutMapping("/{id}/password")
+    @ApiOperation(value="Change Password", notes="Updates user's password")
+    public User changePassword(@PathVariable("id") int id, @RequestHeader("Authorization") String authString, @RequestParam String oldPass, @RequestParam String newPass){
+        try{
+            User x = userPermissionService.loadUserByJWT(authString);
+            User y = userService.getUserById(id);
+            if(y == null || x == null || !y.getUsername().equals(x.getUsername())){
+                throw new ValidationException("JWT does not match ID, check ID/JWT");
+            }
+            userService.changePassword(y, oldPass, newPass);
+            y = userService.getUserById(id);
+            y.setPassword("");
+            return y;
+        }catch(NotFoundException e){
+            throw new ValidationException("Invalid JWT Token, re-authenticate");
         }
     }
 

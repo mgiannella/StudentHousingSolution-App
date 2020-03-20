@@ -50,11 +50,26 @@ public class UserService {
     public void updateUser(User user, RegisterRequest changes){
         user.setEmail(changes.getEmail());
         user.setFullname(changes.getFirstName(), changes.getLastName());
-        String encodedPassword = new BCryptPasswordEncoder().encode(changes.getPassword());
-        user.setPassword(encodedPassword);
         user.setPhone(changes.getPhoneCode() + changes.getPhone());
         UserType type = userTypeRepository.findByType(changes.getUserType());
         user.setType(type);
         userRepository.save(user);
+    }
+
+    public boolean changePassword(User user, String oldPass, String newPass){
+        if(!new BCryptPasswordEncoder().matches(oldPass, user.getPassword())){
+            return false;
+        }
+        user.setPassword(new BCryptPasswordEncoder().encode(newPass));
+        userRepository.save(user);
+        return true;
+    }
+
+    public User getUserById(int id) throws ValidationException{
+        try{
+            return userRepository.findById(id);
+        }catch(Exception e){
+            throw new ValidationException("Couldn't find User By Id");
+        }
     }
 }
