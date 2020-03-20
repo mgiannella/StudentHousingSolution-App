@@ -1,10 +1,10 @@
 package com.softwareengineeringgroup8.studenthousingsolution.model;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Date;
 
 @Entity
-@Table(name="Amenitites")
+@Table(name="Amenities")
 public class Amenities {
 
     @Id

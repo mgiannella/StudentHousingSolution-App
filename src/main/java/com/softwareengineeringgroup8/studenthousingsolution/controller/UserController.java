@@ -1,10 +1,8 @@
 package com.softwareengineeringgroup8.studenthousingsolution.controller;
 
 import com.softwareengineeringgroup8.studenthousingsolution.exceptions.ValidationException;
-import com.softwareengineeringgroup8.studenthousingsolution.model.RegisterRequest;
-import com.softwareengineeringgroup8.studenthousingsolution.model.User;
-import com.softwareengineeringgroup8.studenthousingsolution.model.UserRoles;
-import com.softwareengineeringgroup8.studenthousingsolution.model.UserType;
+import com.softwareengineeringgroup8.studenthousingsolution.model.*;
+import com.softwareengineeringgroup8.studenthousingsolution.repository.AmenitiesRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.UserRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.UserTypeRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.service.JwtUserDetailsService;
@@ -13,6 +11,7 @@ import com.softwareengineeringgroup8.studenthousingsolution.service.UserService;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
 import javassist.NotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
