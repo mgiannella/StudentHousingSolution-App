@@ -23,6 +23,7 @@ import java.util.Map;
 
 @RestController
 @ApiModel(description="Handles all User Management Requests")
+@CrossOrigin(origins="http://localhost:3000")
 @RequestMapping("/user")
 public class UserController {
 
