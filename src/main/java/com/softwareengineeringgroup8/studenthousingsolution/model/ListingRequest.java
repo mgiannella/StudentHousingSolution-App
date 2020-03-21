@@ -16,15 +16,25 @@ public class ListingRequest implements Serializable {
     private String city;
     private String state;
     private String zipCode;
-    private int price;
+    private double price;
+
+ /*   @ApiModelProperty(notes="Phone Number, with no dashes or spaces", example="5555555555", required = true)
+    private String phone;
+    @Size(min=2, max=2)
+    */
+
+    @ApiModelProperty(notes="number of bedrooms in the house", example="3",required=true)
     private int numBedrooms;
     private int numBathrooms;
     //dateTime
     private boolean hasAC;
     private int parkingspots;
     private boolean hasLaundry;
+    private boolean allowPets;
+    private boolean allowSmoking;
 
-    public ListingRequest(String title, String address, String city, String state, String zipCode, int price, int numBedrooms, int numBathrooms, boolean hasAC, int parkingspots, boolean hasLaundry, boolean allowPets, boolean allowSmoking) {
+
+    public ListingRequest(String title, String address, String city, String state, String zipCode, double price, int numBedrooms, int numBathrooms, boolean hasAC, int parkingspots, boolean hasLaundry, boolean allowPets, boolean allowSmoking) {
         this.title = title;
         this.address = address;
         this.city = city;
@@ -40,7 +50,7 @@ public class ListingRequest implements Serializable {
         this.allowSmoking = allowSmoking;
     }
 
-    private boolean allowPets;
+
 
     public String getTitle() {
         return title;
@@ -82,11 +92,11 @@ public class ListingRequest implements Serializable {
         this.zipCode = zipCode;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
@@ -146,7 +156,7 @@ public class ListingRequest implements Serializable {
         this.allowSmoking = allowSmoking;
     }
 
-    private boolean allowSmoking;
+
 
     //@ApiModelProperty(notes="Password", example="Secretword1", required = true)
     //@Size(min=1, max=30)
