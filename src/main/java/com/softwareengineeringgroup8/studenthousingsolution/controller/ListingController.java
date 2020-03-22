@@ -8,7 +8,7 @@ import com.softwareengineeringgroup8.studenthousingsolution.model.ListingRequest
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
 import javassist.NotFoundException;
-
+import java.sql.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -36,9 +36,10 @@ public class ListingController{
         String city = request.getCity();
         String state = request.getState();
         String zipCode = request.getZipCode();
+        Date renovationDate=request.getRenovationDate();
         double price = request.getPrice();
         int numBedrooms = request.getNumBedrooms();
-        int numBathrooms = request.getNumBathrooms();
+        double numBathrooms = request.getNumBathrooms();
         boolean hasAC=request.isHasAC();
         int parkingspots = request.getParkingspots();
         boolean hasLaundry=request.isHasLaundry();
