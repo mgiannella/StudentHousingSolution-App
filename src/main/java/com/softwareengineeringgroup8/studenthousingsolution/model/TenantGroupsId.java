@@ -12,15 +12,15 @@ public class TenantGroupsId implements Serializable {
 
     @OneToOne
     @JoinColumn(name="tenantid")
-    private User tenantId;
+    private User tenant;
 
     public TenantGroupsId() {
 
     }
 
-    public TenantGroupsId(int groupId, User tenantId){
+    public TenantGroupsId(int groupId, User tenant){
         this.groupId = groupId;
-        this.tenantId = tenantId;
+        this.tenant = tenant;
     }
 
     public int getGroupId() {
@@ -32,11 +32,11 @@ public class TenantGroupsId implements Serializable {
     }
 
     public User getTenantId() {
-        return tenantId;
+        return tenant;
     }
 
-    public void setTenantId(User tenantId) {
-        this.tenantId = tenantId;
+    public void setTenantId(User tenant) {
+        this.tenant = tenant;
     }
 
     @Override
@@ -45,11 +45,11 @@ public class TenantGroupsId implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         TenantGroupsId that = (TenantGroupsId) o;
         return groupId == that.groupId &&
-                tenantId.equals(that.tenantId);
+                tenant.equals(that.tenant);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(groupId, tenantId);
+        return Objects.hash(groupId, tenant);
     }
 }
