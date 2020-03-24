@@ -1,6 +1,9 @@
 package com.softwareengineeringgroup8.studenthousingsolution.model;
 
+import org.graalvm.compiler.lir.CompositeValue;
+
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.sql.Date;
 
 @Entity
@@ -13,7 +16,7 @@ public class Amenities {
     private int amenityId;
 
     @Column(name="price")
-    private int price;
+    private BigDecimal price;
 
     @Column(name="bedrooms")
     private int numBedrooms;
@@ -39,7 +42,26 @@ public class Amenities {
     @Column(name="smoking")
     private boolean smokingAllowed;
 
-    public Amenities(int price, int numBedrooms, int numBathrooms, Date renovationDate, boolean hasAC, int parkingSpots, boolean hasLaundry, boolean petsAllowed, boolean smokingAllowed) {
+    @Column(name="waterutil")
+    private boolean waterUtility;
+
+    @Column(name="gaselectricutil")
+    private boolean gasElectricUtil;
+
+    @Column(name="furnished")
+    private boolean isFurnished;
+
+    @Column(name="appliancesincl")
+    private boolean hasAppliances;
+
+    @Column(name="trashpickup")
+    private boolean isTrashPickedUpl;
+
+    @Column(name="heat")
+    private boolean hasHeat;
+
+
+    public Amenities(BigDecimal price, int numBedrooms, int numBathrooms, Date renovationDate, boolean hasAC, int parkingSpots, boolean hasLaundry, boolean petsAllowed, boolean smokingAllowed) {
         this.price = price;
         this.numBedrooms = numBedrooms;
         this.numBathrooms = numBathrooms;
@@ -55,11 +77,11 @@ public class Amenities {
         return amenityId;
     }
 
-    public int getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
@@ -125,5 +147,53 @@ public class Amenities {
 
     public void setSmokingAllowed(boolean smokingAllowed) {
         this.smokingAllowed = smokingAllowed;
+    }
+
+    public boolean isWaterUtility() {
+        return waterUtility;
+    }
+
+    public void setWaterUtility(boolean waterUtility) {
+        this.waterUtility = waterUtility;
+    }
+
+    public boolean isGasElectricUtil() {
+        return gasElectricUtil;
+    }
+
+    public void setGasElectricUtil(boolean gasElectricUtil) {
+        this.gasElectricUtil = gasElectricUtil;
+    }
+
+    public boolean isFurnished() {
+        return isFurnished;
+    }
+
+    public void setFurnished(boolean furnished) {
+        isFurnished = furnished;
+    }
+
+    public boolean isHasAppliances() {
+        return hasAppliances;
+    }
+
+    public void setHasAppliances(boolean hasAppliances) {
+        this.hasAppliances = hasAppliances;
+    }
+
+    public boolean isTrashPickedUpl() {
+        return isTrashPickedUpl;
+    }
+
+    public void setTrashPickedUpl(boolean trashPickedUpl) {
+        isTrashPickedUpl = trashPickedUpl;
+    }
+
+    public boolean isHasHeat() {
+        return hasHeat;
+    }
+
+    public void setHasHeat(boolean hasHeat) {
+        this.hasHeat = hasHeat;
     }
 }
