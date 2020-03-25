@@ -27,7 +27,9 @@ public class MaintenanceStatus {
 
 
     public MaintenanceStatus(String statusDescription, int statusID){
+
         this.statusDesc = statusDescription;
         this.statusID = statusID;
+
     }
 }

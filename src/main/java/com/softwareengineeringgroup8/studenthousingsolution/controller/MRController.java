@@ -35,6 +35,7 @@ public class MRController {
         }
     }
 
+    //only for landlords
     @PostMapping("/update")
     @ApiOperation(value = "Update Maintenance Request")
     public Boolean updateRequest(){
