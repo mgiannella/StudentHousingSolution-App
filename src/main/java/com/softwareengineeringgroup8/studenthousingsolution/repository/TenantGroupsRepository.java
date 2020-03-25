@@ -11,7 +11,4 @@ import java.util.List;
 
 public interface TenantGroupsRepository extends CrudRepository<TenantGroups, TenantGroupsId> {
 
-    @Query("SELECT max(tenantgroupid) FROM TenantGroups")
-    int maxTenantGroupId();
-
 }

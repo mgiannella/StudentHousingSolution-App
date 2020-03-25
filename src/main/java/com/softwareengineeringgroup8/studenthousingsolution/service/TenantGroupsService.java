@@ -23,15 +23,15 @@ public class TenantGroupsService {
     private UserPermissionService userPermissionService;
 
     public void createTenantGroup(User user) throws ValidationException {
-        int maxId = tenantGroupsRepository.maxTenantGroupId(); // try set and catch set to 0
-        int tenantGroupId = maxId + 1;
+        //int maxId = tenantGroupsRepository.maxTenantGroupId(); // try set and catch set to 0
+        int tenantGroupId = 12 + 1;
         if(userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)){
             throw new ValidationException("Cannot create a tenant group with a landlord");
         }
-        tenantGroupsRepository.save(new TenantGroups(tenantGroupId, user, true, false ));
+        tenantGroupsRepository.save(new TenantGroups(new TenantGroupsId(tenantGroupId, user), true, false ));
     }
 
     public void addMember(TenantGroups lead, User user) throws ValidationException{
-        tenantGroupsRepository.save(new TenantGroups(lead.getTenantGroupId(), user, false, false));
+        tenantGroupsRepository.save(new TenantGroups(new TenantGroupsId(lead.getTenantGroupId().getTenantGroupId(), user), false, false));
     }
 }

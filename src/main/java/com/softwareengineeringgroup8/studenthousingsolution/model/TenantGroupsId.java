@@ -4,12 +4,14 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
-
+@Embeddable
 public class TenantGroupsId implements Serializable {
 
-
+    
     private int tenantgroupid;
 
+    @ManyToOne
+    @JoinColumn(name="tenantid")
     private User tenant;
 
     public TenantGroupsId() {

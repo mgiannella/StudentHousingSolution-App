@@ -5,16 +5,11 @@ import java.io.Serializable;
 
 @Entity
 @Table(name="tenantgroups")
-@IdClass(TenantGroupsId.class)
+//@IdClass(TenantGroupsId.class)
 public class TenantGroups implements Serializable {
 
-    @Id
-    @Column(name="tenantgroupid")
-    private int tenantgroupid;
-
-    @Id
-    @OneToOne(mappedBy = "userid")
-    private User tenant;
+    @EmbeddedId
+    private TenantGroupsId tenantGroupsId;
 
     @Column(name="islead")
     private boolean isLead;
@@ -22,31 +17,22 @@ public class TenantGroups implements Serializable {
     @Column(name="signedlease")
     private boolean signedLease;
 
-    public TenantGroups(int tenantgroupid, User tenant, boolean isLead, boolean signedLease) {
-        this.tenantgroupid = tenantgroupid;
-        this.tenant = tenant;
-        this.isLead = isLead;
-        this.signedLease = signedLease;
-    }
-
     public TenantGroups(){
 
     }
 
-    public int getTenantGroupId() {
-        return tenantgroupid;
+    public TenantGroups(TenantGroupsId tenantGroupsId, boolean isLead, boolean signedLease) {
+        this.tenantGroupsId = tenantGroupsId;
+        this.isLead = isLead;
+        this.signedLease = signedLease;
     }
 
-    public void setTenantGroupId(int tenantgroupid) {
-        this.tenantgroupid = tenantgroupid;
+    public TenantGroupsId getTenantGroupId() {
+        return tenantGroupsId;
     }
 
-    public User getTenant() {
-        return tenant;
-    }
-
-    public void setTenant(User tenant) {
-        this.tenant = tenant;
+    public void setTenantGroupId(TenantGroupsId tenantgroupid) {
+        this.tenantGroupsId = tenantgroupid;
     }
 
     public boolean isLead() {
