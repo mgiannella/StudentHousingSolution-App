@@ -31,12 +31,12 @@ public class User {
     @Column(name="phone")
     private String phone;
 
-    @Column(name="countrycode")
+    @Column(name="countrycode", length=2)
     private String phoneCode;
 
-    @Column(name="usertypeid")
-    private int userTypeID;
-
+    @ManyToOne
+    @JoinColumn(name="usertypeid")
+    private UserType type;
 
     public User() {
     }
@@ -91,10 +91,13 @@ public class User {
 
     public void setPhone(String phoneNumber){
         this.phone = phoneNumber.substring(3);
-        this.phoneCode = phoneNumber.substring(0,3);
+        this.phoneCode = phoneNumber.substring(0,2);
     }
+    public UserType getType(){ return this.type; }
 
-    public User(String username, String password, String email, String firstName, String lastName, String phone, String phoneCode) {
+    public void setType(UserType type) {this.type = type;}
+
+    public User(String username, String password, String email, String firstName, String lastName, String phone, String phoneCode, UserType type) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -102,7 +105,7 @@ public class User {
         this.lastName = lastName;
         this.phone = phone;
         this.phoneCode = phoneCode;
-        this.userTypeID = 1;
+        this.type = type;
     }
 
     public String getFullname() {
