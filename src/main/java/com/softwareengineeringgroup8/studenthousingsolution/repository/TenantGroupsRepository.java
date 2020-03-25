@@ -4,10 +4,14 @@ import com.softwareengineeringgroup8.studenthousingsolution.model.TenantGroups;
 import com.softwareengineeringgroup8.studenthousingsolution.model.TenantGroupsId;
 import com.softwareengineeringgroup8.studenthousingsolution.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface TenantGroupsRepository extends JpaRepository<TenantGroups, TenantGroupsId> {
-    // Just here for testing, final methods not here yet, need to be thought out
-    List<TenantGroups> findTenantGroupsByTenant(User tenant);
+public interface TenantGroupsRepository extends CrudRepository<TenantGroups, TenantGroupsId> {
+
+    @Query("SELECT max(tenantgroupid) FROM TenantGroups")
+    int maxTenantGroupId();
+
 }

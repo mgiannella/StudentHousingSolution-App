@@ -13,19 +13,15 @@ public class PropertyLocations {
     @Column(name="locationid")
     private int id;
 
-    @Id
     @Column(name="streetaddress")
     private String address;
 
-    @Id
     @Column(name="city")
     private String city;
 
-    @Id
     @Column(name="stateabbrev")
     private String state;
 
-    @Id
     @Column(name="zipcode")
     private String zip;
 

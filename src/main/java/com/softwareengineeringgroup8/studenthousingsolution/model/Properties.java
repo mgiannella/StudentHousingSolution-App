@@ -2,7 +2,8 @@ package com.softwareengineeringgroup8.studenthousingsolution.model;
 
 
 import javax.persistence.*;
-
+@Entity
+@Table(name="Properties")
 public class Properties {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -15,12 +16,12 @@ public class Properties {
 
     @OneToOne
     @JoinColumns({
-            @JoinColumn(name="tenantgroupsid", referencedColumnName = "tenantgroupsid"),
+            @JoinColumn(name="tenantgroupid", referencedColumnName = "tenantgroupid"),
             @JoinColumn(name="leadtenantid", referencedColumnName = "tenantid")
     })
     private TenantGroups tenantGroup;
 
-    @OneToOne
+
     @Column(name="propertytitle")
     private String title;
 

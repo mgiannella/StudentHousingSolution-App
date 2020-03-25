@@ -1,7 +1,5 @@
 package com.softwareengineeringgroup8.studenthousingsolution.model;
 
-import org.graalvm.compiler.lir.CompositeValue;
-
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Date;
