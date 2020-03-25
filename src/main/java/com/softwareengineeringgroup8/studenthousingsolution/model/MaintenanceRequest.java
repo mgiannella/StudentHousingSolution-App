@@ -25,10 +25,6 @@ public class MaintenanceRequest {
     @JoinColumn(name="MaintenanceStatusID")
     private MaintenanceStatus status;
 
-    @ManyToOne
-    @JoinColumn(name="tenantID", referencedColumnName = "userid")
-    private User tenant;
-
 
     public MaintenanceRequest(){
 
@@ -47,19 +43,14 @@ public class MaintenanceRequest {
     public  void setNotes(String notes) { this.notes = notes; }
 
     public MaintenanceStatus getStatus() { return status; }
+
     public void setStatus(MaintenanceStatus status) { this.status = status; }
 
-    public User getTenant() { return tenant; }
-    public void setTenant(User tenant) { this.tenant = tenant; }
-
-    public MaintenanceRequest(MaintenanceStatus status, int propertyID, Date date, String notes, User tenant){
-
+    public MaintenanceRequest(MaintenanceStatus status, int propertyID, Date date, String notes){
         this.status= status;
         this.propertyID = propertyID;
         this.date = date;
         this.notes = notes;
-        this.tenant = tenant;
-
     }
 
 

@@ -4,8 +4,6 @@ import java.sql.Date;
 import java.util.List;
 
 import com.softwareengineeringgroup8.studenthousingsolution.exceptions.ValidationException;
-import com.softwareengineeringgroup8.studenthousingsolution.model.User;
-import com.softwareengineeringgroup8.studenthousingsolution.repository.UserRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.model.MaintenanceRequest;
 import com.softwareengineeringgroup8.studenthousingsolution.model.MaintenanceRequestData;
 import com.softwareengineeringgroup8.studenthousingsolution.model.MaintenanceStatus;
@@ -22,8 +20,6 @@ public class MRService {
     private MaintenanceRequestRepository mrRepository;
     @Autowired
     private MaintenanceStatusRepository statusRepository;
-    @Autowired
-    private UserRepository userRepository;
 
     public List<MaintenanceRequest> listAll(){
         return mrRepository.findAll();
@@ -35,18 +31,13 @@ public class MRService {
         statusRepository.save(new MaintenanceStatus("resolved",3));
         statusRepository.save(new MaintenanceStatus("denied",4));
 
-        MaintenanceStatus status = new MaintenanceStatus("pending", 1); //
         int propertyID = 5;
+        MaintenanceStatus status = new MaintenanceStatus("pending", 1); //
         Date date = data.getDate();
         String notes = data.getNotes();
-        String username = data.getUsername();
-        User tenant = userRepository.findByUsername(username);
-        mrRepository.save(new MaintenanceRequest(status, propertyID, date, notes, tenant));
+        mrRepository.save(new MaintenanceRequest(status, propertyID, date, notes));
     }
 
-    public void updateMaintenanceRequest(MaintenanceRequestData data){
-
-    }
     public MaintenanceRequest getRequestById(int id) throws ValidationException {
         try{
             return mrRepository.findById(id);

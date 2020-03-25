@@ -6,9 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface MaintenanceStatusRepository extends JpaRepository <MaintenanceStatus, Integer>{
+public interface MaintenanceStatusRepository extends JpaRepository <MaintenanceStatus, Integer> {
 
    @Query("SELECT u FROM MaintenanceStatus u WHERE u.statusDesc = ?1")
    MaintenanceStatus findByStatusDesc(String statusDesc);
-
 }
