@@ -18,7 +18,7 @@ public class TenantGroupsService {
 
     @Autowired
     private UserPermissionService userPermissionService;
-
+/*
     public void createTenantGroup(User user) throws ValidationException {
         int maxId = tenantGroupsRepository.findFirstOrderByTenantGroupId().get(0).getTenantGroupId().getTenantGroupId(); // try set and catch set to 0
         int tenantGroupId = maxId+ + 1;
@@ -31,4 +31,6 @@ public class TenantGroupsService {
     public void addMember(TenantGroups lead, User user) throws ValidationException{
         tenantGroupsRepository.save(new TenantGroups(new TenantGroupsId(lead.getTenantGroupId().getTenantGroupId(), user), false, false));
     }
+*/
 }
+

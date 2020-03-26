@@ -117,7 +117,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/test")
+    /*@GetMapping("/test")
     public boolean test(){
         try{
             tenantGroupsService.createTenantGroup(userService.getUserById(1));
@@ -125,5 +125,5 @@ public class UserController {
         }catch(ValidationException e){
             return false;
         }
-    }
+    }*/
 }
