@@ -2,39 +2,34 @@ package com.softwareengineeringgroup8.studenthousingsolution.controller;
 
 import com.softwareengineeringgroup8.studenthousingsolution.exceptions.ValidationException;
 import com.softwareengineeringgroup8.studenthousingsolution.model.*;
-import com.softwareengineeringgroup8.studenthousingsolution.repository.AmenitiesRepository;
-import com.softwareengineeringgroup8.studenthousingsolution.repository.UserRepository;
-import com.softwareengineeringgroup8.studenthousingsolution.repository.UserTypeRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.service.JwtUserDetailsService;
+import com.softwareengineeringgroup8.studenthousingsolution.service.TenantGroupsService;
 import com.softwareengineeringgroup8.studenthousingsolution.service.UserPermissionService;
 import com.softwareengineeringgroup8.studenthousingsolution.service.UserService;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
 import javassist.NotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException;
 
-import javax.validation.Validation;
 import java.security.NoSuchAlgorithmException;
-import java.util.Map;
 
 @RestController
 @ApiModel(description="Handles all User Management Requests")
+@CrossOrigin(origins="http://localhost:3000")
 @RequestMapping("/user")
 public class UserController {
 
     final private JwtUserDetailsService jwtUserDetailsService;
     final private UserPermissionService userPermissionService;
     final private UserService userService;
+    final private TenantGroupsService tenantGroupsService;
 //    private HashData hashData = new HashData();
 
-    public UserController(JwtUserDetailsService jwtUserDetailsService, UserPermissionService userPermissionService, UserService userService) {
+    public UserController(JwtUserDetailsService jwtUserDetailsService, UserPermissionService userPermissionService, UserService userService, TenantGroupsService tenantGroupsService) {
         this.jwtUserDetailsService = jwtUserDetailsService;
         this.userPermissionService = userPermissionService;
         this.userService = userService;
+        this.tenantGroupsService = tenantGroupsService;
     }
 
     @GetMapping("/delete")
@@ -113,4 +108,13 @@ public class UserController {
         }
     }
 
+    @GetMapping("/test")
+    public boolean test(){
+        try{
+            tenantGroupsService.createTenantGroup(userService.getUserById(1));
+            return true;
+        }catch(ValidationException e){
+            return false;
+        }
+    }
 }
