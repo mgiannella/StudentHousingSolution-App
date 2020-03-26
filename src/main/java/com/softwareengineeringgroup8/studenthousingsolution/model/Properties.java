@@ -40,6 +40,7 @@ public class Properties {
     @Column(name="pageviews")
     private int pageViews;
 
+
     public Properties(User landlord, TenantGroups tenantGroup, String title, Amenities amenities, PropertyDescriptions description, PropertyLocations location, int pageViews) {
         this.landlord = landlord;
         this.tenantGroup = tenantGroup;

@@ -2,52 +2,67 @@ package com.softwareengineeringgroup8.studenthousingsolution.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name="tenantgroups")
-//@IdClass(TenantGroupsId.class)
-public class TenantGroups implements Serializable {
+public class TenantGroups {
 
-    @EmbeddedId
-    private TenantGroupsId tenantGroupsId;
+    @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @Column(name="groupid")
+    private int id;
 
-    @Column(name="islead")
-    private boolean isLead;
+    @ManyToOne
+    @JoinColumn(name="leadtenantid", referencedColumnName = "userid")
+    private User leadTenant;
 
-    @Column(name="signedlease")
-    private boolean signedLease;
+    @Column(name="groupname")
+    private String name;
 
-    public TenantGroups(){
-
+    public TenantGroups() {
     }
 
-    public TenantGroups(TenantGroupsId tenantGroupsId, boolean isLead, boolean signedLease) {
-        this.tenantGroupsId = tenantGroupsId;
-        this.isLead = isLead;
-        this.signedLease = signedLease;
+    public TenantGroups(int id, User leadTenant, String name) {
+        this.id = id;
+        this.leadTenant = leadTenant;
+        this.name = name;
     }
 
-    public TenantGroupsId getTenantGroupId() {
-        return tenantGroupsId;
+    public int getId() {
+        return id;
     }
 
-    public void setTenantGroupId(TenantGroupsId tenantgroupid) {
-        this.tenantGroupsId = tenantgroupid;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public boolean isLead() {
-        return isLead;
+    public User getLeadTenant() {
+        return leadTenant;
     }
 
-    public void setLead(boolean lead) {
-        isLead = lead;
+    public void setLeadTenant(User leadTenant) {
+        this.leadTenant = leadTenant;
     }
 
-    public boolean isSignedLease() {
-        return signedLease;
+    public String getName() {
+        return name;
     }
 
-    public void setSignedLease(boolean signedLease) {
-        this.signedLease = signedLease;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TenantGroups that = (TenantGroups) o;
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
