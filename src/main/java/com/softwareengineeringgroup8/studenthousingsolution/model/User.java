@@ -1,5 +1,6 @@
 package com.softwareengineeringgroup8.studenthousingsolution.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
@@ -18,6 +19,7 @@ public class User {
     private String username;
 
     @Column(name="userpass")
+    @JsonIgnore
     private String password;
 
     @Column(name="email")

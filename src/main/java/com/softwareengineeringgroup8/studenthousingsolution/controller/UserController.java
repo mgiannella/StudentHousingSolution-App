@@ -74,7 +74,6 @@ public class UserController {
             if(x == null) {
                 throw new ValidationException("No user with this JWT");
             }
-            x.setPassword(""); // clears password, so that the bcrypted password isn't sent to user
             return x;
         }catch(NotFoundException e){
             throw new ValidationException("Invalid JWT Token, re-authenticate");
@@ -92,7 +91,6 @@ public class UserController {
             }
             userService.updateUser(y, registerRequest);
             y = userService.getUserById(id);
-            y.setPassword("");
             return y;
         }catch(NotFoundException e){
             throw new ValidationException("Invalid JWT Token, re-authenticate");
@@ -111,7 +109,6 @@ public class UserController {
             }
             userService.changePassword(y, oldPass, newPass);
             y = userService.getUserById(id);
-            y.setPassword("");
             return y;
         }catch(NotFoundException e){
             throw new ValidationException("Invalid JWT Token, re-authenticate");
