@@ -45,9 +45,18 @@ public class ListingController{
         boolean hasLaundry=request.isHasLaundry();
         boolean allowPets = request.isAllowPets();
         boolean allowSmoking = request.isAllowSmoking();
-
-        System.out.println(zipCode);
+        boolean hasWater = request.isHasWater();
+        boolean hasGasElec = request.isHasGasElec();
+        boolean isFurnished = request.isFurnished();
+        boolean hasAppliances = request.isHasAppliances();
+        boolean hasTrashPickup = request.isHasTrashPickup();
+        boolean hasHeat = request.isHasHeat();
+        System.out.println(renovationDate);
         return false;
+
+
+
+
        /* try {
             service.create(newListing);
             return true;

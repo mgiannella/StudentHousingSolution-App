@@ -11,81 +11,6 @@ import java.sql.Date;
 public class ListingRequest implements Serializable {
 
 
-    @Size(min=1, max=150)
-    @ApiModelProperty(notes="title", example="House on Hamilton Street", required = true)
-    private String title;
-
-    @Size(min=6, max=25)
-    @ApiModelProperty(notes="username", example="71 Delafield Street", required = true)
-    private String address;
-
-    @Size(min=1,max=50)
-    @ApiModelProperty(notes="city", example="New Brunswick", required = true)
-    private String city;
-
-    @Size(min=2, max=2)
-    @ApiModelProperty(notes="state abbreviation", example="NJ", required = true)
-    private String state;
-
-    @Size(min=5, max=5)
-    @ApiModelProperty(notes="Zip Code", example="08904", required = true)
-    private String zipCode;
-
-
-    @ApiModelProperty(notes="Monthly rent for house", example="4500", required = true)
-    private double price;
-
-
-    @ApiModelProperty(notes="Number of bedrooms in the house", example="3",required=true)
-    private int numBedrooms;
-
-    @ApiModelProperty(notes="Number of bathrooms in the house",example="2.5",required=true)
-    private double numBathrooms;
-
-    @ApiModelProperty(notes="Date the property was last renovated",example="Format of date",required=true)
-    private Date renovationDate;
-
-    @ApiModelProperty(notes="Does the house have air conditioning",example="true",required=true)
-    private boolean hasAC;
-
-    @ApiModelProperty(notes="Number of parking spots",example="5",required=true)
-    private int parkingspots;
-
-    @ApiModelProperty(notes="Does the house have a laundry machine",example="true",required=true)
-    private boolean hasLaundry;
-
-    @ApiModelProperty(notes="Are pets allowed on the property",example="true",required=true)
-    private boolean allowPets;
-
-    @ApiModelProperty(notes="Is smoking allowed on the property",example="true",required=true)
-    private boolean allowSmoking;
-
-
-    public ListingRequest(String title, String address, String city, String state, String zipCode, double price, Date renovationDate, int numBedrooms, double numBathrooms, boolean hasAC, int parkingspots, boolean hasLaundry, boolean allowPets, boolean allowSmoking) {
-        this.title = title;
-        this.address = address;
-        this.city = city;
-        this.state = state;
-        this.zipCode = zipCode;
-        this.price = price;
-        this.renovationDate=renovationDate;
-        this.numBedrooms = numBedrooms;
-        this.numBathrooms = numBathrooms;
-        this.hasAC = hasAC;
-        this.parkingspots = parkingspots;
-        this.hasLaundry = hasLaundry;
-        this.allowPets = allowPets;
-        this.allowSmoking = allowSmoking;
-    }
-
-   public Date getRenovationDate() {
-        return renovationDate;
-    }
-
-    public void setRenovationDate(Date renovationDate) {
-        this.renovationDate = renovationDate;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -146,8 +71,16 @@ public class ListingRequest implements Serializable {
         return numBathrooms;
     }
 
-    public void setNumBathrooms(int doubleBathrooms) {
+    public void setNumBathrooms(double numBathrooms) {
         this.numBathrooms = numBathrooms;
+    }
+
+    public Date getRenovationDate() {
+        return renovationDate;
+    }
+
+    public void setRenovationDate(Date renovationDate) {
+        this.renovationDate = renovationDate;
     }
 
     public boolean isHasAC() {
@@ -189,6 +122,150 @@ public class ListingRequest implements Serializable {
     public void setAllowSmoking(boolean allowSmoking) {
         this.allowSmoking = allowSmoking;
     }
+
+    public boolean isHasWater() {
+        return hasWater;
+    }
+
+    public void setHasWater(boolean hasWater) {
+        this.hasWater = hasWater;
+    }
+
+    public boolean isHasGasElec() {
+        return hasGasElec;
+    }
+
+    public void setHasGasElec(boolean hasGasElec) {
+        this.hasGasElec = hasGasElec;
+    }
+
+    public boolean isFurnished() {
+        return isFurnished;
+    }
+
+    public void setFurnished(boolean furnished) {
+        isFurnished = furnished;
+    }
+
+    public boolean isHasAppliances() {
+        return hasAppliances;
+    }
+
+    public void setHasAppliances(boolean hasAppliances) {
+        this.hasAppliances = hasAppliances;
+    }
+
+    public boolean isHasTrashPickup() {
+        return hasTrashPickup;
+    }
+
+    public void setHasTrashPickup(boolean hasTrashPickup) {
+        this.hasTrashPickup = hasTrashPickup;
+    }
+
+    public boolean isHasHeat() {
+        return hasHeat;
+    }
+
+    public void setHasHeat(boolean hasHeat) {
+        this.hasHeat = hasHeat;
+    }
+
+    @Size(min=1, max=150)
+    @ApiModelProperty(notes="title", example="House on Hamilton Street", required = true)
+    private String title;
+
+    @Size(min=6, max=25)
+    @ApiModelProperty(notes="username", example="71 Delafield Street", required = true)
+    private String address;
+
+    @Size(min=1,max=50)
+    @ApiModelProperty(notes="city", example="New Brunswick", required = true)
+    private String city;
+
+    @Size(min=2, max=2)
+    @ApiModelProperty(notes="state abbreviation", example="NJ", required = true)
+    private String state;
+
+    @Size(min=5, max=5)
+    @ApiModelProperty(notes="Zip Code", example="08904", required = true)
+    private String zipCode;
+
+
+    @ApiModelProperty(notes="Monthly rent for house", example="4500", required = true)
+    private double price;
+
+
+    @ApiModelProperty(notes="Number of bedrooms in the house", example="3",required=true)
+    private int numBedrooms;
+
+    @ApiModelProperty(notes="Number of bathrooms in the house",example="2.5",required=true)
+    private double numBathrooms;
+
+    @ApiModelProperty(notes="Date the property was last renovated",example="Format of date",required=true)
+    private Date renovationDate;
+
+    @ApiModelProperty(notes="Does the house have air conditioning",example="true",required=true)
+    private boolean hasAC;
+
+    @ApiModelProperty(notes="Number of parking spots",example="5",required=true)
+    private int parkingspots;
+
+    @ApiModelProperty(notes="Does the house have a laundry machine",example="true",required=true)
+    private boolean hasLaundry;
+
+    @ApiModelProperty(notes="Are pets allowed on the property",example="true",required=true)
+    private boolean allowPets;
+
+    @ApiModelProperty(notes="Is smoking allowed on the property",example="true",required=true)
+    private boolean allowSmoking;
+
+    @ApiModelProperty(notes="Is there running water in the house?", example="true", required=true)
+    private boolean hasWater;
+
+    @ApiModelProperty(notes="Is there gas and electricity?", example="true",required=true)
+    private boolean hasGasElec;
+
+    @ApiModelProperty(notes="Is the house fully furnished?", example="true",required=true)
+    private boolean isFurnished;
+
+    @ApiModelProperty(notes="Does the house come with essential appliances?", example="true",required=true)
+    private boolean hasAppliances ;
+
+    @ApiModelProperty(notes="Does the house have trash pickup?", example="true",required=true)
+    private boolean hasTrashPickup;
+
+    public ListingRequest(@Size(min = 1, max = 150) String title, @Size(min = 6, max = 25) String address, @Size(min = 1, max = 50) String city, @Size(min = 2, max = 2) String state, @Size(min = 5, max = 5) String zipCode, double price, int numBedrooms, double numBathrooms, Date renovationDate, boolean hasAC, int parkingspots, boolean hasLaundry, boolean allowPets, boolean allowSmoking, boolean hasWater, boolean hasGasElec, boolean isFurnished, boolean hasAppliances, boolean hasTrashPickup, boolean hasHeat) {
+        this.title = title;
+        this.address = address;
+        this.city = city;
+        this.state = state;
+        this.zipCode = zipCode;
+        this.price = price;
+        this.numBedrooms = numBedrooms;
+        this.numBathrooms = numBathrooms;
+        this.renovationDate = renovationDate;
+        this.hasAC = hasAC;
+        this.parkingspots = parkingspots;
+        this.hasLaundry = hasLaundry;
+        this.allowPets = allowPets;
+        this.allowSmoking = allowSmoking;
+        this.hasWater = hasWater;
+        this.hasGasElec = hasGasElec;
+        this.isFurnished = isFurnished;
+        this.hasAppliances = hasAppliances;
+        this.hasTrashPickup = hasTrashPickup;
+        this.hasHeat = hasHeat;
+    }
+
+    @ApiModelProperty(notes="Does the house have a heating unit?", example="true",required=true)
+    private boolean hasHeat;
+
+
+
+
+
+
 
 
 
