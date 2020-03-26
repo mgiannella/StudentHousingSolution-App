@@ -20,6 +20,7 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import javax.validation.Validation;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -117,13 +118,12 @@ public class UserController {
         }
     }
 
-    /*@GetMapping("/test")
-    public boolean test(){
+    @GetMapping("/test")
+    public List<TenantGroups> test(){
         try{
-            tenantGroupsService.createTenantGroup(userService.getUserById(1));
-            return true;
+            return tenantGroupsService.getGroupByTenant(userService.getUserById(1));
         }catch(ValidationException e){
-            return false;
+            return null;
         }
-    }*/
+    }
 }
