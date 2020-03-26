@@ -43,9 +43,8 @@ public class Properties {
 
     }
 
-    public Properties(User landlord, TenantGroups group, String title, Amenities amenities, PropertyDescriptions description, PropertyLocations location, int pageViews) {
+    public Properties(User landlord, String title, Amenities amenities, PropertyDescriptions description, PropertyLocations location, int pageViews) {
         this.landlord = landlord;
-        this.group = group;
         this.title = title;
         this.amenities = amenities;
         this.description = description;
