@@ -8,43 +8,51 @@ import javax.validation.constraints.Size;
 
 public class MaintenanceRequestData implements Serializable{
 
-   // @Size(min=6, max=11)
-    //@ApiModelProperty(required = true, notes = "statusID")
-    //private String statusDesc;
+    /*@Size(min = 2, max = 2)
+    @ApiModelProperty(required = true, notes = "month")
+    private String month;
 
-    @ApiModelProperty(required = true, notes = "date")
-    private Date date;
+    @Size(min = 2, max = 2)
+    @ApiModelProperty(required = true, notes = "day")
+    private String day;
+
+    @Size(min = 4, max = 4)
+    @ApiModelProperty(required = true, notes = "year")
+    private String year;
+
+     */
 
     @ApiModelProperty(required = true, notes = "notes from tenant")
     private String notes;
 
-    //@Size(min=6, max=25)
-    //@ApiModelProperty(required = true, notes = "username")
-    //private String username;
-
     public MaintenanceRequestData(){
     }
 
-    public MaintenanceRequestData(String statusDesc, Date date, String notes){
-        //this.statusDesc = statusDesc;
-        this.date = date;
+    public MaintenanceRequestData(String month, String day, String year, String notes){
+        //this.month = month;
+        //this.day = day;
+        //this.year = year;
         this.notes = notes;
-        //this.username = username;
+
     }
 
-    //public String getStatusDesc() { return statusDesc; }
+    /*public String getMonth() { return month; }
 
-    //public void setStatusDesc(String statusID) { this.statusDesc = statusDesc; }
+    public void setMonth(String month) { this.month = month; }
 
-    public Date getDate() { return date; }
+    public String getYear() { return year; }
 
-    public void setDate(Date date) { this.date = date; }
+    public void setYear(String year) { this.year = year; }
+
+    public String getDay() { return day; }
+
+    public void setDay(String day) { this.day = day; }
+
+     */
 
     public String getNotes() { return notes; }
 
     public void setNotes(String notes) { this.notes = notes; }
 
-    //public String getUsername() { return username; }
 
-   // public void setUsername(String username) { this.username = username; }
 }

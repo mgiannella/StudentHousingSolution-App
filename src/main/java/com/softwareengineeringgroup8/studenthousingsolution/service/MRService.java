@@ -1,8 +1,10 @@
 package com.softwareengineeringgroup8.studenthousingsolution.service;
 
 import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.List;
-
 import com.softwareengineeringgroup8.studenthousingsolution.exceptions.ValidationException;
 import com.softwareengineeringgroup8.studenthousingsolution.model.User;
 import com.softwareengineeringgroup8.studenthousingsolution.model.MaintenanceUpdateData;
@@ -14,7 +16,6 @@ import com.softwareengineeringgroup8.studenthousingsolution.repository.Maintenan
 import com.softwareengineeringgroup8.studenthousingsolution.repository.MaintenanceStatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 
 @Component
 public class MRService {
@@ -37,7 +38,8 @@ public class MRService {
         statusRepository.save(new MaintenanceStatus("denied",4));
 
         MaintenanceStatus status = new MaintenanceStatus("pending", 1); //
-        Date date = data.getDate();
+        long millis = System.currentTimeMillis();
+        Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
         String notes = data.getNotes();
         User tenant = userRepository.findById(id);
         mrRepository.save(new MaintenanceRequest(status, propertyID, date, notes, tenant));
