@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.softwareengineeringgroup8.studenthousingsolution.exceptions.ValidationException;
 import com.softwareengineeringgroup8.studenthousingsolution.model.User;
+import com.softwareengineeringgroup8.studenthousingsolution.model.MaintenanceUpdateData;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.UserRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.model.MaintenanceRequest;
 import com.softwareengineeringgroup8.studenthousingsolution.model.MaintenanceRequestData;
@@ -29,23 +30,32 @@ public class MRService {
         return mrRepository.findAll();
     }
 
-    public void createMaintenanceRequest(MaintenanceRequestData data){
+    public void createMaintenanceRequest(int id, int propertyID, MaintenanceRequestData data){
         statusRepository.save(new MaintenanceStatus("pending", 1));
         statusRepository.save(new MaintenanceStatus("in progress", 2));
         statusRepository.save(new MaintenanceStatus("resolved",3));
         statusRepository.save(new MaintenanceStatus("denied",4));
 
         MaintenanceStatus status = new MaintenanceStatus("pending", 1); //
-        int propertyID = 5;
         Date date = data.getDate();
         String notes = data.getNotes();
-        String username = data.getUsername();
-        User tenant = userRepository.findByUsername(username);
+        User tenant = userRepository.findById(id);
         mrRepository.save(new MaintenanceRequest(status, propertyID, date, notes, tenant));
     }
 
-    public void updateMaintenanceRequest(MaintenanceRequestData data){
+    public void updateMaintenanceRequest(MaintenanceUpdateData data){
+        String statusDesc = data.getStatusDesc();
+        MaintenanceStatus status;
+        if(statusDesc.equals("in progress")){
+            status = new MaintenanceStatus("in progress", 2);
+        }else if(statusDesc.equals("resolved")){
+            status = new MaintenanceStatus("resolved", 3);
+        }else{
+            status = new MaintenanceStatus("denied", 4);
+        }
+        //request.setStatus(status);
     }
+
     public MaintenanceRequest getRequestById(int id) throws ValidationException {
         try{
             return mrRepository.findById(id);
