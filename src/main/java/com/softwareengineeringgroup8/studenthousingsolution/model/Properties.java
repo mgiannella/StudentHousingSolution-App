@@ -2,6 +2,8 @@ package com.softwareengineeringgroup8.studenthousingsolution.model;
 
 
 import javax.persistence.*;
+import java.util.Objects;
+
 @Entity
 @Table(name="Properties")
 public class Properties {
@@ -15,11 +17,8 @@ public class Properties {
     private User landlord;
 
     @OneToOne
-    @JoinColumns({
-            @JoinColumn(name="tenantgroupid", referencedColumnName = "tenantgroupid"),
-            @JoinColumn(name="leadtenantid", referencedColumnName = "tenantid")
-    })
-    private TenantGroups tenantGroup;
+    @JoinColumn(name="tenantgroupid", referencedColumnName = "groupid")
+    private TenantGroups group;
 
 
     @Column(name="propertytitle")
@@ -40,9 +39,12 @@ public class Properties {
     @Column(name="pageviews")
     private int pageViews;
 
-    public Properties(User landlord, TenantGroups tenantGroup, String title, Amenities amenities, PropertyDescriptions description, PropertyLocations location, int pageViews) {
+    public Properties(){
+
+    }
+
+    public Properties(User landlord, String title, Amenities amenities, PropertyDescriptions description, PropertyLocations location, int pageViews) {
         this.landlord = landlord;
-        this.tenantGroup = tenantGroup;
         this.title = title;
         this.amenities = amenities;
         this.description = description;
@@ -60,12 +62,12 @@ public class Properties {
         this.landlord = landlord;
     }
 
-    public TenantGroups getTenantGroup() {
-        return tenantGroup;
+    public TenantGroups getGroup() {
+        return group;
     }
 
-    public void setTenantGroup(TenantGroups tenantGroup) {
-        this.tenantGroup = tenantGroup;
+    public void setGroup(TenantGroups group) {
+        this.group = group;
     }
 
     public String getTitle() {
@@ -106,5 +108,18 @@ public class Properties {
 
     public void setPageViews(int pageViews) {
         this.pageViews = pageViews;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Properties that = (Properties) o;
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

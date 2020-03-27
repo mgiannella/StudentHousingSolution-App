@@ -1,7 +1,6 @@
 package com.softwareengineeringgroup8.studenthousingsolution.service;
 
 import com.softwareengineeringgroup8.studenthousingsolution.config.JwtToken;
-import com.softwareengineeringgroup8.studenthousingsolution.model.User;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.UserRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import javassist.NotFoundException;

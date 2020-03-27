@@ -1,21 +1,13 @@
 package com.softwareengineeringgroup8.studenthousingsolution.service;
 
-import com.softwareengineeringgroup8.studenthousingsolution.config.JwtToken;
 import com.softwareengineeringgroup8.studenthousingsolution.exceptions.ValidationException;
 import com.softwareengineeringgroup8.studenthousingsolution.model.RegisterRequest;
-import com.softwareengineeringgroup8.studenthousingsolution.model.User;
-import com.softwareengineeringgroup8.studenthousingsolution.model.UserRoles;
 import com.softwareengineeringgroup8.studenthousingsolution.model.UserType;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.UserRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.UserTypeRepository;
-import io.jsonwebtoken.ExpiredJwtException;
-import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import javax.validation.Valid;
-import java.util.Map;
 
 @Component
 public class UserService {
