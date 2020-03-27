@@ -1,6 +1,7 @@
 package com.softwareengineeringgroup8.studenthousingsolution.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
@@ -13,9 +14,11 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="userid")
+    @JsonView(PropertyView.Compare.class)
     private int id;
 
     @Column(name="username")
+    @JsonView(PropertyView.Compare.class)
     private String username;
 
     @Column(name="userpass")
@@ -23,22 +26,28 @@ public class User {
     private String password;
 
     @Column(name="email")
+    @JsonView(PropertyView.ViewProperty.class)
     private String email;
 
     @Column(name="firstname")
+    @JsonView(PropertyView.Compare.class)
     private String firstName;
 
     @Column(name="lastname")
+    @JsonView(PropertyView.Compare.class)
     private String lastName;
 
     @Column(name="phone")
+    @JsonView(PropertyView.ViewProperty.class)
     private String phone;
 
     @Column(name="countrycode", length=2)
+    @JsonView(PropertyView.ViewProperty.class)
     private String phoneCode;
 
     @ManyToOne
     @JoinColumn(name="usertypeid")
+    @JsonView(PropertyView.ExtendedInfo.class)
     private UserType type;
 
     public User() {

@@ -1,15 +1,13 @@
 package com.softwareengineeringgroup8.studenthousingsolution.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.softwareengineeringgroup8.studenthousingsolution.exceptions.ValidationException;
 import com.softwareengineeringgroup8.studenthousingsolution.model.*;
 import com.softwareengineeringgroup8.studenthousingsolution.model.User;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.AmenitiesRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.UserRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.UserTypeRepository;
-import com.softwareengineeringgroup8.studenthousingsolution.service.JwtUserDetailsService;
-import com.softwareengineeringgroup8.studenthousingsolution.service.TenantGroupsService;
-import com.softwareengineeringgroup8.studenthousingsolution.service.UserPermissionService;
-import com.softwareengineeringgroup8.studenthousingsolution.service.UserService;
+import com.softwareengineeringgroup8.studenthousingsolution.service.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
 import javassist.NotFoundException;
@@ -33,14 +31,15 @@ public class UserController {
     final private JwtUserDetailsService jwtUserDetailsService;
     final private UserPermissionService userPermissionService;
     final private UserService userService;
-    final private TenantGroupsService tenantGroupsService;
+    final private PropertyService propertyService;
+
 //    private HashData hashData = new HashData();
 
-    public UserController(JwtUserDetailsService jwtUserDetailsService, UserPermissionService userPermissionService, UserService userService, TenantGroupsService tenantGroupsService) {
+    public UserController(JwtUserDetailsService jwtUserDetailsService, UserPermissionService userPermissionService, UserService userService, PropertyService propertyService) {
         this.jwtUserDetailsService = jwtUserDetailsService;
         this.userPermissionService = userPermissionService;
         this.userService = userService;
-        this.tenantGroupsService = tenantGroupsService;
+        this.propertyService = propertyService;
     }
 
     @GetMapping("/delete")
@@ -117,9 +116,10 @@ public class UserController {
     }
 
     @GetMapping("/test")
-    public List<TenantGroups> test(){
+    @JsonView(PropertyView.ExtendedInfo.class)
+    public List<Properties> test(){
         try{
-            return tenantGroupsService.getGroupByTenant(userService.getUserById(1));
+            return propertyService.getAll();
         }catch(ValidationException e){
             return null;
         }

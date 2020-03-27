@@ -1,5 +1,7 @@
 package com.softwareengineeringgroup8.studenthousingsolution.model;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -11,53 +13,72 @@ public class Amenities {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="amenityid")
+    @JsonView(PropertyView.ExtendedInfo.class)
     private int amenityId;
 
     @Column(name="price")
+    @JsonView(PropertyView.Search.class)
     private BigDecimal price;
 
     @Column(name="bedrooms")
+    @JsonView(PropertyView.Search.class)
     private int numBedrooms;
 
     @Column(name="bathrooms")
+    @JsonView(PropertyView.Search.class)
     private float numBathrooms;
 
     @Column(name="renovationdate")
+    @JsonView(PropertyView.Compare.class)
     private Date renovationDate;
 
     @Column(name="airconditioning")
+    @JsonView(PropertyView.Compare.class)
     private boolean hasAC;
 
     @Column(name="parkingspots")
+    @JsonView(PropertyView.Compare.class)
     private int parkingSpots;
 
     @Column(name="laundry")
+    @JsonView(PropertyView.Compare.class)
     private boolean hasLaundry;
 
     @Column(name="pets")
+    @JsonView(PropertyView.Compare.class)
     private boolean petsAllowed;
 
     @Column(name="smoking")
+    @JsonView(PropertyView.Compare.class)
     private boolean smokingAllowed;
 
     @Column(name="waterutil")
+    @JsonView(PropertyView.Compare.class)
     private boolean waterUtility;
 
     @Column(name="gaselectricutil")
+    @JsonView(PropertyView.Compare.class)
     private boolean gasElectricUtil;
 
     @Column(name="furnished")
+    @JsonView(PropertyView.Compare.class)
     private boolean isFurnished;
 
     @Column(name="appliancesincl")
+    @JsonView(PropertyView.Compare.class)
     private boolean hasAppliances;
 
     @Column(name="trashpickup")
+    @JsonView(PropertyView.Compare.class)
     private boolean isTrashPickedUpl;
 
     @Column(name="heat")
+    @JsonView(PropertyView.Compare.class)
     private boolean hasHeat;
 
+    public Amenities(){
+
+    }
 
     public Amenities(BigDecimal price, int numBedrooms, float numBathrooms, Date renovationDate, boolean hasAC, int parkingSpots, boolean hasLaundry, boolean petsAllowed, boolean smokingAllowed,
                      boolean waterUtility, boolean gasElectricUtil, boolean isFurnished, boolean hasAppliances, boolean trashPickedUpl, boolean hasHeat) {

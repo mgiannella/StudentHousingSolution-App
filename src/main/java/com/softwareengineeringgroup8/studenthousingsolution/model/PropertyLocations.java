@@ -1,5 +1,7 @@
 package com.softwareengineeringgroup8.studenthousingsolution.model;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -11,19 +13,27 @@ public class PropertyLocations {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="locationid")
+    @JsonView(PropertyView.Search.class)
     private int id;
 
     @Column(name="streetaddress")
+    @JsonView(PropertyView.Search.class)
     private String address;
 
     @Column(name="city")
+    @JsonView(PropertyView.Search.class)
     private String city;
 
     @Column(name="stateabbrev")
+    @JsonView(PropertyView.Search.class)
     private String state;
 
     @Column(name="zipcode")
+    @JsonView(PropertyView.Search.class)
     private String zip;
+
+    public PropertyLocations(){
+    }
 
     public PropertyLocations(String address, String city, String state, String zip){
         this.address = address;

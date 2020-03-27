@@ -1,6 +1,8 @@
 package com.softwareengineeringgroup8.studenthousingsolution.model;
 
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -10,33 +12,41 @@ public class Properties {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="propertyid")
+    @JsonView(PropertyView.Search.class)
     private int id;
 
     @OneToOne
     @JoinColumn(name="landlordid", referencedColumnName = "userid")
+    @JsonView(PropertyView.Compare.class)
     private User landlord;
 
     @OneToOne
     @JoinColumn(name="tenantgroupid", referencedColumnName = "groupid")
+    @JsonView(PropertyView.ExtendedInfo.class)
     private TenantGroups group;
 
 
     @Column(name="propertytitle")
+    @JsonView(PropertyView.Search.class)
     private String title;
 
     @OneToOne
     @JoinColumn(name="amenityid")
+    @JsonView(PropertyView.Search.class)
     private Amenities amenities;
 
     @OneToOne
     @JoinColumn(name="descriptionid")
+    @JsonView(PropertyView.ViewProperty.class)
     private PropertyDescriptions description;
 
     @OneToOne
     @JoinColumn(name="locationid")
+    @JsonView(PropertyView.Search.class)
     private PropertyLocations location;
 
     @Column(name="pageviews")
+    @JsonView(PropertyView.Search.class)
     private int pageViews;
 
     public Properties(){
