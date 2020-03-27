@@ -3,8 +3,11 @@ package com.softwareengineeringgroup8.studenthousingsolution.controller;
 
 import com.softwareengineeringgroup8.studenthousingsolution.model.ListingRequest;
 
-//import com.softwareengineeringgroup8.studenthousingsolution.repository.ListingRepository;
-//import com.softwareengineeringgroup8.studenthousingsolution.service.ListingService;
+
+import com.softwareengineeringgroup8.studenthousingsolution.model.User;
+import com.softwareengineeringgroup8.studenthousingsolution.model.UserRoles;
+import com.softwareengineeringgroup8.studenthousingsolution.service.ListingService;
+import com.softwareengineeringgroup8.studenthousingsolution.service.UserPermissionService;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
 import javassist.NotFoundException;
@@ -23,44 +26,41 @@ import java.util.Map;
 @RequestMapping("/listing")
 public class ListingController{
 
-    //@Autowired
-   // private ListingService service;
+    @Autowired
+    private ListingService listingService;
 
+    @Autowired
+    private UserPermissionService userPermissionService;
 
 
     @PostMapping("/create")
     @ApiOperation(value="Create Listing",notes="Create new property listing and store the data in the database.")
-    public Boolean newListing(@RequestBody ListingRequest request) throws NoSuchAlgorithmException {
-        String title = request.getTitle();
-        String address = request.getAddress();
-        String city = request.getCity();
-        String state = request.getState();
-        String zipCode = request.getZipCode();
-        Date renovationDate=request.getRenovationDate();
-        double price = request.getPrice();
-        int numBedrooms = request.getNumBedrooms();
-        double numBathrooms = request.getNumBathrooms();
-        boolean hasAC=request.isHasAC();
-        int parkingspots = request.getParkingspots();
-        boolean hasLaundry=request.isHasLaundry();
-        boolean allowPets = request.isAllowPets();
-        boolean allowSmoking = request.isAllowSmoking();
-        boolean hasWater = request.isHasWater();
-        boolean hasGasElec = request.isHasGasElec();
-        boolean isFurnished = request.isFurnished();
-        boolean hasAppliances = request.isHasAppliances();
-        boolean hasTrashPickup = request.isHasTrashPickup();
-        boolean hasHeat = request.isHasHeat();
-        System.out.println(renovationDate);
-        return false;
-
-
-
-
-       /* try {
-            service.create(newListing);
+    public Boolean newListing(@RequestBody ListingRequest request, @RequestHeader("Authorization") String str) throws NoSuchAlgorithmException {
+        try {
+            User landlord = userPermissionService.loadUserByJWT(str);
+            if (!userPermissionService.assertPermission(landlord, UserRoles.ROLE_LANDLORD)) {
+                return false;
+            }
+            listingService.createListingRequest(request,landlord);
             return true;
-        }catch(Error e){
+        }
+        catch (Error | NotFoundException e) {
+            System.out.println(e);
+            return false;
+        }
+
+
+
+
+
+       /*  try {
+            User x = userPermissionService.loadUserByJWT(authString);
+            int userID = x.getId();
+            //user is a tenant, get propertyID from user
+            int propertyID = 5;
+            mrService.createMaintenanceRequest(userID, propertyID, data);
+            return true;
+        } catch (Error | NotFoundException e) {
             System.out.println(e);
             return false;
         }

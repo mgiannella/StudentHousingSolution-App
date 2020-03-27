@@ -59,7 +59,8 @@ public class Amenities {
     private boolean hasHeat;
 
 
-    public Amenities(BigDecimal price, int numBedrooms, float numBathrooms, Date renovationDate, boolean hasAC, int parkingSpots, boolean hasLaundry, boolean petsAllowed, boolean smokingAllowed) {
+    public Amenities(BigDecimal price, int numBedrooms, float numBathrooms, Date renovationDate, boolean hasAC, int parkingSpots, boolean hasLaundry, boolean petsAllowed, boolean smokingAllowed,
+                     boolean waterUtility, boolean gasElectricUtil, boolean isFurnished, boolean hasAppliances, boolean trashPickedUpl, boolean hasHeat) {
         this.price = price;
         this.numBedrooms = numBedrooms;
         this.numBathrooms = numBathrooms;
@@ -69,7 +70,20 @@ public class Amenities {
         this.hasLaundry = hasLaundry;
         this.petsAllowed = petsAllowed;
         this.smokingAllowed = smokingAllowed;
+        this.waterUtility = waterUtility;
+        this.gasElectricUtil = gasElectricUtil;
+        this.isFurnished=isFurnished;
+        this.hasAppliances = hasAppliances;
+        this.isTrashPickedUpl = trashPickedUpl;
+        this.hasHeat = hasHeat;
     }
+
+
+
+
+
+
+
 
     public int getAmenityId() {
         return amenityId;
@@ -168,7 +182,7 @@ public class Amenities {
     }
 
     public void setFurnished(boolean furnished) {
-        isFurnished = furnished;
+        this.isFurnished = furnished;
     }
 
     public boolean isHasAppliances() {
@@ -184,7 +198,7 @@ public class Amenities {
     }
 
     public void setTrashPickedUpl(boolean trashPickedUpl) {
-        isTrashPickedUpl = trashPickedUpl;
+        this.isTrashPickedUpl = trashPickedUpl;
     }
 
     public boolean isHasHeat() {

@@ -1,6 +1,7 @@
 package com.softwareengineeringgroup8.studenthousingsolution.service;
 
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.List;
 
@@ -17,6 +18,8 @@ import com.softwareengineeringgroup8.studenthousingsolution.repository.Propertie
 import com.softwareengineeringgroup8.studenthousingsolution.repository.AmenitiesRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.PropertyDescriptionsRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.PropertyLocationsRepository;
+import java.math.BigDecimal;
+import java.sql.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,35 +41,67 @@ public class ListingService {
         return propRepository.findAll();
     }
 
-    public void createListingRequest(ListingRequest request){
+    public void createListingRequest(ListingRequest request, User landlord){
+            //add TenantGroup stuff, fix date stuff, add back landlord to properties
+            String address = request.getAddress();
+            String city = request.getCity();
+            String state = request.getState();
+            String zip = request.getZipCode();
+            PropertyLocations createLocation = new PropertyLocations(address,city,state,zip);
+            locRepository.save(createLocation);
 
-           /*  MaintenanceStatus status = new MaintenanceStatus("pending", 1); //
-            int propertyID = 5;
-            Date date = data.getDate();
-            String notes = data.getNotes();
-            String username = data.getUsername();
-            User landlord = userRepository.findByUsername(username);
-            mrRepository.save(new MaintenanceRequest(status, propertyID, date, notes, landlord));
+            String desc = request.getDesc();
+            PropertyDescriptions createDesc = new PropertyDescriptions(desc);
+            descRepository.save(createDesc);
 
-            */
+            BigDecimal price = request.getPrice();
+            int numBedrooms = request.getNumBedrooms();
+            float numBathrooms = request.getNumBathrooms();
+            Date renovationDate = request.getRenovationDate();
+            boolean hasAC = request.isHasAC();
+            int parkingSpots = request.getParkingspots();
+            boolean hasLaundry = request.isHasLaundry();
+            boolean allowPets = request.isAllowPets();
+            boolean allowSmoking = request.isAllowSmoking();
+            boolean hasWater = request.isHasWater();
+            boolean hasGasElec = request.isHasGasElec();
+            boolean isFurnished = request.isFurnished();
+            boolean hasAppliances = request.isHasAppliances();
+            boolean hasTrashPickup = request.isHasTrashPickup();
+            boolean hasHeat = request.isHasHeat();
+
+            Amenities createAmen = new Amenities(price, numBedrooms, numBathrooms, renovationDate, hasAC, parkingSpots, hasLaundry, allowPets, allowSmoking,
+                    hasWater,hasGasElec,isFurnished,hasAppliances,hasTrashPickup,hasHeat);
+            amenRepository.save(createAmen);
+
+
+            String title=request.getTitle();
+
+
+            Properties createProp = new Properties(landlord,title, createAmen, createDesc, createLocation, 0);
+            propRepository.save(createProp);
     }
 
 
     public void updateListing() {
-
+        //if landlord wants to update his listing bc he got tenants, upload lease, etc..
     }
 
+    public void uploadPhoto() {
+        //photos
+    }
+
+    /*
     public Properties gePropertyById(int id) throws ValidationException {
 
-           /* try{
-                return mrRepository.findById(id);
+           try{
+                return PropertiesRepository.findById(id);
             }catch(Exception e){
                 throw new ValidationException("Couldn't find Request By Id");
             }
-            */
+    }
+*/
+
     }
 
-
-}
-}
 
