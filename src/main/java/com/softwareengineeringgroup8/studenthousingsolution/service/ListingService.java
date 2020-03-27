@@ -37,10 +37,6 @@ public class ListingService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<Properties> listAll(){
-        return propRepository.findAll();
-    }
-
     public void createListingRequest(ListingRequest request, User landlord){
             //add TenantGroup stuff, fix date stuff, add back landlord to properties
             String address = request.getAddress();
@@ -57,7 +53,10 @@ public class ListingService {
             BigDecimal price = request.getPrice();
             int numBedrooms = request.getNumBedrooms();
             float numBathrooms = request.getNumBathrooms();
-            Date renovationDate = request.getRenovationDate();
+
+            String renDate = request.getRenovationDate();
+            Date renovationDate = Date.valueOf(renDate);
+
             boolean hasAC = request.isHasAC();
             int parkingSpots = request.getParkingspots();
             boolean hasLaundry = request.isHasLaundry();
@@ -83,7 +82,7 @@ public class ListingService {
     }
 
 
-    public void updateListing() {
+    public void updateLease() {
         //if landlord wants to update his listing bc he got tenants, upload lease, etc..
     }
 

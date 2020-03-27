@@ -1,13 +1,15 @@
 package com.softwareengineeringgroup8.studenthousingsolution.controller;
 
 
-import com.softwareengineeringgroup8.studenthousingsolution.model.ListingRequest;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.softwareengineeringgroup8.studenthousingsolution.exceptions.ValidationException;
+import com.softwareengineeringgroup8.studenthousingsolution.model.*;
 
 
-import com.softwareengineeringgroup8.studenthousingsolution.model.User;
-import com.softwareengineeringgroup8.studenthousingsolution.model.UserRoles;
 import com.softwareengineeringgroup8.studenthousingsolution.service.ListingService;
+import com.softwareengineeringgroup8.studenthousingsolution.service.PropertyService;
 import com.softwareengineeringgroup8.studenthousingsolution.service.UserPermissionService;
+import com.softwareengineeringgroup8.studenthousingsolution.controller.UserController;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
 import javassist.NotFoundException;
@@ -19,9 +21,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import java.util.Map;
 
 @RestController
+@CrossOrigin(origins="http://localhost:3000")
 @ApiModel(description="User input for Create Listing")
 @RequestMapping("/listing")
 public class ListingController{
@@ -31,6 +35,9 @@ public class ListingController{
 
     @Autowired
     private UserPermissionService userPermissionService;
+
+    @Autowired
+    private PropertyService propertyService;
 
 
     @PostMapping("/create")
@@ -42,6 +49,7 @@ public class ListingController{
                 return false;
             }
             listingService.createListingRequest(request,landlord);
+            test();
             return true;
         }
         catch (Error | NotFoundException e) {
@@ -51,21 +59,16 @@ public class ListingController{
 
 
 
+    }
 
-
-       /*  try {
-            User x = userPermissionService.loadUserByJWT(authString);
-            int userID = x.getId();
-            //user is a tenant, get propertyID from user
-            int propertyID = 5;
-            mrService.createMaintenanceRequest(userID, propertyID, data);
-            return true;
-        } catch (Error | NotFoundException e) {
-            System.out.println(e);
-            return false;
+    @GetMapping("/test")
+    @JsonView(PropertyView.ExtendedInfo.class)
+    public List<Properties> test(){
+        try{
+            return propertyService.getAll();
+        }catch(ValidationException e){
+            return null;
         }
-
-        */
     }
 
 }

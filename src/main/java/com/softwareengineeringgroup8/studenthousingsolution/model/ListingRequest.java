@@ -68,10 +68,8 @@ public class ListingRequest implements Serializable {
         this.numBathrooms = numBathrooms;
     }
 
-    public Date getRenovationDate() {
-        return renovationDate;
-    }
-    public void setRenovationDate(Date renovationDate) {
+    public String getRenovationDate() { return renovationDate; }
+    public void setRenovationDate(String renovationDate) {
         this.renovationDate = renovationDate;
     }
 
@@ -191,7 +189,7 @@ public class ListingRequest implements Serializable {
     private float numBathrooms;
 
     @ApiModelProperty(notes="Date the property was last renovated",example="Format of date",required=true)
-    private Date renovationDate;
+    private String renovationDate;
 
     @ApiModelProperty(notes="Does the house have air conditioning",example="true",required=true)
     private boolean hasAC;
@@ -229,7 +227,7 @@ public class ListingRequest implements Serializable {
     private String desc;
 
 
-    public ListingRequest(String title, String description, String address, String city, String state, String zipCode, BigDecimal price, int numBedrooms, float numBathrooms, Date renovationDate, boolean hasAC, int parkingspots, boolean hasLaundry, boolean allowPets, boolean allowSmoking, boolean hasWater, boolean hasGasElec, boolean isFurnished, boolean hasAppliances, boolean hasTrashPickup, boolean hasHeat) {
+    public ListingRequest(String title, String description, String address, String city, String state, String zipCode, BigDecimal price, int numBedrooms, float numBathrooms, String renovationDate, boolean hasAC, int parkingspots, boolean hasLaundry, boolean allowPets, boolean allowSmoking, boolean hasWater, boolean hasGasElec, boolean isFurnished, boolean hasAppliances, boolean hasTrashPickup, boolean hasHeat) {
         this.title = title;
         this.address = address;
         this.city = city;
