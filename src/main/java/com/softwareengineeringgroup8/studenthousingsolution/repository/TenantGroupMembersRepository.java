@@ -4,6 +4,7 @@ import com.softwareengineeringgroup8.studenthousingsolution.model.TenantGroupMem
 import com.softwareengineeringgroup8.studenthousingsolution.model.TenantGroups;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import com.softwareengineeringgroup8.studenthousingsolution.model.User;
 
 import java.util.List;
 

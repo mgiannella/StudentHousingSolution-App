@@ -3,6 +3,7 @@ package com.softwareengineeringgroup8.studenthousingsolution.service;
 import com.softwareengineeringgroup8.studenthousingsolution.exceptions.ValidationException;
 import com.softwareengineeringgroup8.studenthousingsolution.model.RegisterRequest;
 import com.softwareengineeringgroup8.studenthousingsolution.model.UserType;
+import com.softwareengineeringgroup8.studenthousingsolution.model.User;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.UserRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.UserTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.sql.Date;
+import java.math.BigDecimal;
 
 //@ApiModel(description="How a user's username and password are sent to the application")
 public class ListingRequest implements Serializable {
@@ -14,7 +15,6 @@ public class ListingRequest implements Serializable {
     public String getTitle() {
         return title;
     }
-
     public void setTitle(String title) {
         this.title = title;
     }
@@ -22,7 +22,6 @@ public class ListingRequest implements Serializable {
     public String getAddress() {
         return address;
     }
-
     public void setAddress(String address) {
         this.address = address;
     }
@@ -30,7 +29,6 @@ public class ListingRequest implements Serializable {
     public String getCity() {
         return city;
     }
-
     public void setCity(String city) {
         this.city = city;
     }
@@ -38,7 +36,6 @@ public class ListingRequest implements Serializable {
     public String getState() {
         return state;
     }
-
     public void setState(String state) {
         this.state = state;
     }
@@ -46,23 +43,20 @@ public class ListingRequest implements Serializable {
     public String getZipCode() {
         return zipCode;
     }
-
     public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
     }
 
-    public double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
-
-    public void setPrice(double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
     public int getNumBedrooms() {
         return numBedrooms;
     }
-
     public void setNumBedrooms(int numBedrooms) {
         this.numBedrooms = numBedrooms;
     }
@@ -70,7 +64,6 @@ public class ListingRequest implements Serializable {
     public double getNumBathrooms() {
         return numBathrooms;
     }
-
     public void setNumBathrooms(double numBathrooms) {
         this.numBathrooms = numBathrooms;
     }
@@ -78,7 +71,6 @@ public class ListingRequest implements Serializable {
     public Date getRenovationDate() {
         return renovationDate;
     }
-
     public void setRenovationDate(Date renovationDate) {
         this.renovationDate = renovationDate;
     }
@@ -86,7 +78,6 @@ public class ListingRequest implements Serializable {
     public boolean isHasAC() {
         return hasAC;
     }
-
     public void setHasAC(boolean hasAC) {
         this.hasAC = hasAC;
     }
@@ -94,7 +85,6 @@ public class ListingRequest implements Serializable {
     public int getParkingspots() {
         return parkingspots;
     }
-
     public void setParkingspots(int parkingspots) {
         this.parkingspots = parkingspots;
     }
@@ -102,7 +92,6 @@ public class ListingRequest implements Serializable {
     public boolean isHasLaundry() {
         return hasLaundry;
     }
-
     public void setHasLaundry(boolean hasLaundry) {
         this.hasLaundry = hasLaundry;
     }
@@ -110,7 +99,6 @@ public class ListingRequest implements Serializable {
     public boolean isAllowPets() {
         return allowPets;
     }
-
     public void setAllowPets(boolean allowPets) {
         this.allowPets = allowPets;
     }
@@ -118,7 +106,6 @@ public class ListingRequest implements Serializable {
     public boolean isAllowSmoking() {
         return allowSmoking;
     }
-
     public void setAllowSmoking(boolean allowSmoking) {
         this.allowSmoking = allowSmoking;
     }
@@ -126,7 +113,6 @@ public class ListingRequest implements Serializable {
     public boolean isHasWater() {
         return hasWater;
     }
-
     public void setHasWater(boolean hasWater) {
         this.hasWater = hasWater;
     }
@@ -134,7 +120,6 @@ public class ListingRequest implements Serializable {
     public boolean isHasGasElec() {
         return hasGasElec;
     }
-
     public void setHasGasElec(boolean hasGasElec) {
         this.hasGasElec = hasGasElec;
     }
@@ -142,7 +127,6 @@ public class ListingRequest implements Serializable {
     public boolean isFurnished() {
         return isFurnished;
     }
-
     public void setFurnished(boolean furnished) {
         isFurnished = furnished;
     }
@@ -150,7 +134,6 @@ public class ListingRequest implements Serializable {
     public boolean isHasAppliances() {
         return hasAppliances;
     }
-
     public void setHasAppliances(boolean hasAppliances) {
         this.hasAppliances = hasAppliances;
     }
@@ -158,7 +141,6 @@ public class ListingRequest implements Serializable {
     public boolean isHasTrashPickup() {
         return hasTrashPickup;
     }
-
     public void setHasTrashPickup(boolean hasTrashPickup) {
         this.hasTrashPickup = hasTrashPickup;
     }
@@ -166,9 +148,15 @@ public class ListingRequest implements Serializable {
     public boolean isHasHeat() {
         return hasHeat;
     }
-
     public void setHasHeat(boolean hasHeat) {
         this.hasHeat = hasHeat;
+    }
+
+
+
+    public String getDesc() { return desc; }
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 
     @Size(min=1, max=150)
@@ -193,7 +181,7 @@ public class ListingRequest implements Serializable {
 
 
     @ApiModelProperty(notes="Monthly rent for house", example="4500", required = true)
-    private double price;
+    private BigDecimal price;
 
 
     @ApiModelProperty(notes="Number of bedrooms in the house", example="3",required=true)
@@ -235,7 +223,13 @@ public class ListingRequest implements Serializable {
     @ApiModelProperty(notes="Does the house have trash pickup?", example="true",required=true)
     private boolean hasTrashPickup;
 
-    public ListingRequest(@Size(min = 1, max = 150) String title, @Size(min = 6, max = 25) String address, @Size(min = 1, max = 50) String city, @Size(min = 2, max = 2) String state, @Size(min = 5, max = 5) String zipCode, double price, int numBedrooms, double numBathrooms, Date renovationDate, boolean hasAC, int parkingspots, boolean hasLaundry, boolean allowPets, boolean allowSmoking, boolean hasWater, boolean hasGasElec, boolean isFurnished, boolean hasAppliances, boolean hasTrashPickup, boolean hasHeat) {
+
+
+    @ApiModelProperty(notes="Does the house have trash pickup?", example="true",required=true)
+    private String desc;
+
+
+    public ListingRequest(String title, String description, String address, String city, String state, String zipCode, BigDecimal price, int numBedrooms, double numBathrooms, Date renovationDate, boolean hasAC, int parkingspots, boolean hasLaundry, boolean allowPets, boolean allowSmoking, boolean hasWater, boolean hasGasElec, boolean isFurnished, boolean hasAppliances, boolean hasTrashPickup, boolean hasHeat) {
         this.title = title;
         this.address = address;
         this.city = city;
@@ -256,6 +250,7 @@ public class ListingRequest implements Serializable {
         this.hasAppliances = hasAppliances;
         this.hasTrashPickup = hasTrashPickup;
         this.hasHeat = hasHeat;
+        this.desc=description;
     }
 
     @ApiModelProperty(notes="Does the house have a heating unit?", example="true",required=true)
