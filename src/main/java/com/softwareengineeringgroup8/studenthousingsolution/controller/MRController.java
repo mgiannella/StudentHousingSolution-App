@@ -1,16 +1,12 @@
 package com.softwareengineeringgroup8.studenthousingsolution.controller;
 
 
-import com.softwareengineeringgroup8.studenthousingsolution.model.MaintenanceRequest;
-import com.softwareengineeringgroup8.studenthousingsolution.model.MaintenanceRequestData;
-import com.softwareengineeringgroup8.studenthousingsolution.model.MaintenanceUpdateData;
-import com.softwareengineeringgroup8.studenthousingsolution.model.User;
-import com.softwareengineeringgroup8.studenthousingsolution.service.JwtUserDetailsService;
-import com.softwareengineeringgroup8.studenthousingsolution.service.MRService;
-import com.softwareengineeringgroup8.studenthousingsolution.service.UserPermissionService;
+import com.softwareengineeringgroup8.studenthousingsolution.model.*;
+import com.softwareengineeringgroup8.studenthousingsolution.service.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
 import javassist.NotFoundException;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +26,10 @@ public class MRController {
     private UserPermissionService userPermissionService;
     @Autowired
     private JwtUserDetailsService jwtUserDetailsService;
+    @Autowired
+    private TenantGroupsService tenantGroupsService;
+    @Autowired
+    private PropertyService propertyService;
 
     //CREATE//
     ///ONLY FOR TENANTS///
@@ -37,11 +37,12 @@ public class MRController {
     @ApiOperation(value = "Create Maintenance Request")
     public Boolean createRequest(@RequestHeader("Authorization") String authString, @RequestBody MaintenanceRequestData data) throws NoSuchAlgorithmException {
         try {
-            User x = userPermissionService.loadUserByJWT(authString);
-            int userID = x.getId();
-            //user is a tenant, get propertyID from user
-            int propertyID = 5;
-            mrService.createMaintenanceRequest(userID, propertyID, data);
+            User tenant = userPermissionService.loadUserByJWT(authString);
+            //int userID = x.getId(); //userid
+            List<TenantGroups> tenantGroupsList = tenantGroupsService.getGroupByTenant(tenant);
+            TenantGroups tenantGroup = tenantGroupsList.get(0);
+            Properties prop = propertyService.getPropertyByGroup(tenantGroup);
+            mrService.createMaintenanceRequest(tenant, prop, data);
             return true;
         } catch (Error | NotFoundException e) {
             System.out.println(e);
@@ -50,15 +51,28 @@ public class MRController {
     }
 
     //only for landlords
-    @PostMapping("/update")
+   /* @PostMapping("/update")
     @ApiOperation(value = "Update Maintenance Request")
-    public List<MaintenanceRequest> updateRequest(@RequestBody MaintenanceUpdateData data) {
-        mrService.updateMaintenanceRequest(data);
-        return mrService.listAll();
+    public List<MaintenanceRequest> updateRequest(@RequestHeader("Authorization") String authString, @RequestBody MaintenanceUpdateData data) {
+        try {
+            User x = userPermissionService.loadUserByJWT(authString);
+            int userID = x.getId();
+            int propertyID = 5;
+            return mrService.updateMaintenanceRequest(userID, propertyID, data);
+
+        } catch (Error | NotFoundException e) {
+            System.out.println(e);
+            return null;
+        }
+        }
+
+    */
 
 
 
-    }
+
+
+
 
 
 

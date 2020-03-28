@@ -12,8 +12,9 @@ public class MaintenanceRequest {
     @Column(name="MaintenanceRequestID")
     private int requestID;
 
-    @Column(name="PropertyID")
-    private int propertyID;
+    @ManyToOne
+    @JoinColumn(name="PropertyID")
+    private Properties prop;
 
     @Column(name="RequestDate")
     private Date date;
@@ -36,8 +37,8 @@ public class MaintenanceRequest {
     public int getRequestID() { return this.requestID; }
     public void setRequestID(int requestID) { this.requestID = requestID; }
 
-    public int getPropertyID() { return this.propertyID; }
-    public void setPropertyID(int propertyID) { this.propertyID = propertyID; }
+    public Properties getProperty() { return this.prop; }
+    public void setProperty(Properties propertyID) { this.prop = prop; }
 
     public Date getDate() { return this.date; }
     public void setDate(Date date) { this.date = date; }
@@ -51,10 +52,10 @@ public class MaintenanceRequest {
     public User getTenant() { return tenant; }
     public void setTenant(User tenant) { this.tenant = tenant; }
 
-    public MaintenanceRequest(MaintenanceStatus status, int propertyID, Date date, String notes, User tenant){
+    public MaintenanceRequest(MaintenanceStatus status, Properties prop, Date date, String notes, User tenant){
 
-        this.status= status;
-        this.propertyID = propertyID;
+        this.status = status;
+        this.prop = prop;
         this.date = date;
         this.notes = notes;
         this.tenant = tenant;
