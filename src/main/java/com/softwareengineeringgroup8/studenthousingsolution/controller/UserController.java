@@ -116,11 +116,11 @@ public class UserController {
 
     @GetMapping("/test")
     @JsonView(PropertyView.ExtendedInfo.class)
-    public boolean test(){
+    public List<Amenities> test(@RequestBody SearchFilterRequest values){
         try{
-            return propertyService.create();
+            return propertyService.filterSearch(values);
         }catch(ValidationException e){
-            return false;
+            return null;
         }
     }
 }
