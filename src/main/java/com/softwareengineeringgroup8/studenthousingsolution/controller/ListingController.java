@@ -42,7 +42,7 @@ public class ListingController{
 
     @PostMapping("/create")
     @ApiOperation(value="Create Listing",notes="Create new property listing and store the data in the database.")
-    public Boolean newListing(@RequestBody ListingRequest request, @RequestHeader("Authorization") String str) throws NoSuchAlgorithmException {
+    public Boolean newListing(@RequestBody ListingRequest request, @RequestHeader("Authorization") String str) throws ValidationException {
         try {
             User landlord = userPermissionService.loadUserByJWT(str);
             if (!userPermissionService.assertPermission(landlord, UserRoles.ROLE_LANDLORD)) {

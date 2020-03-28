@@ -68,7 +68,7 @@ public class ListingService {
             boolean hasAppliances = request.isHasAppliances();
             boolean hasTrashPickup = request.isHasTrashPickup();
             boolean hasHeat = request.isHasHeat();
-
+            System.out.println(numBathrooms);
             Amenities createAmen = new Amenities(price, numBedrooms, numBathrooms, renovationDate, hasAC, parkingSpots, hasLaundry, allowPets, allowSmoking,
                     hasWater,hasGasElec,isFurnished,hasAppliances,hasTrashPickup,hasHeat);
             amenRepository.save(createAmen);

@@ -157,7 +157,7 @@ public class ListingRequest implements Serializable {
         this.desc = desc;
     }
 
-    @Size(min=1, max=150)
+    @Size(min=1, max=250)
     @ApiModelProperty(notes="title", example="House on Hamilton Street", required = true)
     private String title;
 
