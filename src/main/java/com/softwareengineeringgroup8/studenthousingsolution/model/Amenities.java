@@ -20,6 +20,10 @@ public class Amenities {
     @JsonView(PropertyView.Search.class)
     private BigDecimal price;
 
+    @Column(name="sleeps")
+    @JsonView(PropertyView.Search.class)
+    private int sleeps;
+
     @Column(name="bedrooms")
     @JsonView(PropertyView.Search.class)
     private int numBedrooms;
@@ -80,8 +84,9 @@ public class Amenities {
 
     }
 
-    public Amenities(BigDecimal price, int numBedrooms, float numBathrooms, Date renovationDate, boolean hasAC, int parkingSpots, boolean hasLaundry, boolean petsAllowed, boolean smokingAllowed) {
+    public Amenities(BigDecimal price, int sleeps, int numBedrooms, float numBathrooms, Date renovationDate, boolean hasAC, int parkingSpots, boolean hasLaundry, boolean petsAllowed, boolean smokingAllowed, boolean waterUtility, boolean gasElectricUtil, boolean isFurnished, boolean hasAppliances, boolean isTrashPickedUpl, boolean hasHeat) {
         this.price = price;
+        this.sleeps = sleeps;
         this.numBedrooms = numBedrooms;
         this.numBathrooms = numBathrooms;
         this.renovationDate = renovationDate;
@@ -90,6 +95,12 @@ public class Amenities {
         this.hasLaundry = hasLaundry;
         this.petsAllowed = petsAllowed;
         this.smokingAllowed = smokingAllowed;
+        this.waterUtility = waterUtility;
+        this.gasElectricUtil = gasElectricUtil;
+        this.isFurnished = isFurnished;
+        this.hasAppliances = hasAppliances;
+        this.isTrashPickedUpl = isTrashPickedUpl;
+        this.hasHeat = hasHeat;
     }
 
     public int getAmenityId() {
@@ -215,4 +226,7 @@ public class Amenities {
     public void setHasHeat(boolean hasHeat) {
         this.hasHeat = hasHeat;
     }
+
+    public int getSleeps() { return sleeps; }
+    public void setSleeps(int sleeps) { this.sleeps =sleeps; }
 }
