@@ -16,6 +16,7 @@ import com.softwareengineeringgroup8.studenthousingsolution.repository.Maintenan
 import com.softwareengineeringgroup8.studenthousingsolution.repository.MaintenanceStatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import sun.applet.Main;
 
 @Component
 public class MRService {
@@ -29,9 +30,7 @@ public class MRService {
     @Autowired
     private PropertiesRepository propertiesRepository;
 
-    public List<MaintenanceRequest> listAll(){
-        return mrRepository.findAll();
-    }
+    public List<MaintenanceRequest> getRequestByProperty(Properties prop){ return mrRepository.findByProperty(prop); }
 
     public void createMaintenanceRequest(User tenant, Properties prop, MaintenanceRequestData data){
         //statusRepository.save(new MaintenanceStatus("pending", 1));
@@ -46,21 +45,21 @@ public class MRService {
         mrRepository.save(new MaintenanceRequest(status, prop, date, notes, tenant));
     }
 
-    /*
-    public void updateMaintenanceRequest(int id, Properties prop, MaintenanceUpdateData data){
-        //List<MaintenanceRequest> requests = mrRepository.findByProperty(propertyID);
+
+    public void updateMaintenanceRequest(MaintenanceRequest request, MaintenanceUpdateData data) {
         String statusDesc = data.getStatusDesc();
         MaintenanceStatus status;
-        if(statusDesc.equals("in progress")){
+        if (statusDesc.equals("in progress")) {
             status = new MaintenanceStatus("in progress", 2);
-        }else if(statusDesc.equals("resolved")){
+        } else if (statusDesc.equals("resolved")) {
             status = new MaintenanceStatus("resolved", 3);
-        }else{
+        } else {
             status = new MaintenanceStatus("denied", 4);
         }
-        return requests;
-        //request.setStatus(status);
+        request.setStatus(status);
+        mrRepository.save(request);
     }
+
 
 
 

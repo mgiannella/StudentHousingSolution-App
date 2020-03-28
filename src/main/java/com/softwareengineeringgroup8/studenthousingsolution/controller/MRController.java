@@ -6,7 +6,6 @@ import com.softwareengineeringgroup8.studenthousingsolution.service.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
 import javassist.NotFoundException;
-import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +37,6 @@ public class MRController {
     public Boolean createRequest(@RequestHeader("Authorization") String authString, @RequestBody MaintenanceRequestData data) throws NoSuchAlgorithmException {
         try {
             User tenant = userPermissionService.loadUserByJWT(authString);
-            //int userID = x.getId(); //userid
             List<TenantGroups> tenantGroupsList = tenantGroupsService.getGroupByTenant(tenant);
             TenantGroups tenantGroup = tenantGroupsList.get(0);
             Properties prop = propertyService.getPropertyByGroup(tenantGroup);
@@ -51,32 +49,21 @@ public class MRController {
     }
 
     //only for landlords
-   /* @PostMapping("/update")
+    @PostMapping("/update")
     @ApiOperation(value = "Update Maintenance Request")
-    public List<MaintenanceRequest> updateRequest(@RequestHeader("Authorization") String authString, @RequestBody MaintenanceUpdateData data) {
+    public Boolean updateRequest(@RequestHeader("Authorization") String authString, @RequestBody MaintenanceUpdateData data) {
         try {
-            User x = userPermissionService.loadUserByJWT(authString);
-            int userID = x.getId();
-            int propertyID = 5;
-            return mrService.updateMaintenanceRequest(userID, propertyID, data);
-
+            User landlord = userPermissionService.loadUserByJWT(authString);
+            Properties prop = propertyService.getPropertyByLandlord(landlord);
+            List<MaintenanceRequest> requests = mrService.getRequestByProperty(prop);
+            MaintenanceRequest request = requests.get(0);
+            mrService.updateMaintenanceRequest(request, data);
+            return true;
         } catch (Error | NotFoundException e) {
             System.out.println(e);
-            return null;
+            return false;
         }
-        }
-
-    */
-
-
-
-
-
-
-
-
-
-
+    }
 
     /*
     @RequestMapping(value = "/send", method = RequestMethod.POST) //only for tenants
