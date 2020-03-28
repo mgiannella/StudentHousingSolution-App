@@ -17,20 +17,24 @@ public class PropertyPhotos {
     private int id;
 
     @Column(name="seqid")
+    @JsonView(PropertyView.Search.class)
     private int seq;
 
     @Column(name="photolocation")
+    @JsonView(PropertyView.Search.class)
     private String location;
 
     @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="propertyid")
+    @JsonIgnore
     private Properties property;
 
     public PropertyPhotos(){
 
     }
 
-    public PropertyPhotos(int seq, String location){
-        //this.property = property;
+    public PropertyPhotos(int seq, String location, Properties property){
+        this.property = property;
         this.seq = seq;
         this.location = location;
     }

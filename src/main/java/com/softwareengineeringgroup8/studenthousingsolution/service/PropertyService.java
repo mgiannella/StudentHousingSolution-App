@@ -35,12 +35,17 @@ public class PropertyService {
         return propertyRepository.findAll();
     }
 
+    public List<Properties> getByFilter(){
+
+    }
     public boolean create() {
         List<PropertyPhotos> photosList = new ArrayList<PropertyPhotos>();
-        photosList.add(new PropertyPhotos(1,"yourmomshouse"));
-        photosList.add(new PropertyPhotos(2,"yoursistersbutt"));
+
         Amenities x = amenitiesRepository.findById(1);
-        propertyRepository.save(new Properties(userRepository.findById(4), "Words", x, propertyDescriptionsRepository.findById(1), propertyLocationsRepository.findById(1), 0,photosList));
+        Properties z = new Properties(userRepository.findById(4), "Words", x, propertyDescriptionsRepository.findById(1), propertyLocationsRepository.findById(1), 0,photosList);
+        z.getPhotos().add(new PropertyPhotos(1,"name2",z));
+        z.getPhotos().add(new PropertyPhotos(2,"name",z));
+        propertyRepository.save(z);
         return true;
     }
 }
