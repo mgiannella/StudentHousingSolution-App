@@ -14,6 +14,10 @@ import java.util.List;
 public interface AmenitiesRepository extends JpaRepository<Amenities,Integer> {
     Amenities findById(int id);
 
-    @Query("SELECT a FROM Amenities a WHERE (a.price>= :#{#filter.price.min} and a.price<= :#{#filter.price.max}) and (a.price>= :#{#filter.price.min} and a.price<= :#{#filter.price.max}) and (a.price>= :#{#filter.price.min} and a.price<= :#{#filter.price.max}) and (a.price>= :#{#filter.price.min} and a.price<= :#{#filter.price.max}) and (a.price>= :#{#filter.price.min} and a.price<= :#{#filter.price.max}) and a.hasAC >= :#{#filter.hasAC}")
+    @Query("SELECT a FROM Amenities a WHERE (a.price>= :#{#filter.price.min} and a.price<= :#{#filter.price.max})"
+            + "and (a.sleeps>= :#{#filter.sleeps.min} and a.sleeps<= :#{#filter.sleeps.max}) "
+            + "and (a.numBedrooms>= :#{#filter.bedrooms.min} and a.numBedrooms<= :#{#filter.bedrooms.max}) "
+            + "and (a.numBathrooms>= :#{#filter.bathrooms.min} and a.price<= :#{#filter.bathrooms.max}) "
+            + "and a.hasAC >= :#{#filter.hasAC}")
     List<Amenities> filterSearch(@Param("filter")SearchFilterRequest values);
 }

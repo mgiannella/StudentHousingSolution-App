@@ -28,8 +28,6 @@ public class SearchFilterRequest implements Serializable {
 
     private SearchFilterSleeps sleeps;
 
-    private SearchFilterRenovationDate renovationDate;
-
     @ApiModelProperty(notes="Does the property have central air conditioning?", example="true", required=false)
     private boolean hasAC;
 
@@ -101,14 +99,6 @@ public class SearchFilterRequest implements Serializable {
 
     public void setPrice(SearchFilterPrice price) {
         this.price = price;
-    }
-
-    public SearchFilterRenovationDate getRenovationDate() {
-        return renovationDate;
-    }
-
-    public void setRenovationDate(SearchFilterRenovationDate renovationDate) {
-        this.renovationDate = renovationDate;
     }
 
     public boolean isHasAC() {

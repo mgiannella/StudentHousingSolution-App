@@ -114,7 +114,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/test")
+    @PostMapping("/test")
     @JsonView(PropertyView.ExtendedInfo.class)
     public List<Amenities> test(@RequestBody SearchFilterRequest values){
         try{
