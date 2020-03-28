@@ -26,6 +26,8 @@ public class SearchFilterRequest implements Serializable {
 
     private SearchFilterPrice price;
 
+    private SearchFilterSleeps sleeps;
+
     private SearchFilterRenovationDate renovationDate;
 
     @ApiModelProperty(notes="Does the property have central air conditioning?", example="true", required=false)
@@ -59,6 +61,14 @@ public class SearchFilterRequest implements Serializable {
     private boolean hasHeat;
 
     public SearchFilterRequest() {
+    }
+
+    public SearchFilterSleeps getSleeps() {
+        return sleeps;
+    }
+
+    public void setSleeps(SearchFilterSleeps sleeps) {
+        this.sleeps = sleeps;
     }
 
     public SearchFilterBedroom getBedrooms() {
