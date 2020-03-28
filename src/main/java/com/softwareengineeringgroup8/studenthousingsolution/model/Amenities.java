@@ -26,7 +26,7 @@ public class Amenities {
 
     @Column(name="bathrooms")
     @JsonView(PropertyView.Search.class)
-    private int numBathrooms;
+    private float numBathrooms;
 
     @Column(name="renovationdate")
     @JsonView(PropertyView.Compare.class)
@@ -80,7 +80,7 @@ public class Amenities {
 
     }
 
-    public Amenities(BigDecimal price, int numBedrooms, int numBathrooms, Date renovationDate, boolean hasAC, int parkingSpots, boolean hasLaundry, boolean petsAllowed, boolean smokingAllowed) {
+    public Amenities(BigDecimal price, int numBedrooms, float numBathrooms, Date renovationDate, boolean hasAC, int parkingSpots, boolean hasLaundry, boolean petsAllowed, boolean smokingAllowed) {
         this.price = price;
         this.numBedrooms = numBedrooms;
         this.numBathrooms = numBathrooms;
@@ -112,11 +112,11 @@ public class Amenities {
         this.numBedrooms = numBedrooms;
     }
 
-    public int getNumBathrooms() {
+    public float getNumBathrooms() {
         return numBathrooms;
     }
 
-    public void setNumBathrooms(int numBathrooms) {
+    public void setNumBathrooms(float numBathrooms) {
         this.numBathrooms = numBathrooms;
     }
 
