@@ -16,7 +16,7 @@ import com.softwareengineeringgroup8.studenthousingsolution.repository.Maintenan
 import com.softwareengineeringgroup8.studenthousingsolution.repository.MaintenanceStatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import sun.applet.Main;
+
 
 @Component
 public class MRService {
@@ -33,11 +33,6 @@ public class MRService {
     public List<MaintenanceRequest> getRequestByProperty(Properties prop){ return mrRepository.findByProperty(prop); }
 
     public void createMaintenanceRequest(User tenant, Properties prop, MaintenanceRequestData data){
-        //statusRepository.save(new MaintenanceStatus("pending", 1));
-        //statusRepository.save(new MaintenanceStatus("in progress", 2));
-        //statusRepository.save(new MaintenanceStatus("resolved",3));
-        //statusRepository.save(new MaintenanceStatus("denied",4));
-
         MaintenanceStatus status = new MaintenanceStatus("pending", 1); //
         long millis = System.currentTimeMillis();
         Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
@@ -60,9 +55,6 @@ public class MRService {
         mrRepository.save(request);
     }
 
-
-
-
     /*public MaintenanceRequest getRequestById(int id) throws ValidationException {
         try{
             return mrRepository.findById(id);
@@ -70,7 +62,6 @@ public class MRService {
             throw new ValidationException("Couldn't find Request By Id");
         }
     }
-
      */
 
 

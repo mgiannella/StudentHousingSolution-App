@@ -8,12 +8,11 @@ import io.swagger.annotations.ApiOperation;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-
 import java.security.NoSuchAlgorithmException;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000/request")
 @ApiModel(description = "Manages maintenance requests")
 @RequestMapping("/maintenanceRequests")
 
@@ -30,9 +29,8 @@ public class MRController {
     @Autowired
     private PropertyService propertyService;
 
-    //CREATE//
-    ///ONLY FOR TENANTS///
-    @PutMapping("/create")
+    //create
+    @PostMapping("/createRequest")
     @ApiOperation(value = "Create Maintenance Request")
     public Boolean createRequest(@RequestHeader("Authorization") String authString, @RequestBody MaintenanceRequestData data) throws NoSuchAlgorithmException {
         try {
@@ -48,8 +46,21 @@ public class MRController {
         }
     }
 
-    //only for landlords
-    @PostMapping("/update")
+    @PostMapping("/viewRequests")
+    @ApiOperation(value = "View Requests")
+    public List<MaintenanceRequest> viewRequest(@RequestHeader("Authorization") String authString){
+        try {
+            User landlord = userPermissionService.loadUserByJWT(authString);
+            Properties prop = propertyService.getPropertyByLandlord(landlord);
+            return mrService.getRequestByProperty(prop);
+        } catch (Error| NotFoundException e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+
+    //update
+    @PostMapping("/updateRequest")
     @ApiOperation(value = "Update Maintenance Request")
     public Boolean updateRequest(@RequestHeader("Authorization") String authString, @RequestBody MaintenanceUpdateData data) {
         try {
@@ -64,26 +75,5 @@ public class MRController {
             return false;
         }
     }
-
-    /*
-    @RequestMapping(value = "/send", method = RequestMethod.POST) //only for tenants
-    public String sendRequest(@ModelAttribute("request") MaintenanceRequest request) {
-        service.save(request);
-        return "";
-    }
-
-    //update Maintenance Request//
-    ///ONLY FOR LANDLORDS///
-    @RequestMapping("/manageRequests")
-    public ResponseEntity<?> manageRequest(@PathVariable(name = "requestID") int requestID){
-        ModelAndView mav = new ModelAndView("manage_request");
-        //
-        MaintenanceRequest request = service.get(requestID);
-        mav.addObject("request", request);
-        return ResponseEntity.ok(new MaintenanceRequest());
-    }
-    */
-
-
 
 }
