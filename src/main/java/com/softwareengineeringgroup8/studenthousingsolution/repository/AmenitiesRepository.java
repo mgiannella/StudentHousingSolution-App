@@ -16,18 +16,19 @@ public interface AmenitiesRepository extends JpaRepository<Amenities,Integer> {
 
     @Query("SELECT a FROM Amenities a WHERE (a.price>= :#{#filter.price.min} and a.price<= :#{#filter.price.max})"
             + "and (a.sleeps>= :#{#filter.sleeps.min} and a.sleeps<= :#{#filter.sleeps.max}) "
+            + "and (a.price>= :#{#filter.price.min} and a.price<= :#{#filter.price.max}) "
             + "and (a.numBedrooms>= :#{#filter.bedrooms.min} and a.numBedrooms<= :#{#filter.bedrooms.max}) "
-            + "and (a.numBathrooms>= :#{#filter.bathrooms.min} and a.price<= :#{#filter.bathrooms.max}) "
+            + "and (a.numBathrooms>= :#{#filter.bathrooms.min} and a.numBathrooms <= :#{#filter.bathrooms.max}) "
             + "and (a.hasAC >= :#{#filter.hasAC}) "
             + "and (a.hasLaundry >= :#{#filter.hasLaundry}) "
-            + "and (a.parkingSpots >= :#{#filter.parking}) "
+            + "and (a.parkingSpots >= :#{#filter.parking.min} and a.parkingSpots <= :#{#filter.parking.max}) "
             + "and (a.petsAllowed >= :#{#filter.petsAllowed}) "
             + "and (a.smokingAllowed >= :#{#filter.smokingAllowed}) "
             + "and (a.waterUtility >= :#{#filter.waterUtility}) "
             + "and (a.gasElectricUtil >= :#{#filter.gasElectricUtil}) "
-            + "and (a.isFurnished >= :#{#filter.isFurnished}) "
+            + "and (a.isFurnished >= :#{#filter.furnished}) "
             + "and (a.hasAppliances >= :#{#filter.hasAppliances}) "
-            + "and (a.isTrashPickedUpl >= :#{#filter.isTrashPickedUpl}) "
+            + "and (a.isTrashPickedUpl >= :#{#filter.trashPickedUpl}) "
             + "and (a.hasHeat >= :#{#filter.hasHeat})")
     List<Amenities> filterSearch(@Param("filter")SearchFilterRequest values);
 }
