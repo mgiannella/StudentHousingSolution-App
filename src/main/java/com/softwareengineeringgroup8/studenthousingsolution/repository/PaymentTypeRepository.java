@@ -5,8 +5,8 @@ import com.softwareengineeringgroup8.studenthousingsolution.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-public interface PaymentTypeRepository {
-    PaymentType findById(int id);
-    PaymentType findByPTypeDesc(String pTypeDesc);
+public interface PaymentTypeRepository extends JpaRepository<PaymentType, Integer> {
+
+    PaymentType findBypTypeDesc(String pTypeDesc);
 
 }

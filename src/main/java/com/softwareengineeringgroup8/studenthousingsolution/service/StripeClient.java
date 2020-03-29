@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 
@@ -29,10 +30,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static java.lang.String.valueOf;
-import static jdk.nashorn.internal.runtime.regexp.joni.Syntax.Java;
 
 
-@Service
+
+@Component
 public class StripeClient {
 
 
@@ -244,7 +245,7 @@ public class StripeClient {
         List<Properties> propList= propertiesRepository.findByTenantGroup(tglist.get(0));
 
         Properties x = propList.get(0);
-        PaymentRecord paymentRecord = new PaymentRecord(new Date(new java.util.Date().getTime()),x, tenant, paymentTypeRepository.findByPTypeDesc("TENANT_MONTHLY"), new BigDecimal(1245));
+        PaymentRecord paymentRecord = new PaymentRecord(new Date(new java.util.Date().getTime()),x, tenant, paymentTypeRepository.findBypTypeDesc("TENANT_MONTHLY"), new BigDecimal(1245));
 
         paymentRecordRepository.save(paymentRecord);
 
