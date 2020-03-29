@@ -12,7 +12,7 @@ import java.util.List;
 import java.security.NoSuchAlgorithmException;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000/request")
+@CrossOrigin(origins = "http://localhost:3000")
 @ApiModel(description = "Manages maintenance requests")
 @RequestMapping("/maintenanceRequests")
 
@@ -60,14 +60,14 @@ public class MRController {
     }
 
     //update
-    @PostMapping("/updateRequest")
+    @PostMapping("/{id}")
     @ApiOperation(value = "Update Maintenance Request")
-    public Boolean updateRequest(@RequestHeader("Authorization") String authString, @RequestBody MaintenanceUpdateData data) {
+    public Boolean updateRequest(@PathVariable("id") int id, @RequestHeader("Authorization") String authString, @RequestBody MaintenanceUpdateData data) {
         try {
             User landlord = userPermissionService.loadUserByJWT(authString);
             Properties prop = propertyService.getPropertyByLandlord(landlord);
             List<MaintenanceRequest> requests = mrService.getRequestByProperty(prop);
-            MaintenanceRequest request = requests.get(0);
+            MaintenanceRequest request = mrService.getRequestById(id);
             mrService.updateMaintenanceRequest(request, data);
             return true;
         } catch (Error | NotFoundException e) {

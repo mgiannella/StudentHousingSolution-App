@@ -55,14 +55,13 @@ public class MRService {
         mrRepository.save(request);
     }
 
-    /*public MaintenanceRequest getRequestById(int id) throws ValidationException {
+    public MaintenanceRequest getRequestById(int id) throws ValidationException {
         try{
-            return mrRepository.findById(id);
+            return mrRepository.findByRequestId(id);
         }catch(Exception e){
             throw new ValidationException("Couldn't find Request By Id");
         }
     }
-     */
 
 
 }

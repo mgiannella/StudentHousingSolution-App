@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PropertyDescriptionsRepository extends JpaRepository<PropertyDescriptions,Integer> {
-
+    PropertyDescriptions findById(int id);
 }

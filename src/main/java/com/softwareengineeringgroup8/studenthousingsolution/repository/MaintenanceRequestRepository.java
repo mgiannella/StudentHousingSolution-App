@@ -11,4 +11,6 @@ import com.softwareengineeringgroup8.studenthousingsolution.model.Properties;
 public interface MaintenanceRequestRepository extends JpaRepository<MaintenanceRequest, Integer>{
     @Query("SELECT u FROM MaintenanceRequest u WHERE u.prop = ?1")
     List<MaintenanceRequest> findByProperty(Properties prop);
+    @Query("SELECT u FROM MaintenanceRequest u WHERE u.requestID = ?1")
+    MaintenanceRequest findByRequestId(int requestID);
 }
