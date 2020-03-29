@@ -48,28 +48,28 @@ public class PaymentController {
     //@RequestMapping(value="/create-charge", method=RequestMethod.POST)
     //@ResponseBody
     @PostMapping("/create-charge")
-    public Boolean createCharge(@RequestBody ChargeRequest req, @RequestHeader("Authorization") String str) throws StripeException {
+    public PaymentResponse createCharge(@RequestBody ChargeRequest req, @RequestHeader("Authorization") String str) throws StripeException {
         try {
             User tenant = userPermissionService.loadUserByJWT(str);
             if (!userPermissionService.assertPermission(tenant, UserRoles.ROLE_TENANT)) {
-                return false;
-
+                //return false;
+                return new PaymentResponse(false, "invalid authentication");
             }
             //listingService.createListingRequest(request,landlord);
-            stripeClient.createCharge(req.getEmail(), req.getCard_num(), req.getMonthNum(), req.getYearNum(), req.getCcv(), tenant);
+            String chargeId= stripeClient.createCharge(req.getEmail(), req.getCard_num(), req.getMonthNum(), req.getYearNum(), req.getCcv(), tenant);
 
-            stripeClient.transferCharge(req.getEmail());
-
-          /*  if (chargeId == null) {
+            String transferId=stripeClient.transferCharge(req.getEmail());
+            if (chargeId == null) {
                 return new PaymentResponse(false, "An error occurred while trying to create a charge.");
             }
 
             return new PaymentResponse(true, "Success! Your charge id is " + chargeId + " Your transaction id: " + transferId);
-        }*/
-            return true;
+
+            //return true;
         } catch (Error | NotFoundException e) {
             System.out.println(e);
-            return false;
+            //return false;
+            return new PaymentResponse(false);
         }
     }
 }
@@ -81,9 +81,14 @@ public class PaymentController {
             return new PaymentResponse(false, "An error occurred while trying to create a customer.");
         }
 */
-        //creates charge
+        //checks charge
 
+ /*  if (chargeId == null) {
+                return new PaymentResponse(false, "An error occurred while trying to create a charge.");
+            }
 
+            return new PaymentResponse(true, "Success! Your charge id is " + chargeId + " Your transaction id: " + transferId);
+        }*/
 
 
 
