@@ -24,6 +24,7 @@ public class TenantGroupsService {
     @Autowired
     private UserPermissionService userPermissionService;
 
+    // returns true if user is in the group
     public boolean inGroup(User user, TenantGroups group){
         List<TenantGroups> groups = tenantGroupMembersRepository.findTenantGroupByMember(user);
         if(groups.contains(user)){
@@ -104,4 +105,3 @@ public class TenantGroupsService {
     }
 
 }
-

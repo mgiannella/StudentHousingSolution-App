@@ -50,26 +50,31 @@ public class Properties {
     @JsonView(PropertyView.Search.class)
     private int pageViews;
 
-    //@OneToMany(
-       //     cascade = CascadeType.ALL,
-        //    orphanRemoval = true
-    //)
+
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            mappedBy="property"
+    )
     //@JoinColumn(name="propertyid")
-    //@JsonView(PropertyView.Search.class)
-    //private List<PropertyPhotos> photos;
+    @JsonView(PropertyView.Search.class)
+    private List<PropertyPhotos> photos;
+
 
     public Properties(){
 
     }
 
+
     public Properties(User landlord, String title, Amenities amenities, PropertyDescriptions description, PropertyLocations location, int pageViews, List<PropertyPhotos> photos) {
+
         this.landlord = landlord;
         this.title = title;
         this.amenities = amenities;
         this.description = description;
         this.location = location;
         this.pageViews = pageViews;
-        //this.photos = photos;
+        this.photos = photos;
     }
 
     public int getId() {return id;}
@@ -130,15 +135,13 @@ public class Properties {
         this.pageViews = pageViews;
     }
 
-   /* public List<PropertyPhotos> getPhotos() {
+    public List<PropertyPhotos> getPhotos() {
         return photos;
     }
 
     public void setPhotos(List<PropertyPhotos> photos) {
         this.photos = photos;
     }
-
-    */
 
     @Override
     public boolean equals(Object o) {
