@@ -1,6 +1,14 @@
 package com.softwareengineeringgroup8.studenthousingsolution.service;
 
+<<<<<<< HEAD
+import com.softwareengineeringgroup8.studenthousingsolution.model.Properties;
+import com.softwareengineeringgroup8.studenthousingsolution.model.TenantGroups;
+import com.softwareengineeringgroup8.studenthousingsolution.model.User;
+import com.softwareengineeringgroup8.studenthousingsolution.repository.PropertiesRepository;
+import com.softwareengineeringgroup8.studenthousingsolution.repository.PropertyDescriptionsRepository;
+=======
 import com.softwareengineeringgroup8.studenthousingsolution.exceptions.ValidationException;
+>>>>>>> development
 import com.softwareengineeringgroup8.studenthousingsolution.model.*;
 import com.softwareengineeringgroup8.studenthousingsolution.model.PropertyDescriptions;
 import com.softwareengineeringgroup8.studenthousingsolution.model.PropertyLocations;
@@ -8,7 +16,6 @@ import com.softwareengineeringgroup8.studenthousingsolution.model.PropertyPhotos
 import com.softwareengineeringgroup8.studenthousingsolution.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +43,11 @@ public class PropertyService {
     public List<Properties> getAll(){
         return propertyRepository.findAll();
     }
+
+    public Properties getPropertyByGroup(TenantGroups group){ return propertyRepository.findByGroup(group); }
+
+    public Properties getPropertyByLandlord(User landlord){ return propertyRepository.findByLandlord(landlord); }
+
 
     // returns all properties within a certain zip code
     public List<Properties> getByZip(String zip) throws ValidationException{

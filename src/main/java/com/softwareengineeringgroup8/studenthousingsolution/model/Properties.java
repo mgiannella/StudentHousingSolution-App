@@ -50,6 +50,7 @@ public class Properties {
     @JsonView(PropertyView.Search.class)
     private int pageViews;
 
+
     @OneToMany(
             cascade = CascadeType.ALL,
             orphanRemoval = true,
@@ -59,13 +60,13 @@ public class Properties {
     @JsonView(PropertyView.Search.class)
     private List<PropertyPhotos> photos;
 
+
     public Properties(){
 
     }
 
 
-    public Properties(User landlord, String title, Amenities amenities, PropertyDescriptions description, PropertyLocations location, int pageViews,
-    List<PropertyPhotos> photos) {
+    public Properties(User landlord, String title, Amenities amenities, PropertyDescriptions description, PropertyLocations location, int pageViews, List<PropertyPhotos> photos) {
 
         this.landlord = landlord;
         this.title = title;
