@@ -11,6 +11,82 @@ import java.math.BigDecimal;
 //@ApiModel(description="How a user's username and password are sent to the application")
 public class ListingRequest implements Serializable {
 
+    @Size(min=1, max=250)
+    @ApiModelProperty(notes="title", example="House on Hamilton Street", required = true)
+    private String title;
+
+    @Size(min=6, max=25)
+    @ApiModelProperty(notes="username", example="71 Delafield Street", required = true)
+    private String address;
+
+    @Size(min=1,max=50)
+    @ApiModelProperty(notes="city", example="New Brunswick", required = true)
+    private String city;
+
+    @Size(min=2, max=2)
+    @ApiModelProperty(notes="state abbreviation", example="NJ", required = true)
+    private String state;
+
+    @Size(min=5, max=5)
+    @ApiModelProperty(notes="Zip Code", example="08904", required = true)
+    private String zipCode;
+
+
+    @ApiModelProperty(notes="Monthly rent for house", example="4500", required = true)
+    private BigDecimal price;
+
+
+    @ApiModelProperty(notes="Number of bedrooms in the house", example="3",required=true)
+    private int numBedrooms;
+
+    @ApiModelProperty(notes="Number of bathrooms in the house",example="2.5",required=true)
+    private float numBathrooms;
+
+    @ApiModelProperty(notes="Date the property was last renovated",example="Format of date",required=true)
+    private String renovationDate;
+
+    @ApiModelProperty(notes="Does the house have air conditioning",example="true",required=true)
+    private boolean hasAC;
+
+    @ApiModelProperty(notes="Number of parking spots",example="5",required=true)
+    private int parkingspots;
+
+    @ApiModelProperty(notes="Does the house have a laundry machine",example="true",required=true)
+    private boolean hasLaundry;
+
+    @ApiModelProperty(notes="Are pets allowed on the property",example="true",required=true)
+    private boolean allowPets;
+
+    @ApiModelProperty(notes="Is smoking allowed on the property",example="true",required=true)
+    private boolean allowSmoking;
+
+    @ApiModelProperty(notes="Is there running water in the house?", example="true", required=true)
+    private boolean hasWater;
+
+    @ApiModelProperty(notes="Is there gas and electricity?", example="true",required=true)
+    private boolean hasGasElec;
+
+    @ApiModelProperty(notes="Is the house fully furnished?", example="true",required=true)
+    private boolean isFurnished;
+
+    @ApiModelProperty(notes="Does the house come with essential appliances?", example="true",required=true)
+    private boolean hasAppliances ;
+
+    @ApiModelProperty(notes="Does the house have trash pickup?", example="true",required=true)
+    private boolean hasTrashPickup;
+
+    @ApiModelProperty(notes="Does the house have trash pickup?", example="true",required=true)
+    private String desc;
+
+    @ApiModelProperty(notes="How many can sleep in house?", example="3",required=true)
+    private int sleeps;
+
+    @ApiModelProperty(notes="Does the house have a heating unit?", example="true",required=true)
+    private boolean hasHeat;
+
+
+    public int getSleeps() { return sleeps; }
+    public void setSleeps(int sleeps) { this.sleeps =sleeps; }
 
     public String getTitle() {
         return title;
@@ -157,77 +233,12 @@ public class ListingRequest implements Serializable {
         this.desc = desc;
     }
 
-    @Size(min=1, max=250)
-    @ApiModelProperty(notes="title", example="House on Hamilton Street", required = true)
-    private String title;
 
-    @Size(min=6, max=25)
-    @ApiModelProperty(notes="username", example="71 Delafield Street", required = true)
-    private String address;
-
-    @Size(min=1,max=50)
-    @ApiModelProperty(notes="city", example="New Brunswick", required = true)
-    private String city;
-
-    @Size(min=2, max=2)
-    @ApiModelProperty(notes="state abbreviation", example="NJ", required = true)
-    private String state;
-
-    @Size(min=5, max=5)
-    @ApiModelProperty(notes="Zip Code", example="08904", required = true)
-    private String zipCode;
-
-
-    @ApiModelProperty(notes="Monthly rent for house", example="4500", required = true)
-    private BigDecimal price;
-
-
-    @ApiModelProperty(notes="Number of bedrooms in the house", example="3",required=true)
-    private int numBedrooms;
-
-    @ApiModelProperty(notes="Number of bathrooms in the house",example="2.5",required=true)
-    private float numBathrooms;
-
-    @ApiModelProperty(notes="Date the property was last renovated",example="Format of date",required=true)
-    private String renovationDate;
-
-    @ApiModelProperty(notes="Does the house have air conditioning",example="true",required=true)
-    private boolean hasAC;
-
-    @ApiModelProperty(notes="Number of parking spots",example="5",required=true)
-    private int parkingspots;
-
-    @ApiModelProperty(notes="Does the house have a laundry machine",example="true",required=true)
-    private boolean hasLaundry;
-
-    @ApiModelProperty(notes="Are pets allowed on the property",example="true",required=true)
-    private boolean allowPets;
-
-    @ApiModelProperty(notes="Is smoking allowed on the property",example="true",required=true)
-    private boolean allowSmoking;
-
-    @ApiModelProperty(notes="Is there running water in the house?", example="true", required=true)
-    private boolean hasWater;
-
-    @ApiModelProperty(notes="Is there gas and electricity?", example="true",required=true)
-    private boolean hasGasElec;
-
-    @ApiModelProperty(notes="Is the house fully furnished?", example="true",required=true)
-    private boolean isFurnished;
-
-    @ApiModelProperty(notes="Does the house come with essential appliances?", example="true",required=true)
-    private boolean hasAppliances ;
-
-    @ApiModelProperty(notes="Does the house have trash pickup?", example="true",required=true)
-    private boolean hasTrashPickup;
-
-
-
-    @ApiModelProperty(notes="Does the house have trash pickup?", example="true",required=true)
-    private String desc;
-
-
-    public ListingRequest(String title, String description, String address, String city, String state, String zipCode, BigDecimal price, int numBedrooms, float numBathrooms, String renovationDate, boolean hasAC, int parkingspots, boolean hasLaundry, boolean allowPets, boolean allowSmoking, boolean hasWater, boolean hasGasElec, boolean isFurnished, boolean hasAppliances, boolean hasTrashPickup, boolean hasHeat) {
+    public ListingRequest(String title, String description, String address, String city, String state, String zipCode,
+                          BigDecimal price, int numBedrooms, float numBathrooms, String renovationDate, boolean hasAC,
+                          int parkingspots, boolean hasLaundry, boolean allowPets, boolean allowSmoking, boolean hasWater,
+                          boolean hasGasElec, boolean isFurnished, boolean hasAppliances, boolean hasTrashPickup, boolean hasHeat,
+                          int sleeps) {
         this.title = title;
         this.address = address;
         this.city = city;
@@ -249,10 +260,10 @@ public class ListingRequest implements Serializable {
         this.hasTrashPickup = hasTrashPickup;
         this.hasHeat = hasHeat;
         this.desc=description;
+        this.sleeps=sleeps;
     }
 
-    @ApiModelProperty(notes="Does the house have a heating unit?", example="true",required=true)
-    private boolean hasHeat;
+
 
 
 

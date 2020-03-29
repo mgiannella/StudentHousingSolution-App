@@ -71,7 +71,7 @@ public class Properties {
         this.description = description;
         this.location = location;
         this.pageViews = pageViews;
-       // this.photos = photos;
+       // this.photos = photos; ADD BACK LATER
     }
 
     public int getId() {return id;}
