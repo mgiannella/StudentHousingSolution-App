@@ -1,13 +1,10 @@
 package com.softwareengineeringgroup8.studenthousingsolution.repository;
 
-<<<<<<< HEAD
 import com.softwareengineeringgroup8.studenthousingsolution.model.User;
 import com.softwareengineeringgroup8.studenthousingsolution.model.Properties;
-=======
 import com.softwareengineeringgroup8.studenthousingsolution.model.Amenities;
 import com.softwareengineeringgroup8.studenthousingsolution.model.Properties;
 import com.softwareengineeringgroup8.studenthousingsolution.model.PropertyLocations;
->>>>>>> development
 import com.softwareengineeringgroup8.studenthousingsolution.model.TenantGroups;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
