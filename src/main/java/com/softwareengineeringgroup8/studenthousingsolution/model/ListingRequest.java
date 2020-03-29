@@ -2,11 +2,12 @@ package com.softwareengineeringgroup8.studenthousingsolution.model;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
+import com.softwareengineeringgroup8.studenthousingsolution.model.PropertyPhotos;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.sql.Date;
 import java.math.BigDecimal;
+import java.util.List;
 
 //@ApiModel(description="How a user's username and password are sent to the application")
 public class ListingRequest implements Serializable {
@@ -84,7 +85,15 @@ public class ListingRequest implements Serializable {
     @ApiModelProperty(notes="Does the house have a heating unit?", example="true",required=true)
     private boolean hasHeat;
 
+    @ApiModelProperty(notes="Add photo",example="hi.jpg",required=true)
+    private String photos;
 
+    public String getPhotos() {
+        return photos;
+    }
+    public void setPhotos(String photos) {
+        this.photos = photos;
+    }
 
 
     public int getSleeps() { return sleeps; }
@@ -240,7 +249,7 @@ public class ListingRequest implements Serializable {
                           BigDecimal price, int numBedrooms, float numBathrooms, String renovationDate, boolean hasAC,
                           int parkingspots, boolean hasLaundry, boolean allowPets, boolean allowSmoking, boolean hasWater,
                           boolean hasGasElec, boolean isFurnished, boolean hasAppliances, boolean hasTrashPickup, boolean hasHeat,
-                          int sleeps) {
+                          int sleeps, String photos) {
         this.title = title;
         this.address = address;
         this.city = city;
@@ -263,6 +272,7 @@ public class ListingRequest implements Serializable {
         this.hasHeat = hasHeat;
         this.desc=description;
         this.sleeps=sleeps;
+        this.photos = photos;
     }
 
 

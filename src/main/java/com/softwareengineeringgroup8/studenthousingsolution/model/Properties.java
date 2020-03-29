@@ -64,7 +64,8 @@ public class Properties {
     }
 
 
-    public Properties(User landlord, String title, Amenities amenities, PropertyDescriptions description, PropertyLocations location, int pageViews) {
+    public Properties(User landlord, String title, Amenities amenities, PropertyDescriptions description, PropertyLocations location, int pageViews,
+    List<PropertyPhotos> photos) {
 
         this.landlord = landlord;
         this.title = title;
@@ -72,7 +73,7 @@ public class Properties {
         this.description = description;
         this.location = location;
         this.pageViews = pageViews;
-       // this.photos = photos; ADD BACK LATER
+        this.photos = photos;
     }
 
     public int getId() {return id;}

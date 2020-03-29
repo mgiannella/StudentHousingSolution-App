@@ -3,21 +3,14 @@ package com.softwareengineeringgroup8.studenthousingsolution.service;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.softwareengineeringgroup8.studenthousingsolution.exceptions.ValidationException;
+import com.softwareengineeringgroup8.studenthousingsolution.model.*;
+import com.softwareengineeringgroup8.studenthousingsolution.repository.*;
 import com.softwareengineeringgroup8.studenthousingsolution.model.User;
-import com.softwareengineeringgroup8.studenthousingsolution.repository.UserRepository;
-import com.softwareengineeringgroup8.studenthousingsolution.model.Properties;
-import com.softwareengineeringgroup8.studenthousingsolution.model.ListingRequest;
-import com.softwareengineeringgroup8.studenthousingsolution.model.User;
-import com.softwareengineeringgroup8.studenthousingsolution.model.Amenities;
-import com.softwareengineeringgroup8.studenthousingsolution.model.PropertyLocations;
-import com.softwareengineeringgroup8.studenthousingsolution.model.PropertyDescriptions;
-import com.softwareengineeringgroup8.studenthousingsolution.repository.PropertiesRepository;
-import com.softwareengineeringgroup8.studenthousingsolution.repository.AmenitiesRepository;
-import com.softwareengineeringgroup8.studenthousingsolution.repository.PropertyDescriptionsRepository;
-import com.softwareengineeringgroup8.studenthousingsolution.repository.PropertyLocationsRepository;
+
 import java.math.BigDecimal;
 import java.sql.Date;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +27,8 @@ public class ListingService {
     private PropertyDescriptionsRepository descRepository;
     @Autowired
     private PropertyLocationsRepository locRepository;
+    @Autowired
+    private PropertyPhotosRepository photosRepository;
     @Autowired
     private UserRepository userRepository;
 
@@ -77,9 +72,10 @@ public class ListingService {
 
 
             String title=request.getTitle();
-
-
-            Properties createProp = new Properties(landlord,title, createAmen, createDesc, createLocation, 0);
+            List<PropertyPhotos> photos = new ArrayList<PropertyPhotos>();
+            Properties createProp = new Properties(landlord,title, createAmen, createDesc, createLocation, 0,photos);
+            createProp.getPhotos().add(new PropertyPhotos(1,request.getPhotos(),createProp));
+            //photosRepository.save(photos);
             propRepository.save(createProp);
     }
 
@@ -90,6 +86,7 @@ public class ListingService {
 
     public void uploadPhoto() {
         //photos
+
     }
 
     /*
