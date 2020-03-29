@@ -3,12 +3,18 @@ package com.softwareengineeringgroup8.studenthousingsolution.service;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.softwareengineeringgroup8.studenthousingsolution.model.TenantGroups;
+import com.softwareengineeringgroup8.studenthousingsolution.model.User;
+import com.softwareengineeringgroup8.studenthousingsolution.repository.PaymentRecordRepository;
+import com.softwareengineeringgroup8.studenthousingsolution.repository.PaymentTypeRepository;
+import com.softwareengineeringgroup8.studenthousingsolution.repository.UserRepository;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
 import com.stripe.model.Customer;
 import com.stripe.model.Token;
 import com.stripe.model.*;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +30,16 @@ public class StripeClient {
 
 
     @Autowired
+    private PaymentRecordRepository paymentRecordRepository;
+    @Autowired
+    private PaymentTypeRepository paymentTypeRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private TenantGroupsService tenantGroupsService;
+    @Autowired
+    private PropertyService propertyService;
+
     StripeClient() {
         Stripe.apiKey = "sk_test_OmrxXx3SrMP0kubI9Mmkm5rP00UhLqD8c7";
     }
@@ -51,7 +67,7 @@ public class StripeClient {
     }
 
     //Creates customer with a card
-    public String createCharge(String email, String card_num, String monthNum, String yearNum, String ccv) throws StripeException {
+    public String createCharge(String email, String card_num, String monthNum, String yearNum, String ccv, User tenant) throws StripeException {
 
        /*  Map<String, Object> customerParameter = new HashMap<String, Object>();
         String CustomerId=null;
@@ -168,6 +184,7 @@ public class StripeClient {
 
 }
 */
+
         Map<String, Object> customerParameter = new HashMap<String, Object>();
         String CustomerId=null;
 
@@ -213,6 +230,9 @@ public class StripeClient {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+
+        List<TenantGroups> tglist= tenantGroupsService.getGroupByTenant(tenant);
+
 
         return chargeId;
     }
