@@ -1,5 +1,6 @@
 package com.softwareengineeringgroup8.studenthousingsolution.service;
 
+import com.softwareengineeringgroup8.studenthousingsolution.exceptions.ValidationException;
 import com.softwareengineeringgroup8.studenthousingsolution.model.*;
 import com.softwareengineeringgroup8.studenthousingsolution.model.PropertyDescriptions;
 import com.softwareengineeringgroup8.studenthousingsolution.model.PropertyLocations;
@@ -35,13 +36,34 @@ public class PropertyService {
         return propertyRepository.findAll();
     }
 
+    public List<Properties> getByZip(String zip) throws ValidationException{
+        try{
+            List<PropertyLocations> propertyLocationsList = propertyLocationsRepository.findByZip(zip);
+            List<Properties> properties = propertyRepository.findByLocations(propertyLocationsList);
+            return properties;
+        }catch(Error e){
+            throw new ValidationException("Invalid input");
+        }
+    }
+
+    public List<Properties> filterSearch(SearchFilterRequest values) throws ValidationException{
+        try {
+            List<PropertyLocations> propertyLocationsList = propertyLocationsRepository.findByZip(values.getZip());
+            List<Amenities> amenitiesList = amenitiesRepository.filterSearch(values);
+            List<Properties> properties = propertyRepository.findByAmenityAndLocation(amenitiesList, propertyLocationsList);
+            return properties;
+        }catch(Error e){
+            throw new ValidationException("Invalid input, check filters and try again");
+        }
+    }
+    // Test Method to show how to create properties
     public boolean create() {
         List<PropertyPhotos> photosList = new ArrayList<PropertyPhotos>();
-        photosList.add(new PropertyPhotos(1,"yourmomshouse"));
-        photosList.add(new PropertyPhotos(2,"yoursistersbutt"));
         Amenities x = amenitiesRepository.findById(1);
-        propertyRepository.save(new Properties(userRepository.findById(4), "Words", x, propertyDescriptionsRepository.findById(1), propertyLocationsRepository.findById(1), 0));
-        //photosList  REMOVED FROM ABOVE ADD BACK LATER
+      //  Properties z = new Properties(userRepository.findById(4), "Words", x, propertyDescriptionsRepository.findById(1), propertyLocationsRepository.findById(1), 0,photosList);
+      //  z.getPhotos().add(new PropertyPhotos(1,"name2",z));
+        //z.getPhotos().add(new PropertyPhotos(2,"name",z));
+        //propertyRepository.save(z);
         return true;
     }
 }

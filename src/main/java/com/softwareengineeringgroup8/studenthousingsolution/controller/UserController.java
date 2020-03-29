@@ -115,13 +115,6 @@ public class UserController {
         }
     }
 
-    @GetMapping("/test")
-    @JsonView(PropertyView.ExtendedInfo.class)
-    public boolean test(){
-        try{
-            return propertyService.create();
-        }catch(ValidationException e){
-            return false;
-        }
-    }
+
 }
+

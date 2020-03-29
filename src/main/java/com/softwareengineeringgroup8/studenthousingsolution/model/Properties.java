@@ -52,9 +52,10 @@ public class Properties {
 
     @OneToMany(
             cascade = CascadeType.ALL,
-            orphanRemoval = true
+            orphanRemoval = true,
+            mappedBy="property"
     )
-    @JoinColumn(name="propertyid")
+    //@JoinColumn(name="propertyid")
     @JsonView(PropertyView.Search.class)
     private List<PropertyPhotos> photos;
 

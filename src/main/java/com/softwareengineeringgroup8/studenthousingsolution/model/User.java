@@ -97,14 +97,22 @@ public class User {
         this.lastName = lastName;
     }
 
-    public String getPhone(){
-        return '+'+phoneCode+phone;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setPhone(String phoneNumber){
-        this.phone = phoneNumber.substring(3);
-        this.phoneCode = phoneNumber.substring(0,2);
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
+
+    public String getPhoneCode() {
+        return phoneCode;
+    }
+
+    public void setPhoneCode(String phoneCode) {
+        this.phoneCode = phoneCode;
+    }
+
     public UserType getType(){ return this.type; }
 
     public void setType(UserType type) {this.type = type;}

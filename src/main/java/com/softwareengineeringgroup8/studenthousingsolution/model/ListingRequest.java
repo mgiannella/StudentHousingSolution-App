@@ -85,6 +85,8 @@ public class ListingRequest implements Serializable {
     private boolean hasHeat;
 
 
+
+
     public int getSleeps() { return sleeps; }
     public void setSleeps(int sleeps) { this.sleeps =sleeps; }
 
@@ -227,11 +229,11 @@ public class ListingRequest implements Serializable {
     }
 
 
-
     public String getDesc() { return desc; }
     public void setDesc(String desc) {
         this.desc = desc;
     }
+
 
 
     public ListingRequest(String title, String description, String address, String city, String state, String zipCode,
@@ -262,13 +264,6 @@ public class ListingRequest implements Serializable {
         this.desc=description;
         this.sleeps=sleeps;
     }
-
-
-
-
-
-
-
 
 
 
