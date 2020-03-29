@@ -4,6 +4,7 @@ package com.softwareengineeringgroup8.studenthousingsolution.model;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -49,9 +50,18 @@ public class Properties {
     @JsonView(PropertyView.Search.class)
     private int pageViews;
 
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @JoinColumn(name="propertyid")
+    @JsonView(PropertyView.Search.class)
+    private List<PropertyPhotos> photos;
+
     public Properties(){
 
     }
+
 
     public Properties(User landlord, String title, Amenities amenities, PropertyDescriptions description, PropertyLocations location, int pageViews) {
 
@@ -61,6 +71,7 @@ public class Properties {
         this.description = description;
         this.location = location;
         this.pageViews = pageViews;
+       // this.photos = photos;
     }
 
     public int getId() {return id;}
@@ -119,6 +130,14 @@ public class Properties {
 
     public void setPageViews(int pageViews) {
         this.pageViews = pageViews;
+    }
+
+    public List<PropertyPhotos> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(List<PropertyPhotos> photos) {
+        this.photos = photos;
     }
 
     @Override

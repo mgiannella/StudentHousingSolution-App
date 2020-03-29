@@ -82,6 +82,7 @@ public class Amenities {
 
     public Amenities(BigDecimal price, int numBedrooms, float numBathrooms, Date renovationDate, boolean hasAC, int parkingSpots, boolean hasLaundry, boolean petsAllowed, boolean smokingAllowed,
                      boolean waterUtility, boolean gasElectricUtil, boolean isFurnished, boolean hasAppliances, boolean trashPickedUpl, boolean hasHeat) {
+
         this.price = price;
         this.numBedrooms = numBedrooms;
         this.numBathrooms = numBathrooms;

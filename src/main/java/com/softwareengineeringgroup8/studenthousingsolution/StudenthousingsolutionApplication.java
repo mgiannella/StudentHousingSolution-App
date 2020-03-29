@@ -11,12 +11,14 @@ import com.softwareengineeringgroup8.studenthousingsolution.controller.*;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import java.util.Arrays;
+import java.util.Collections;
+
 
 import java.util.Arrays;
 import java.util.Collections;
 
 @SpringBootApplication
-
 public class StudenthousingsolutionApplication {
 
     public static void main(String[] args) {

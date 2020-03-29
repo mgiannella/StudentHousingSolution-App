@@ -117,11 +117,11 @@ public class UserController {
 
     @GetMapping("/test")
     @JsonView(PropertyView.ExtendedInfo.class)
-    public List<Properties> test(){
+    public boolean test(){
         try{
-            return propertyService.getAll();
+            return propertyService.create();
         }catch(ValidationException e){
-            return null;
+            return false;
         }
     }
 }
