@@ -1,5 +1,6 @@
 package com.softwareengineeringgroup8.studenthousingsolution.service;
 
+import com.softwareengineeringgroup8.studenthousingsolution.exceptions.ValidationException;
 import com.softwareengineeringgroup8.studenthousingsolution.model.*;
 import com.softwareengineeringgroup8.studenthousingsolution.model.PropertyDescriptions;
 import com.softwareengineeringgroup8.studenthousingsolution.model.PropertyLocations;
@@ -35,11 +36,25 @@ public class PropertyService {
         return propertyRepository.findAll();
     }
 
-    public List<Properties> filterSearch(SearchFilterRequest values){
-        List<PropertyLocations> propertyLocationsList = propertyLocationsRepository.findByZip(values.getZip());
-        List<Amenities> amenitiesList = amenitiesRepository.filterSearch(values);
-        List<Properties> properties = propertyRepository.findByAmenityAndLocation(amenitiesList, propertyLocationsList);
-        return properties;
+    public List<Properties> getByZip(String zip) throws ValidationException{
+        try{
+            List<PropertyLocations> propertyLocationsList = propertyLocationsRepository.findByZip(zip);
+            List<Properties> properties = propertyRepository.findByLocations(propertyLocationsList);
+            return properties;
+        }catch(Error e){
+            throw new ValidationException("Invalid input");
+        }
+    }
+
+    public List<Properties> filterSearch(SearchFilterRequest values) throws ValidationException{
+        try {
+            List<PropertyLocations> propertyLocationsList = propertyLocationsRepository.findByZip(values.getZip());
+            List<Amenities> amenitiesList = amenitiesRepository.filterSearch(values);
+            List<Properties> properties = propertyRepository.findByAmenityAndLocation(amenitiesList, propertyLocationsList);
+            return properties;
+        }catch(Error e){
+            throw new ValidationException("Invalid input, check filters and try again");
+        }
     }
     public boolean create() {
         List<PropertyPhotos> photosList = new ArrayList<PropertyPhotos>();

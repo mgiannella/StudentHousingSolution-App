@@ -114,13 +114,4 @@ public class UserController {
         }
     }
 
-    @PostMapping("/test")
-    @JsonView(PropertyView.ExtendedInfo.class)
-    public List<Properties> test(@RequestBody SearchFilterRequest values){
-        try{
-            return propertyService.filterSearch(values);
-        }catch(ValidationException e){
-            return null;
-        }
-    }
 }

@@ -13,4 +13,7 @@ public interface PropertiesRepository extends JpaRepository<Properties, Integer>
     @Query("Select p FROM Properties p WHERE (p.amenities IN ?1) and (p.location in ?2)")
     List<Properties> findByAmenityAndLocation(List<Amenities> a, List<PropertyLocations> pl);
 
+    @Query("Select p FROM Properties p WHERE p.location in ?1")
+    List<Properties> findByLocations(List<PropertyLocations> pl);
+
 }

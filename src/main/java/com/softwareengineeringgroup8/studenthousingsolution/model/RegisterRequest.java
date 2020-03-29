@@ -22,8 +22,8 @@ public class RegisterRequest implements Serializable {
     @Size(min=10, max=10)
     @ApiModelProperty(notes="Phone Number, with no dashes or spaces", example="5555555555", required = true)
     private String phone;
-    @Size(min=2, max=2)
-    @ApiModelProperty(notes="Two digit country code", example="01", required = true)
+    @Size(min=1, max=5)
+    @ApiModelProperty(notes="country code", example="1", required = true)
     private String phoneCode;
     @Size(min=1, max=50)
     @ApiModelProperty(notes="First Name", example="Test", required = true)
