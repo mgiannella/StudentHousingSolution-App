@@ -3,6 +3,7 @@ package com.softwareengineeringgroup8.studenthousingsolution.repository;
 import com.softwareengineeringgroup8.studenthousingsolution.model.Amenities;
 import com.softwareengineeringgroup8.studenthousingsolution.model.Properties;
 import com.softwareengineeringgroup8.studenthousingsolution.model.PropertyLocations;
+import com.softwareengineeringgroup8.studenthousingsolution.model.TenantGroups;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -15,5 +16,8 @@ public interface PropertiesRepository extends JpaRepository<Properties, Integer>
 
     @Query("Select p FROM Properties p WHERE p.location in ?1")
     List<Properties> findByLocations(List<PropertyLocations> pl);
+
+    @Query("Select p FROM Properties p WHERE p.group = ?1")
+    List<Properties> findByTenantGroup(TenantGroups tg);
 
 }
