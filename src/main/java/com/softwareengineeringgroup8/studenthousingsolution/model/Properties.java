@@ -63,7 +63,10 @@ public class Properties {
 
     }
 
-    public Properties(User landlord, String title, Amenities amenities, PropertyDescriptions description, PropertyLocations location, int pageViews, List<PropertyPhotos> photos) {
+
+    public Properties(User landlord, String title, Amenities amenities, PropertyDescriptions description, PropertyLocations location, int pageViews,
+    List<PropertyPhotos> photos) {
+
         this.landlord = landlord;
         this.title = title;
         this.amenities = amenities;
