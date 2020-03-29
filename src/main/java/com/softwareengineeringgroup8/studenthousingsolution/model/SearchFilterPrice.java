@@ -6,9 +6,9 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 public class SearchFilterPrice implements Serializable {
-    @ApiModelProperty(notes="Minimum price", example="1000", required=false)
+    @ApiModelProperty(notes="Minimum price", example="1000", required=true)
     private BigDecimal min;
-    @ApiModelProperty(notes="Maximum price", example="3000", required=false)
+    @ApiModelProperty(notes="Maximum price", example="3000", required=true)
     private BigDecimal max;
 
     public SearchFilterPrice() {

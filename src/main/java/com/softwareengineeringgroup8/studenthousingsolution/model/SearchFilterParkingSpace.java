@@ -5,9 +5,9 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 
 public class SearchFilterParkingSpace implements Serializable {
-    @ApiModelProperty(notes="Minimum amount of parking spaces", example="3", required=false)
+    @ApiModelProperty(notes="Minimum amount of parking spaces", example="3", required=true)
     private int min;
-    @ApiModelProperty(notes="Maximum amount of parking spaces", example="4", required=false)
+    @ApiModelProperty(notes="Maximum amount of parking spaces", example="4", required=true)
     private int max;
 
     public SearchFilterParkingSpace() {

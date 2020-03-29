@@ -28,37 +28,48 @@ public class SearchFilterRequest implements Serializable {
 
     private SearchFilterSleeps sleeps;
 
-    @ApiModelProperty(notes="Does the property have central air conditioning?", example="true", required=false)
+    @ApiModelProperty(notes="Zip code", example="08901", required=true)
+    private String zip;
+
+    @ApiModelProperty(notes="Does the property have central air conditioning?", example="true", required=true)
     private boolean hasAC;
 
-    @ApiModelProperty(notes="Does the property have on-site laundry?", example="true", required=false)
+    @ApiModelProperty(notes="Does the property have on-site laundry?", example="true", required=true)
     private boolean hasLaundry;
 
-    @ApiModelProperty(notes="Does the property allow pets?", example="true", required=false)
+    @ApiModelProperty(notes="Does the property allow pets?", example="true", required=true)
     private boolean petsAllowed;
 
-    @ApiModelProperty(notes="Can the tenant smoke in the property?", example="true", required=false)
+    @ApiModelProperty(notes="Can the tenant smoke in the property?", example="true", required=true)
     private boolean smokingAllowed;
 
-    @ApiModelProperty(notes="Does the tenant have to pay the water bill?", example="true", required=false)
+    @ApiModelProperty(notes="Does the tenant have to pay the water bill?", example="true", required=true)
     private boolean waterUtility;
 
-    @ApiModelProperty(notes="Does the tenant have to pay gas and electricity?", example="true", required=false)
+    @ApiModelProperty(notes="Does the tenant have to pay gas and electricity?", example="true", required=true)
     private boolean gasElectricUtil;
 
-    @ApiModelProperty(notes="Does the property have all the furniture it needs?", example="true", required=false)
+    @ApiModelProperty(notes="Does the property have all the furniture it needs?", example="true", required=true)
     private boolean isFurnished;
 
-    @ApiModelProperty(notes="Does the property have appliances already?", example="true", required=false)
+    @ApiModelProperty(notes="Does the property have appliances already?", example="true", required=true)
     private boolean hasAppliances;
 
-    @ApiModelProperty(notes="Does the property offer trash pickup by town or landlord?", example="true", required=false)
+    @ApiModelProperty(notes="Does the property offer trash pickup by town or landlord?", example="true", required=true)
     private boolean isTrashPickedUpl;
 
-    @ApiModelProperty(notes="Does the property have heat?", example="true", required=false)
+    @ApiModelProperty(notes="Does the property have heat?", example="true", required=true)
     private boolean hasHeat;
 
     public SearchFilterRequest() {
+    }
+
+    public String getZip() {
+        return zip;
+    }
+
+    public void setZip(String zip) {
+        this.zip = zip;
     }
 
     public SearchFilterSleeps getSleeps() {

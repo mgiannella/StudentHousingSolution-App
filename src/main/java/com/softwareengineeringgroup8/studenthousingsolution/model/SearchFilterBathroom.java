@@ -5,9 +5,9 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 
 public class SearchFilterBathroom implements Serializable {
-    @ApiModelProperty(notes="Minimum amount of bathrooms", example="1", required=false)
+    @ApiModelProperty(notes="Minimum amount of bathrooms", example="1", required=true)
     private float min;
-    @ApiModelProperty(notes="Maximum amount of bathrooms", example="4.5", required=false)
+    @ApiModelProperty(notes="Maximum amount of bathrooms", example="4.5", required=true)
     private float max;
 
     public SearchFilterBathroom() {

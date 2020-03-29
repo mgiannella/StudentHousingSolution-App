@@ -5,8 +5,13 @@ import com.softwareengineeringgroup8.studenthousingsolution.model.PropertyLocati
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 
 @Repository
 public interface PropertyLocationsRepository extends JpaRepository<PropertyLocations,Integer> {
+
+    List<PropertyLocations> findByZip(String zip);
+
     PropertyLocations findById(int id);
 }

@@ -5,9 +5,9 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 
 public class SearchFilterSleeps implements Serializable {
-    @ApiModelProperty(notes="Minimum amount of people the house sleeps", example="3", required=false)
+    @ApiModelProperty(notes="Minimum amount of people the house sleeps", example="3", required=true)
     private int min;
-    @ApiModelProperty(notes="Maximum amount of people the house sleeps", example="4", required=false)
+    @ApiModelProperty(notes="Maximum amount of people the house sleeps", example="4", required=true)
     private int max;
 
     public SearchFilterSleeps() {

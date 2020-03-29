@@ -35,9 +35,11 @@ public class PropertyService {
         return propertyRepository.findAll();
     }
 
-    public List<Amenities> filterSearch(SearchFilterRequest values){
-        List<Amenities> ams = amenitiesRepository.filterSearch(values);
-        return ams;
+    public List<Properties> filterSearch(SearchFilterRequest values){
+        List<PropertyLocations> propertyLocationsList = propertyLocationsRepository.findByZip(values.getZip());
+        List<Amenities> amenitiesList = amenitiesRepository.filterSearch(values);
+        List<Properties> properties = propertyRepository.findByAmenityAndLocation(amenitiesList, propertyLocationsList);
+        return properties;
     }
     public boolean create() {
         List<PropertyPhotos> photosList = new ArrayList<PropertyPhotos>();
