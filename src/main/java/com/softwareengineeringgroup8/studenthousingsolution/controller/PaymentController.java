@@ -56,7 +56,7 @@ public class PaymentController {
 
             }
             //listingService.createListingRequest(request,landlord);
-            stripeClient.createCharge(req.getEmail(), req.getCard_num(), req.getMonthNum(), req.getYearNum(), req.getCcv());
+            stripeClient.createCharge(req.getEmail(), req.getCard_num(), req.getMonthNum(), req.getYearNum(), req.getCcv(), tenant);
 
             stripeClient.transferCharge(req.getEmail());
 

@@ -3,10 +3,13 @@ package com.softwareengineeringgroup8.studenthousingsolution.service;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.softwareengineeringgroup8.studenthousingsolution.model.PaymentRecord;
+import com.softwareengineeringgroup8.studenthousingsolution.model.Properties;
 import com.softwareengineeringgroup8.studenthousingsolution.model.TenantGroups;
 import com.softwareengineeringgroup8.studenthousingsolution.model.User;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.PaymentRecordRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.PaymentTypeRepository;
+import com.softwareengineeringgroup8.studenthousingsolution.repository.PropertiesRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.UserRepository;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
@@ -14,6 +17,9 @@ import com.stripe.model.Charge;
 import com.stripe.model.Customer;
 import com.stripe.model.Token;
 import com.stripe.model.*;
+
+import java.math.BigDecimal;
+import java.sql.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static java.lang.String.valueOf;
+import static jdk.nashorn.internal.runtime.regexp.joni.Syntax.Java;
 
 
 @Service
@@ -39,6 +46,8 @@ public class StripeClient {
     private TenantGroupsService tenantGroupsService;
     @Autowired
     private PropertyService propertyService;
+    @Autowired
+    private PropertiesRepository propertiesRepository;
 
     StripeClient() {
         Stripe.apiKey = "sk_test_OmrxXx3SrMP0kubI9Mmkm5rP00UhLqD8c7";
@@ -232,7 +241,12 @@ public class StripeClient {
         }
 
         List<TenantGroups> tglist= tenantGroupsService.getGroupByTenant(tenant);
+        List<Properties> propList= propertiesRepository.findByTenantGroup(tglist.get(0));
 
+        Properties x = propList.get(0);
+        PaymentRecord paymentRecord = new PaymentRecord(new Date(new java.util.Date().getTime()),x, tenant, paymentTypeRepository.findByPTypeDesc("TENANT_MONTHLY"), new BigDecimal(1245));
+
+        paymentRecordRepository.save(paymentRecord);
 
         return chargeId;
     }

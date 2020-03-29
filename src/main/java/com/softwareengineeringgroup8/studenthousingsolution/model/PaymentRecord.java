@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 import java.sql.Date;
-import java.util.Properties;
+import com.softwareengineeringgroup8.studenthousingsolution.model.Properties;
 
 
 @Entity
