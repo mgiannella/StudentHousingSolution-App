@@ -48,28 +48,28 @@ public class PaymentController {
     //@RequestMapping(value="/create-charge", method=RequestMethod.POST)
     //@ResponseBody
     @PostMapping("/create-charge")
-    public PaymentResponse createCharge(@RequestBody ChargeRequest req, @RequestHeader("Authorization") String str) throws StripeException {
+    public String createCharge(@RequestBody ChargeRequest req, @RequestHeader("Authorization") String str) throws StripeException {
         try {
             User tenant = userPermissionService.loadUserByJWT(str);
             if (!userPermissionService.assertPermission(tenant, UserRoles.ROLE_TENANT)) {
                 //return false;
-                return new PaymentResponse(false, "invalid authentication");
+                return "invalid authentication";
             }
             //listingService.createListingRequest(request,landlord);
             String chargeId= stripeClient.createCharge(req.getEmail(), req.getCard_num(), req.getMonthNum(), req.getYearNum(), req.getCcv(), tenant);
 
             String transferId=stripeClient.transferCharge(req.getEmail());
             if (chargeId == null) {
-                return new PaymentResponse(false, "An error occurred while trying to create a charge.");
+                return "An error occurred while trying to create a charge.";
             }
 
-            return new PaymentResponse(true, "Success! Your charge id is " + chargeId + " Your transaction id: " + transferId);
+            return "Success! Your charge id is " + chargeId + " Your transaction id: " + transferId;
 
             //return true;
         } catch (Error | NotFoundException e) {
             System.out.println(e);
             //return false;
-            return new PaymentResponse(false);
+            return "error";
         }
     }
 }
