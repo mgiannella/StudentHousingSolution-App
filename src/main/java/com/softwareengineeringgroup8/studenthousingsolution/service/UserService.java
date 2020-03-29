@@ -24,7 +24,7 @@ public class UserService {
     private UserRepository userRepository;
     @Autowired
     private UserTypeRepository userTypeRepository;
-
+    // create a user with the registration values
     public void createUser(RegisterRequest registerRequest) throws ValidationException{
         String username = registerRequest.getUsername();
         if (userRepository.existsByUsername(registerRequest.getUsername())){
@@ -39,14 +39,14 @@ public class UserService {
         UserType type = userTypeRepository.findByType(registerRequest.getUserType());
         userRepository.save(new User(username, encodedPassword, email, firstName, lastName, phone, phoneCode,type));
     }
-
+    // delete user
     public void deleteUser(User user) throws ValidationException{
         if (!userRepository.existsByUsername(user.getUsername())){
             throw new ValidationException("User doesn't exist");
         }
         userRepository.deleteById(user.getId());
     }
-
+    // update a user with new information
     public void updateUser(User user, RegisterRequest changes){
         user.setEmail(changes.getEmail());
         user.setFullname(changes.getFirstName(), changes.getLastName());
@@ -55,7 +55,7 @@ public class UserService {
         user.setType(type);
         userRepository.save(user);
     }
-
+    // change password
     public boolean changePassword(User user, String oldPass, String newPass){
         if(!new BCryptPasswordEncoder().matches(oldPass, user.getPassword())){
             return false;
@@ -64,7 +64,7 @@ public class UserService {
         userRepository.save(user);
         return true;
     }
-
+    // returns user with certain userId
     public User getUserById(int id) throws ValidationException{
         try{
             return userRepository.findById(id);

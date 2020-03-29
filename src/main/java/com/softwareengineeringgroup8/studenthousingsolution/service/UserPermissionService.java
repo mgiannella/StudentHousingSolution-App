@@ -20,7 +20,7 @@ public class UserPermissionService {
     public UserPermissionService(JwtToken jwtTokenUtil) {
         this.jwtTokenUtil = jwtTokenUtil;
     }
-
+    // given a JWT returns user assigned that token
     public User loadUserByJWT(String token) throws NotFoundException {
         String jwtToken, username = null;
         if (token != null && token.startsWith("Bearer ")) {
@@ -51,7 +51,7 @@ public class UserPermissionService {
         return userRepository.findByUsername(username);
 
     }
-
+    // Compares user and enum type, if equal returns true
     public boolean assertPermission(User user, UserRoles role){
         if(user.getType().getUserTypeDesc().equals("Landlord") && role == UserRoles.ROLE_LANDLORD){
             return true;

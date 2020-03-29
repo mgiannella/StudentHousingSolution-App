@@ -18,7 +18,7 @@ import static springfox.documentation.builders.PathSelectors.regex;
 @Import(BeanValidatorPluginsConfiguration.class)
 @Configuration
 public class SwaggerConfig {
-
+    // All Configuration for Swagger
     ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("Student Housing Solution")

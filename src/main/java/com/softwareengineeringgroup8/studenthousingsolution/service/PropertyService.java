@@ -32,10 +32,12 @@ public class PropertyService {
     @Autowired
     private PropertyPhotosRepository propertyPhotosRepository;
 
+    // returns all properties
     public List<Properties> getAll(){
         return propertyRepository.findAll();
     }
 
+    // returns all properties within a certain zip code
     public List<Properties> getByZip(String zip) throws ValidationException{
         try{
             List<PropertyLocations> propertyLocationsList = propertyLocationsRepository.findByZip(zip);
@@ -46,6 +48,7 @@ public class PropertyService {
         }
     }
 
+    // returns all properties that fit filters
     public List<Properties> filterSearch(SearchFilterRequest values) throws ValidationException{
         try {
             List<PropertyLocations> propertyLocationsList = propertyLocationsRepository.findByZip(values.getZip());
@@ -56,7 +59,8 @@ public class PropertyService {
             throw new ValidationException("Invalid input, check filters and try again");
         }
     }
-    // Test Method to show how to create properties
+
+    /* Test Method to show how to create properties
     public boolean create() {
         List<PropertyPhotos> photosList = new ArrayList<PropertyPhotos>();
         Amenities x = amenitiesRepository.findById(1);
@@ -65,5 +69,5 @@ public class PropertyService {
         z.getPhotos().add(new PropertyPhotos(2,"name",z));
         propertyRepository.save(z);
         return true;
-    }
+    }*/
 }
