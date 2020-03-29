@@ -1,14 +1,11 @@
 package com.softwareengineeringgroup8.studenthousingsolution.service;
 
-<<<<<<< HEAD
 import com.softwareengineeringgroup8.studenthousingsolution.model.Properties;
 import com.softwareengineeringgroup8.studenthousingsolution.model.TenantGroups;
 import com.softwareengineeringgroup8.studenthousingsolution.model.User;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.PropertiesRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.PropertyDescriptionsRepository;
-=======
 import com.softwareengineeringgroup8.studenthousingsolution.exceptions.ValidationException;
->>>>>>> development
 import com.softwareengineeringgroup8.studenthousingsolution.model.*;
 import com.softwareengineeringgroup8.studenthousingsolution.model.PropertyDescriptions;
 import com.softwareengineeringgroup8.studenthousingsolution.model.PropertyLocations;
