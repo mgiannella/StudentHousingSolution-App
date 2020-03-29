@@ -3,6 +3,7 @@ package com.softwareengineeringgroup8.studenthousingsolution.controller;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.softwareengineeringgroup8.studenthousingsolution.exceptions.ValidationException;
 import com.softwareengineeringgroup8.studenthousingsolution.model.*;
+import com.softwareengineeringgroup8.studenthousingsolution.model.User;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.AmenitiesRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.UserRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.UserTypeRepository;
@@ -114,4 +115,6 @@ public class UserController {
         }
     }
 
+
 }
+
