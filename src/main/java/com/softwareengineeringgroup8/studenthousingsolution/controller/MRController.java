@@ -34,11 +34,18 @@ public class MRController {
     @ApiOperation(value = "Create Maintenance Request")
     public Boolean createRequest(@RequestHeader("Authorization") String authString, @RequestBody MaintenanceRequestData data) throws NoSuchAlgorithmException {
         try {
-            User tenant = userPermissionService.loadUserByJWT(authString);
-            List<TenantGroups> tenantGroupsList = tenantGroupsService.getGroupByTenant(tenant);
+
+            User user = userPermissionService.loadUserByJWT(authString);
+            if (!userPermissionService.assertPermission(user, UserRoles.ROLE_TENANT)) {
+                return false;
+            }
+            if(data.getNotes().equals("")){
+                return false;
+            }
+            List<TenantGroups> tenantGroupsList = tenantGroupsService.getGroupByTenant(user);
             TenantGroups tenantGroup = tenantGroupsList.get(0);
             Properties prop = propertyService.getPropertyByGroup(tenantGroup);
-            mrService.createMaintenanceRequest(tenant, prop, data);
+            mrService.createMaintenanceRequest(user, prop, data);
             return true;
         } catch (Error | NotFoundException e) {
             System.out.println(e);
@@ -50,8 +57,11 @@ public class MRController {
     @ApiOperation(value = "View Requests")
     public List<MaintenanceRequest> viewRequest(@RequestHeader("Authorization") String authString){
         try {
-            User landlord = userPermissionService.loadUserByJWT(authString);
-            Properties prop = propertyService.getPropertyByLandlord(landlord);
+            User user = userPermissionService.loadUserByJWT(authString);
+            if (!userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
+                return null;
+            }
+            Properties prop = propertyService.getPropertyByLandlord(user);
             return mrService.getRequestByProperty(prop);
         } catch (Error| NotFoundException e) {
             System.out.println(e);
@@ -64,8 +74,11 @@ public class MRController {
     @ApiOperation(value = "Update Maintenance Request")
     public Boolean updateRequest(@PathVariable("id") int id, @RequestHeader("Authorization") String authString, @RequestBody MaintenanceUpdateData data) {
         try {
-            User landlord = userPermissionService.loadUserByJWT(authString);
-            Properties prop = propertyService.getPropertyByLandlord(landlord);
+            User user = userPermissionService.loadUserByJWT(authString);
+            if (!userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
+                return false;
+            }
+            Properties prop = propertyService.getPropertyByLandlord(user);
             List<MaintenanceRequest> requests = mrService.getRequestByProperty(prop);
             MaintenanceRequest request = mrService.getRequestById(id);
             mrService.updateMaintenanceRequest(request, data);
