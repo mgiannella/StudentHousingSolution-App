@@ -21,6 +21,8 @@ import com.stripe.model.*;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.List;
+
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -54,7 +56,7 @@ public class StripeClient {
         Stripe.apiKey = "sk_test_OmrxXx3SrMP0kubI9Mmkm5rP00UhLqD8c7";
     }
 
-    public String transferCharge(String email)throws StripeException{
+    public String transferCharge(String email) throws StripeException {
 
         String transactionId = null;
 
@@ -67,7 +69,7 @@ public class StripeClient {
             transferParam.put("transfer_group", "testTrans");
             Transfer transfer = Transfer.create(transferParam);
 
-            transactionId= transfer.getId();
+            transactionId = transfer.getId();
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -80,25 +82,25 @@ public class StripeClient {
     public String createCharge(String email, String card_num, String monthNum, String yearNum, String ccv, User tenant) throws StripeException {
 
         Map<String, Object> customerParameter = new HashMap<String, Object>();
-        String CustomerId=null;
+        String CustomerId = null;
 
         customerParameter.put("description", "Customer for " + email);
         customerParameter.put("email", email);
 
         Customer newCustomer = Customer.create(customerParameter);
 
-        Map <String, Object> cardParam = new HashMap<String, Object> ();
+        Map<String, Object> cardParam = new HashMap<String, Object>();
         cardParam.put("number", card_num);
         cardParam.put("exp_month", monthNum);
         cardParam.put("exp_year", yearNum);
         cardParam.put("cvc", ccv);
 
-        Map <String, Object> tokenParam = new HashMap<String, Object>();
+        Map<String, Object> tokenParam = new HashMap<String, Object>();
         tokenParam.put("card", cardParam);
 
         Token token = Token.create(tokenParam);
 
-        Map <String, Object> source = new HashMap<String, Object>();
+        Map<String, Object> source = new HashMap<String, Object>();
         source.put("source", token.getId());
 
 
@@ -106,7 +108,7 @@ public class StripeClient {
 
         newCustomer.getSources().create(source);
         //charging a customer
-        String chargeId=null;
+        String chargeId = null;
         //Long payamount=null;
         try {
 
@@ -117,10 +119,9 @@ public class StripeClient {
             chargeParam.put("customer", CustomerId);
 
 
-
             //create a charge
             Charge charge = Charge.create(chargeParam);
-            chargeId=charge.getId();
+            chargeId = charge.getId();
 
             //Stores amount into long variable
             //payamount= charge.getAmount();
@@ -130,12 +131,12 @@ public class StripeClient {
             ex.printStackTrace();
         }
 
-        List<TenantGroups> tglist= tenantGroupsService.getGroupByTenant(tenant);
-        List<Properties> propList= propertiesRepository.findByTenantGroup(tglist.get(0));
+        List<TenantGroups> tglist = tenantGroupsService.getGroupByTenant(tenant);
+        List<Properties> propList = propertiesRepository.findByTenantGroup(tglist.get(0));
 
         Properties x = propList.get(0);
 
-        // Gets property description from front end selection
+            // Gets property description from front end selection
         /*
            if (chargeDescription== "Complete Rent"){
             ptypeDesc="TENANT_MONTHLY"
@@ -151,15 +152,16 @@ public class StripeClient {
            }
          */
 
-        String ptypeDesc= "TENANT_MONTHLY";
+            String ptypeDesc = "TENANT_MONTHLY";
 
 
+            PaymentRecord paymentRecord = new PaymentRecord(new Date(new java.util.Date().getTime()), x, tenant, paymentTypeRepository.findBypTypeDesc(ptypeDesc), new BigDecimal(1245));
 
-        PaymentRecord paymentRecord = new PaymentRecord(new Date(new java.util.Date().getTime()),x, tenant, paymentTypeRepository.findBypTypeDesc(ptypeDesc), new BigDecimal(1245));
+            paymentRecordRepository.save(paymentRecord);
 
-        paymentRecordRepository.save(paymentRecord);
+            return chargeId;
 
-        return chargeId;
+        }
     }
-}
+
 
