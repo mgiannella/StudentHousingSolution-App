@@ -26,12 +26,12 @@ public class MaintenanceRequest {
     @JoinColumn(name="MaintenanceStatusID")
     private MaintenanceStatus status;
 
-
     @ManyToOne
     @JoinColumn(name="tenantID", referencedColumnName = "userid")
     private User tenant;
 
-
+    public MaintenanceRequest(){
+    }
 
 
     public int getRequestID() { return this.requestID; }
