@@ -14,6 +14,9 @@ public class MaintenanceStatus {
     private String statusDesc;
 
     public MaintenanceStatus(){
+
+
+
     }
 
     public int getStatusID() { return statusID; }

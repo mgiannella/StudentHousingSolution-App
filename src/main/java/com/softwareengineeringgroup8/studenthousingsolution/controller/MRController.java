@@ -1,6 +1,16 @@
 package com.softwareengineeringgroup8.studenthousingsolution.controller;
 
 
+
+import com.softwareengineeringgroup8.studenthousingsolution.model.MaintenanceRequestData;
+import com.softwareengineeringgroup8.studenthousingsolution.repository.MaintenanceStatusRepository;
+import com.softwareengineeringgroup8.studenthousingsolution.service.MRService;
+import com.sun.org.apache.xpath.internal.operations.Bool;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import java.security.NoSuchAlgorithmException;
 import com.softwareengineeringgroup8.studenthousingsolution.model.*;
 import com.softwareengineeringgroup8.studenthousingsolution.service.*;
 import io.swagger.annotations.ApiModel;
@@ -34,24 +44,36 @@ public class MRController {
     @ApiOperation(value = "Create Maintenance Request")
     public Boolean createRequest(@RequestHeader("Authorization") String authString, @RequestBody MaintenanceRequestData data) throws NoSuchAlgorithmException {
         try {
-            User tenant = userPermissionService.loadUserByJWT(authString);
-            List<TenantGroups> tenantGroupsList = tenantGroupsService.getGroupByTenant(tenant);
+
+            User user = userPermissionService.loadUserByJWT(authString);
+            if (!userPermissionService.assertPermission(user, UserRoles.ROLE_TENANT)) {
+                return false;
+            }
+            if(data.getNotes().equals("")){
+                return false;
+            }
+            List<TenantGroups> tenantGroupsList = tenantGroupsService.getGroupByTenant(user);
             TenantGroups tenantGroup = tenantGroupsList.get(0);
             Properties prop = propertyService.getPropertyByGroup(tenantGroup);
-            mrService.createMaintenanceRequest(tenant, prop, data);
+            mrService.createMaintenanceRequest(user, prop, data);
             return true;
         } catch (Error | NotFoundException e) {
+
             System.out.println(e);
             return false;
         }
     }
 
+
     @PostMapping("/viewRequests")
     @ApiOperation(value = "View Requests")
     public List<MaintenanceRequest> viewRequest(@RequestHeader("Authorization") String authString){
         try {
-            User landlord = userPermissionService.loadUserByJWT(authString);
-            Properties prop = propertyService.getPropertyByLandlord(landlord);
+            User user = userPermissionService.loadUserByJWT(authString);
+            if (!userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
+                return null;
+            }
+            Properties prop = propertyService.getPropertyByLandlord(user);
             return mrService.getRequestByProperty(prop);
         } catch (Error| NotFoundException e) {
             System.out.println(e);
@@ -64,8 +86,11 @@ public class MRController {
     @ApiOperation(value = "Update Maintenance Request")
     public Boolean updateRequest(@PathVariable("id") int id, @RequestHeader("Authorization") String authString, @RequestBody MaintenanceUpdateData data) {
         try {
-            User landlord = userPermissionService.loadUserByJWT(authString);
-            Properties prop = propertyService.getPropertyByLandlord(landlord);
+            User user = userPermissionService.loadUserByJWT(authString);
+            if (!userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
+                return false;
+            }
+            Properties prop = propertyService.getPropertyByLandlord(user);
             List<MaintenanceRequest> requests = mrService.getRequestByProperty(prop);
             MaintenanceRequest request = mrService.getRequestById(id);
             mrService.updateMaintenanceRequest(request, data);

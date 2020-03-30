@@ -1,6 +1,14 @@
 package com.softwareengineeringgroup8.studenthousingsolution.service;
 
 import java.sql.Date;
+
+import java.util.List;
+
+import com.softwareengineeringgroup8.studenthousingsolution.exceptions.ValidationException;
+import com.softwareengineeringgroup8.studenthousingsolution.model.MaintenanceRequest;
+import com.softwareengineeringgroup8.studenthousingsolution.model.MaintenanceRequestData;
+import com.softwareengineeringgroup8.studenthousingsolution.model.MaintenanceStatus;
+
 import java.util.Calendar;
 import java.util.List;
 import com.softwareengineeringgroup8.studenthousingsolution.exceptions.ValidationException;
@@ -12,6 +20,7 @@ import com.softwareengineeringgroup8.studenthousingsolution.model.MaintenanceReq
 import com.softwareengineeringgroup8.studenthousingsolution.model.MaintenanceRequestData;
 import com.softwareengineeringgroup8.studenthousingsolution.model.MaintenanceStatus;
 import com.softwareengineeringgroup8.studenthousingsolution.model.Properties;
+
 import com.softwareengineeringgroup8.studenthousingsolution.repository.MaintenanceRequestRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.MaintenanceStatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +62,7 @@ public class MRService {
         }
         request.setStatus(status);
         mrRepository.save(request);
+
     }
 
     public MaintenanceRequest getRequestById(int id) throws ValidationException {
