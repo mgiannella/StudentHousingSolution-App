@@ -1,8 +1,11 @@
 package com.softwareengineeringgroup8.studenthousingsolution.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name="Users")
@@ -11,31 +14,40 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="userid")
+    @JsonView(PropertyView.Compare.class)
     private int id;
 
     @Column(name="username")
+    @JsonView(PropertyView.Compare.class)
     private String username;
 
     @Column(name="userpass")
+    @JsonIgnore
     private String password;
 
     @Column(name="email")
+    @JsonView(PropertyView.ViewProperty.class)
     private String email;
 
     @Column(name="firstname")
+    @JsonView(PropertyView.Compare.class)
     private String firstName;
 
     @Column(name="lastname")
+    @JsonView(PropertyView.Compare.class)
     private String lastName;
 
     @Column(name="phone")
+    @JsonView(PropertyView.ViewProperty.class)
     private String phone;
 
     @Column(name="countrycode", length=2)
+    @JsonView(PropertyView.ViewProperty.class)
     private String phoneCode;
 
     @ManyToOne
     @JoinColumn(name="usertypeid")
+    @JsonView(PropertyView.ExtendedInfo.class)
     private UserType type;
 
     public User() {
@@ -85,14 +97,22 @@ public class User {
         this.lastName = lastName;
     }
 
-    public String getPhone(){
-        return '+'+phoneCode+phone;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setPhone(String phoneNumber){
-        this.phone = phoneNumber.substring(3);
-        this.phoneCode = phoneNumber.substring(0,2);
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
+
+    public String getPhoneCode() {
+        return phoneCode;
+    }
+
+    public void setPhoneCode(String phoneCode) {
+        this.phoneCode = phoneCode;
+    }
+
     public UserType getType(){ return this.type; }
 
     public void setType(UserType type) {this.type = type;}
@@ -115,5 +135,18 @@ public class User {
     public void setFullname(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

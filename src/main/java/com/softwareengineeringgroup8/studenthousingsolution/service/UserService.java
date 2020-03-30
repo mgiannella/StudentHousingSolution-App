@@ -1,21 +1,14 @@
 package com.softwareengineeringgroup8.studenthousingsolution.service;
 
-import com.softwareengineeringgroup8.studenthousingsolution.config.JwtToken;
 import com.softwareengineeringgroup8.studenthousingsolution.exceptions.ValidationException;
 import com.softwareengineeringgroup8.studenthousingsolution.model.RegisterRequest;
-import com.softwareengineeringgroup8.studenthousingsolution.model.User;
-import com.softwareengineeringgroup8.studenthousingsolution.model.UserRoles;
 import com.softwareengineeringgroup8.studenthousingsolution.model.UserType;
+import com.softwareengineeringgroup8.studenthousingsolution.model.User;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.UserRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.UserTypeRepository;
-import io.jsonwebtoken.ExpiredJwtException;
-import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import javax.validation.Valid;
-import java.util.Map;
 
 @Component
 public class UserService {
@@ -24,7 +17,7 @@ public class UserService {
     private UserRepository userRepository;
     @Autowired
     private UserTypeRepository userTypeRepository;
-
+    // create a user with the registration values
     public void createUser(RegisterRequest registerRequest) throws ValidationException{
         String username = registerRequest.getUsername();
         if (userRepository.existsByUsername(registerRequest.getUsername())){
@@ -39,14 +32,14 @@ public class UserService {
         UserType type = userTypeRepository.findByType(registerRequest.getUserType());
         userRepository.save(new User(username, encodedPassword, email, firstName, lastName, phone, phoneCode,type));
     }
-
+    // delete user
     public void deleteUser(User user) throws ValidationException{
         if (!userRepository.existsByUsername(user.getUsername())){
             throw new ValidationException("User doesn't exist");
         }
         userRepository.deleteById(user.getId());
     }
-
+    // update a user with new information
     public void updateUser(User user, RegisterRequest changes){
         user.setEmail(changes.getEmail());
         user.setFullname(changes.getFirstName(), changes.getLastName());
@@ -55,7 +48,7 @@ public class UserService {
         user.setType(type);
         userRepository.save(user);
     }
-
+    // change password
     public boolean changePassword(User user, String oldPass, String newPass){
         if(!new BCryptPasswordEncoder().matches(oldPass, user.getPassword())){
             return false;
@@ -64,7 +57,7 @@ public class UserService {
         userRepository.save(user);
         return true;
     }
-
+    // returns user with certain userId
     public User getUserById(int id) throws ValidationException{
         try{
             return userRepository.findById(id);

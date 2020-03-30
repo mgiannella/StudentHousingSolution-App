@@ -15,6 +15,8 @@ public class MaintenanceStatus {
 
     public MaintenanceStatus(){
 
+
+
     }
 
     public int getStatusID() { return statusID; }

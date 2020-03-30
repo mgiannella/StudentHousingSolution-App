@@ -36,6 +36,11 @@ public class MaintenanceRequestData implements Serializable{
 
     public void setDate(Date date) { this.date = date; }
 
+    public MaintenanceRequestData(String notes){
+        this.notes = notes;
+    }
+
+
     public String getNotes() { return notes; }
 
     public void setNotes(String notes) { this.notes = notes; }
