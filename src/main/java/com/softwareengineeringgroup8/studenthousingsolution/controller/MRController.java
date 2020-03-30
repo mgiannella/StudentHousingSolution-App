@@ -5,7 +5,6 @@ package com.softwareengineeringgroup8.studenthousingsolution.controller;
 import com.softwareengineeringgroup8.studenthousingsolution.model.MaintenanceRequestData;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.MaintenanceStatusRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.service.MRService;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
