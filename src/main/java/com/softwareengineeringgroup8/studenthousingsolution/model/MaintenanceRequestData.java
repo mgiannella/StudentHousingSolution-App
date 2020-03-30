@@ -8,38 +8,15 @@ import javax.validation.constraints.Size;
 
 public class MaintenanceRequestData implements Serializable{
 
-    @Size(min=6, max=11)
-    @ApiModelProperty(required = true, notes = "statusID")
-    private String statusDesc;
-
-    @ApiModelProperty(required = true, notes = "date")
-    private Date date;
-
     @ApiModelProperty(required = true, notes = "notes from tenant")
     private String notes;
 
     public MaintenanceRequestData(){
-
     }
-
-    public MaintenanceRequestData(String statusDesc, Date date, String notes){
-        this.statusDesc = statusDesc;
-        this.date = date;
-        this.notes = notes;
-    }
-
-    public String getStatusDesc() { return statusDesc; }
-
-    public void setStatusDesc(String statusID) { this.statusDesc = statusDesc; }
-
-    public Date getDate() { return date; }
-
-    public void setDate(Date date) { this.date = date; }
 
     public MaintenanceRequestData(String notes){
         this.notes = notes;
     }
-
 
     public String getNotes() { return notes; }
 
