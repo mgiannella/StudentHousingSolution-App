@@ -3,8 +3,6 @@ package com.softwareengineeringgroup8.studenthousingsolution.controller;
 
 
 import com.softwareengineeringgroup8.studenthousingsolution.model.MaintenanceRequestData;
-import com.softwareengineeringgroup8.studenthousingsolution.repository.MaintenanceStatusRepository;
-import com.softwareengineeringgroup8.studenthousingsolution.service.MRService;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +10,10 @@ import org.springframework.web.bind.annotation.*;
 import java.security.NoSuchAlgorithmException;
 import com.softwareengineeringgroup8.studenthousingsolution.model.*;
 import com.softwareengineeringgroup8.studenthousingsolution.service.*;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiOperation;
 import javassist.NotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 import java.util.List;
-import java.security.NoSuchAlgorithmException;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -63,17 +58,22 @@ public class MRController {
         }
     }
 
-
     @PostMapping("/viewRequests")
     @ApiOperation(value = "View Requests")
-    public List<MaintenanceRequest> viewRequest(@RequestHeader("Authorization") String authString){
+    public List<List<MaintenanceRequest>> viewRequest(@RequestHeader("Authorization") String authString){
         try {
             User user = userPermissionService.loadUserByJWT(authString);
             if (!userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
                 return null;
             }
-            Properties prop = propertyService.getPropertyByLandlord(user);
-            return mrService.getRequestByProperty(prop);
+            List<List<MaintenanceRequest>> requests = new ArrayList<List<MaintenanceRequest>>();
+            List<Properties> properties = propertyService.getPropertiesByLandlord(user);
+            int numOfProperties = properties.size();
+            for(int i = 0; i < numOfProperties; i++){
+                Properties prop = properties.get(i);
+                requests.add(mrService.getRequestByProperty(prop));
+            }
+            return requests;
         } catch (Error| NotFoundException e) {
             System.out.println(e);
             return null;
@@ -81,17 +81,15 @@ public class MRController {
     }
 
     //update
-    @PostMapping("/{id}")
+    @PostMapping("/{requestID}")
     @ApiOperation(value = "Update Maintenance Request")
-    public Boolean updateRequest(@PathVariable("id") int id, @RequestHeader("Authorization") String authString, @RequestBody MaintenanceUpdateData data) {
+    public Boolean updateRequest(@PathVariable("requestID") int requestID, @RequestHeader("Authorization") String authString, @RequestBody MaintenanceUpdateData data) {
         try {
             User user = userPermissionService.loadUserByJWT(authString);
             if (!userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
                 return false;
             }
-            Properties prop = propertyService.getPropertyByLandlord(user);
-            List<MaintenanceRequest> requests = mrService.getRequestByProperty(prop);
-            MaintenanceRequest request = mrService.getRequestById(id);
+            MaintenanceRequest request = mrService.getRequestById(requestID);
             mrService.updateMaintenanceRequest(request, data);
             return true;
         } catch (Error | NotFoundException e) {
