@@ -39,7 +39,10 @@ public class ListingService {
             String city = request.getCity();
             String state = request.getState();
             String zip = request.getZipCode();
-            PropertyLocations createLocation = new PropertyLocations(address,city,state,zip);
+            String latitude = request.getLatitude();
+            String longitude = request.getLongitude();
+
+            PropertyLocations createLocation = new PropertyLocations(address,city,state,zip,latitude,longitude);
             locRepository.save(createLocation);
 
             String desc = request.getDesc();

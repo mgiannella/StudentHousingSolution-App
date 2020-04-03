@@ -12,6 +12,7 @@ import java.util.List;
 public interface PropertyLocationsRepository extends JpaRepository<PropertyLocations,Integer> {
 
     List<PropertyLocations> findByZip(String zip);
-
+    List<PropertyLocations> findByLatitude(String latitude);
+    List<PropertyLocations> findByLongitude(String longitude);
     PropertyLocations findById(int id);
 }

@@ -95,6 +95,7 @@ public class ListingRequest implements Serializable {
         this.photos = photos;
     }
 
+    public String 
 
     public int getSleeps() { return sleeps; }
     public void setSleeps(int sleeps) { this.sleeps =sleeps; }
