@@ -16,6 +16,8 @@ import java.sql.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.validation.Valid;
+
 @Component
 public class ListingService {
 
@@ -34,14 +36,16 @@ public class ListingService {
 
     public void createListingRequest(ListingRequest request, User landlord){
             //add TenantGroup stuff, fix date stuff, add back landlord to properties
-
+             String latitude = request.getLatitude();
+             String longitude = request.getLongitude();
+             if (locRepository.existsByLatitude(latitude) && locRepository.existsByLongitude(longitude)) {
+                 throw new ValidationException("Address already exists.");
+             }
 
             String address = request.getAddress();
             String city = request.getCity();
             String state = request.getState();
             String zip = request.getZipCode();
-            String latitude = request.getLatitude();
-            String longitude = request.getLongitude();
             PropertyLocations createLocation = new PropertyLocations(address,city,state,zip,latitude,longitude);
             locRepository.save(createLocation);
 
