@@ -32,15 +32,43 @@ public class PropertyLocations {
     @JsonView(PropertyView.Search.class)
     private String zip;
 
+    @Column(name="latitude")
+    private String latitude;
+
+
+    @Column(name="longitude")
+    private String longitude;
+
+
     public PropertyLocations(){
     }
 
-    public PropertyLocations(String address, String city, String state, String zip){
+    public PropertyLocations(String address, String city, String state, String zip, String latitude, String longitude){
         this.address = address;
         this.city = city;
         this.state = state;
         this.zip = zip;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+
     public int getId() {return this.id;}
     public String getAddress() {
         return address;

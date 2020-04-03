@@ -34,11 +34,15 @@ public class ListingService {
 
     public void createListingRequest(ListingRequest request, User landlord){
             //add TenantGroup stuff, fix date stuff, add back landlord to properties
+
+
             String address = request.getAddress();
             String city = request.getCity();
             String state = request.getState();
             String zip = request.getZipCode();
-            PropertyLocations createLocation = new PropertyLocations(address,city,state,zip);
+            String latitude = request.getLatitude();
+            String longitude = request.getLongitude();
+            PropertyLocations createLocation = new PropertyLocations(address,city,state,zip,latitude,longitude);
             locRepository.save(createLocation);
 
             String desc = request.getDesc();
