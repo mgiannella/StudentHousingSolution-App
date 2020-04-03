@@ -10,6 +10,7 @@ import com.softwareengineeringgroup8.studenthousingsolution.exceptions.Validatio
 import com.softwareengineeringgroup8.studenthousingsolution.model.*;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.*;
 import com.softwareengineeringgroup8.studenthousingsolution.model.User;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -73,11 +74,17 @@ public class ListingService {
 
             String title=request.getTitle();
             List<PropertyPhotos> photos = new ArrayList<PropertyPhotos>();
-            Properties createProp = new Properties(landlord,title, createAmen, createDesc, createLocation, 0,photos);
 
+            Properties createProp = new Properties(landlord,title, createAmen, createDesc, createLocation, 0,photos);
+            for (int i=0; i<request.getPhotos().size();i++) {
+                createProp.getPhotos().add(new PropertyPhotos(i+1,request.getPhotos().get(i),createProp));
+            }
+
+            /*
             if (!request.getPhotos().equals("")) {
                 createProp.getPhotos().add(new PropertyPhotos(1,request.getPhotos(),createProp));
             }
+             */
             //photosRepository.save(photos);
             propRepository.save(createProp);
     }
@@ -87,7 +94,7 @@ public class ListingService {
         //if landlord wants to update his listing bc he got tenants, upload lease, etc..
     }
 
-    public void uploadPhoto() {
+    public void uploadPhoto(ListingRequest request, MultipartFile[] photos ) {
         //photos
 
     }

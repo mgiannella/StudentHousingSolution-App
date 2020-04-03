@@ -86,12 +86,12 @@ public class ListingRequest implements Serializable {
     private boolean hasHeat;
 
     @ApiModelProperty(notes="Add photo",example="hi.jpg",required=true)
-    private String photos;
+    private List<String> photos;
 
-    public String getPhotos() {
+    public List<String> getPhotos() {
         return photos;
     }
-    public void setPhotos(String photos) {
+    public void setPhotos(List <String> photos) {
         this.photos = photos;
     }
 
@@ -249,7 +249,7 @@ public class ListingRequest implements Serializable {
                           BigDecimal price, int numBedrooms, float numBathrooms, String renovationDate, boolean hasAC,
                           int parkingspots, boolean hasLaundry, boolean allowPets, boolean allowSmoking, boolean hasWater,
                           boolean hasGasElec, boolean isFurnished, boolean hasAppliances, boolean hasTrashPickup, boolean hasHeat,
-                          int sleeps, String photos) {
+                          int sleeps, List<String> photos) {
         this.title = title;
         this.address = address;
         this.city = city;
