@@ -11,6 +11,9 @@ public class MaintenanceRequestData implements Serializable{
     @ApiModelProperty(required = true, notes = "notes from tenant")
     private String notes;
 
+    @ApiModelProperty(required = true, notes = "propertyID")
+    private int id;
+
     public MaintenanceRequestData(){
     }
 
@@ -22,5 +25,8 @@ public class MaintenanceRequestData implements Serializable{
 
     public void setNotes(String notes) { this.notes = notes; }
 
+    public int getId() { return id; }
 
+    public void setId(int id) { this.id = id; }
 }
+

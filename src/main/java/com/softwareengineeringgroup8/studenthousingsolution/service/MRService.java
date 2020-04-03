@@ -5,24 +5,12 @@ import java.sql.Date;
 import java.util.List;
 
 import com.softwareengineeringgroup8.studenthousingsolution.exceptions.ValidationException;
-import com.softwareengineeringgroup8.studenthousingsolution.model.MaintenanceRequest;
-import com.softwareengineeringgroup8.studenthousingsolution.model.MaintenanceRequestData;
-import com.softwareengineeringgroup8.studenthousingsolution.model.MaintenanceStatus;
+import com.softwareengineeringgroup8.studenthousingsolution.model.*;
 
 import java.util.Calendar;
 import java.util.List;
 import com.softwareengineeringgroup8.studenthousingsolution.exceptions.ValidationException;
-import com.softwareengineeringgroup8.studenthousingsolution.model.User;
-import com.softwareengineeringgroup8.studenthousingsolution.model.MaintenanceUpdateData;
-import com.softwareengineeringgroup8.studenthousingsolution.repository.PropertiesRepository;
-import com.softwareengineeringgroup8.studenthousingsolution.repository.UserRepository;
-import com.softwareengineeringgroup8.studenthousingsolution.model.MaintenanceRequest;
-import com.softwareengineeringgroup8.studenthousingsolution.model.MaintenanceRequestData;
-import com.softwareengineeringgroup8.studenthousingsolution.model.MaintenanceStatus;
-import com.softwareengineeringgroup8.studenthousingsolution.model.Properties;
-
-import com.softwareengineeringgroup8.studenthousingsolution.repository.MaintenanceRequestRepository;
-import com.softwareengineeringgroup8.studenthousingsolution.repository.MaintenanceStatusRepository;
+import com.softwareengineeringgroup8.studenthousingsolution.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,15 +26,27 @@ public class MRService {
     private UserRepository userRepository;
     @Autowired
     private PropertiesRepository propertiesRepository;
+    @Autowired
+    private TenantGroupMembersRepository tgmRepository;
 
     public List<MaintenanceRequest> getRequestByProperty(Properties prop){ return mrRepository.findByProperty(prop); }
 
-    public void createMaintenanceRequest(User tenant, Properties prop, MaintenanceRequestData data){
-        MaintenanceStatus status = new MaintenanceStatus("pending", 1); //
+    public void createMaintenanceRequest(User tenant, MaintenanceRequestData data){
+        MaintenanceStatus status = new MaintenanceStatus("pending", 1);
         long millis = System.currentTimeMillis();
         Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
         String notes = data.getNotes();
-        mrRepository.save(new MaintenanceRequest(status, prop, date, notes, tenant));
+        int id = data.getId();
+        Properties prop = propertiesRepository.findById(id);
+        List<TenantGroups> tenantGroupsList = tgmRepository.findTenantGroupByMember(tenant);
+        for(int i = 0; i < tenantGroupsList.size(); i++){
+            if(tenantGroupsList.get(i) == prop.getGroup()){
+                mrRepository.save(new MaintenanceRequest(status, prop, date, notes, tenant));
+                return;
+            }
+        }
+        throw new ValidationException("Property is not owned by Tenant");
+
     }
 
 

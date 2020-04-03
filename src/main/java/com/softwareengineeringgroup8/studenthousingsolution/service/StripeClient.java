@@ -9,7 +9,8 @@ import com.softwareengineeringgroup8.studenthousingsolution.model.TenantGroups;
 import com.softwareengineeringgroup8.studenthousingsolution.model.User;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.PaymentRecordRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.PaymentTypeRepository;
-import com.softwareengineeringgroup8.studenthousingsolution.repository.PropertiesRepository;
+import com.softwareengineeringgroup8.studenthousingsolution.repository.*;
+
 import com.softwareengineeringgroup8.studenthousingsolution.repository.UserRepository;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;

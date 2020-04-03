@@ -4,6 +4,7 @@ package com.softwareengineeringgroup8.studenthousingsolution.controller;
 
 import com.softwareengineeringgroup8.studenthousingsolution.model.MaintenanceRequestData;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +34,29 @@ public class MRController {
     @Autowired
     private PropertyService propertyService;
 
+
+    @PostMapping("/viewTenantProperties")
+    @ApiOperation(value =  "View Tenant Properties")
+    public List<Properties> listProperties(@RequestHeader("Authorization") String authString){
+        try {
+            User user = userPermissionService.loadUserByJWT(authString);
+            List<Properties> propertiesList = new ArrayList<Properties>();
+            List<TenantGroups> tenantGroupsList = tenantGroupsService.getGroupByTenant(user);
+            int size = tenantGroupsList.size();
+            for (int i = 0; i < size; i++) {
+                TenantGroups tg = tenantGroupsList.get(i);
+                Properties prop = propertyService.getPropertyByGroup(tg);
+                propertiesList.add(prop);
+            }
+            return propertiesList;
+        } catch (Error | NotFoundException e) {
+
+            System.out.println(e);
+            return null;
+        }
+
+
+    }
     //create
     @PostMapping("/createRequest")
     @ApiOperation(value = "Create Maintenance Request")
@@ -46,10 +70,10 @@ public class MRController {
             if(data.getNotes().equals("")){
                 return false;
             }
-            List<TenantGroups> tenantGroupsList = tenantGroupsService.getGroupByTenant(user);
-            TenantGroups tenantGroup = tenantGroupsList.get(0);
-            Properties prop = propertyService.getPropertyByGroup(tenantGroup);
-            mrService.createMaintenanceRequest(user, prop, data);
+            //List<TenantGroups> tenantGroupsList = tenantGroupsService.getGroupByTenant(user);
+            //TenantGroups tenantGroup = tenantGroupsList.get(0);
+            //Properties prop = propertyService.getPropertyByGroup(tenantGroup);
+            mrService.createMaintenanceRequest(user, data);
             return true;
         } catch (Error | NotFoundException e) {
 
