@@ -79,13 +79,16 @@ public class StripeClient {
     }
 
     //Creates customer with a card
-    public String createCharge(String email, String card_num, String monthNum, String yearNum, String ccv, User tenant) throws StripeException {
+    public String createCharge(String name_card, String email, String card_num, String monthNum, String yearNum, String ccv, String firstName, String lastName, String address, String city, String state, String zip, String country, String phone, User tenant) throws StripeException {
 
         Map<String, Object> customerParameter = new HashMap<String, Object>();
         String CustomerId = null;
 
         customerParameter.put("description", "Customer for " + email);
         customerParameter.put("email", email);
+        customerParameter.put("name", firstName+ " " + lastName);
+        customerParameter.put("phone", phone);
+
 
         Customer newCustomer = Customer.create(customerParameter);
 
@@ -94,6 +97,14 @@ public class StripeClient {
         cardParam.put("exp_month", monthNum);
         cardParam.put("exp_year", yearNum);
         cardParam.put("cvc", ccv);
+        cardParam.put("name", name_card);
+        cardParam.put("address_state", state);
+        cardParam.put("address_city", city);
+        cardParam.put("address_country", country);
+        cardParam.put("address_zip", zip);
+        cardParam.put("address_line1", address);
+
+
 
         Map<String, Object> tokenParam = new HashMap<String, Object>();
         tokenParam.put("card", cardParam);
@@ -161,6 +172,10 @@ public class StripeClient {
 
             return chargeId;
 
+        }
+
+        public String bankCharge(String email, String firstName, String lastName, String address, String city, String state, String zip, String country, String phone, User tenant,String name_bank, String account_num, String routing_num) throws StripeException {
+         return null;
         }
     }
 

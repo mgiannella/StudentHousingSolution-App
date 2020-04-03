@@ -56,7 +56,7 @@ public class PaymentController {
                 //;
             }
             //listingService.createListingRequest(request,landlord);
-            String chargeId= stripeClient.createCharge(req.getEmail(), req.getCard_num(), req.getMonthNum(), req.getYearNum(), req.getCcv(), tenant);
+            String chargeId= stripeClient.createCharge(req.getName_card(), req.getEmail(), req.getCard_num(), req.getMonthNum(), req.getYearNum(), req.getCcv(), req.getFirstName(), req.getLastName(), req.getAddress(), req.getCity(), req.getState(), req.getZip(), req.getCountry(), req.getPhone(), tenant);
 
             String transferId=stripeClient.transferCharge(req.getEmail());
             if (chargeId == null) {
