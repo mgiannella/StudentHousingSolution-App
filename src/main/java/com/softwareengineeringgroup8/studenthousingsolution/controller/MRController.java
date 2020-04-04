@@ -35,7 +35,7 @@ public class MRController {
     private PropertyService propertyService;
 
 
-    @PostMapping("/viewTenantProperties")
+    @GetMapping("/viewTenantProperties")
     @ApiOperation(value =  "View Tenant Properties")
     public List<Properties> listProperties(@RequestHeader("Authorization") String authString){
         try {
@@ -82,7 +82,7 @@ public class MRController {
         }
     }
 
-    @PostMapping("/viewRequests")
+    @GetMapping("/viewRequests")
     @ApiOperation(value = "View Requests")
     public List<List<MaintenanceRequest>> viewRequest(@RequestHeader("Authorization") String authString){
         try {
