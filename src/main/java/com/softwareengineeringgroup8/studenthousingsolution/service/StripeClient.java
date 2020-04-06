@@ -20,16 +20,13 @@ import com.stripe.model.*;
 
 import java.math.BigDecimal;
 import java.sql.Date;
-import java.util.List;
+import java.util.*;
 
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static java.lang.String.valueOf;
 
@@ -138,8 +135,9 @@ public class StripeClient {
             //payamount= charge.getAmount();
 
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        }catch (Exception ex) {
+           ex.printStackTrace();
+
         }
 
         List<TenantGroups> tglist = tenantGroupsService.getGroupByTenant(tenant);
@@ -177,6 +175,43 @@ public class StripeClient {
         public String bankCharge(String email, String firstName, String lastName, String address, String city, String state, String zip, String country, String phone, User tenant,String name_bank, String account_num, String routing_num) throws StripeException {
          return null;
         }
+
+    public String createLandlordacct(String email) throws StripeException {
+
+        String accountId = null;
+    //creating a landlord account
+        try {
+            ArrayList<Object> requestedCapabilities =new ArrayList<>();
+            requestedCapabilities.add("card_payments");
+            requestedCapabilities.add("transfers");
+
+            Map<String, Object> params = new HashMap<>();
+            params.put("type", "custom");
+            params.put("country", "US");
+            params.put("email", "s@gmail.com");
+            params.put("requested_capabilities", Arrays.asList("card_payments", "transfers"));
+
+            Account account = Account.create(params);
+            accountId=account.getId();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+
+        //Accepting terms of agreement
+       /* Map<String, Object> tosAcceptanceParams = new HashMap<>();
+        tosAcceptanceParams.put("date", (long) System.currentTimeMillis() / 1000L);
+        tosAcceptanceParams.put("ip", request.getRemoteAddr()); // Assumes you're not using a proxy
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("tos_acceptance", tosAcceptanceParams);
+
+        acct.update(params);
+
+*/
+        return accountId;
+    }
     }
 
 
