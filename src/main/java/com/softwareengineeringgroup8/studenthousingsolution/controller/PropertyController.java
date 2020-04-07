@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiOperation;
 import javassist.NotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Validation;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
@@ -27,6 +28,17 @@ public class PropertyController {
         this.userPermissionService = userPermissionService;
         this.tenantGroupsService = tenantGroupsService;
         this.userService = userService;
+    }
+
+    @GetMapping("/view/{id}")
+    @ApiOperation(value="Property Information", notes="Gets all information about a property")
+    @JsonView(PropertyView.ViewProperty.class)
+    public Properties viewProperty(@PathVariable("id") int id) throws ValidationException {
+        try{
+            return propertyService.getById(id);
+        }catch(Error e){
+            throw new ValidationException("Invalid input, try again.");
+        }
     }
 
     @GetMapping("/view")
