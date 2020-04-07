@@ -14,8 +14,15 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+
+import com.sun.javaws.jnl.PropertyDesc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+import java.nio.file.Path;
+import java.util.stream.Stream;
+
+import javax.validation.Valid;
 
 @Component
 public class ListingService {
@@ -35,12 +42,20 @@ public class ListingService {
 
     public void createListingRequest(ListingRequest request, User landlord){
             //add TenantGroup stuff, fix date stuff, add back landlord to properties
+             String latitude = request.getLatitude();
+             String longitude = request.getLongitude();
+             if (locRepository.existsByLatitude(latitude) && locRepository.existsByLongitude(longitude)) {
+                 throw new ValidationException("Address already exists.");
+             }
+
             String address = request.getAddress();
             String city = request.getCity();
             String state = request.getState();
             String zip = request.getZipCode();
+
             String latitude = request.getLatitude();
             String longitude = request.getLongitude();
+
 
             PropertyLocations createLocation = new PropertyLocations(address,city,state,zip,latitude,longitude);
             locRepository.save(createLocation);
@@ -91,6 +106,66 @@ public class ListingService {
             //photosRepository.save(photos);
             propRepository.save(createProp);
     }
+
+
+
+    public void updateListing(Properties property, ListingUpdate update) {
+      property.getDescription().setDescContent("Updated");
+      propRepository.save(property);
+
+      /* description.setDescContent(update.getDesc());
+       descRepository.save(description);
+
+
+
+
+        amenities.setPrice(update.getPrice());
+        amenities.setNumBedrooms(update.getNumBedrooms());
+        amenities.setNumBathrooms(update.getNumBathrooms());
+
+        String renDate = update.getRenovationDate();
+        amenities.setRenovationDate(Date.valueOf(renDate));
+
+        amenities.setHasAC(update.isHasAC());
+        amenities.setParkingSpots(update.getParkingspots());
+        amenities.setHasLaundry(update.isHasLaundry());
+        amenities.setSmokingAllowed(update.isAllowPets());
+        amenities.setSmokingAllowed(update.isAllowSmoking());
+        amenities.setWaterUtility(update.isHasWater());
+        amenities.setGasElectricUtil(update.isHasGasElec());
+        amenities.setFurnished(update.isFurnished());
+        amenities.setHasAppliances(update.isHasAppliances());
+        amenities.setTrashPickedUpl(update.isHasTrashPickup());
+        amenities.setHasHeat(update.isHasHeat());
+        amenities.setSleeps(update.getSleeps());
+
+        amenRepository.save(amenities);
+
+
+        property.setTitle(update.getTitle());
+
+
+        //photosRepository.save(photos);
+        propRepository.save(property);
+       */
+    }
+
+
+
+
+
+
+
+    public Properties getPropertyById(int id) throws ValidationException {
+        try{
+            return propRepository.findByPropertyID(id);
+        }catch(Exception e){
+            throw new ValidationException("Couldn't find Property By Id");
+        }
+    }
+
+
+
 
 
     public void updateLease() {

@@ -39,6 +39,7 @@ public class PropertyLocations {
     @Column(name="longitude")
     private String longitude;
 
+
     public PropertyLocations(){
     }
 
@@ -47,10 +48,29 @@ public class PropertyLocations {
         this.city = city;
         this.state = state;
         this.zip = zip;
-        this.latitude=latitude;
-        this.longitude =longitude;
+
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
 
     }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+
     public int getId() {return this.id;}
     public String getAddress() {
         return address;
@@ -84,9 +104,5 @@ public class PropertyLocations {
         this.zip = zip;
     }
 
-    public String getLatitude() { return latitude; }
-    public void setLatitude(String latitude) { this.latitude = latitude; }
 
-    public String getLongitude() { return longitude; }
-    public void setLongitude(String longitude) { this.longitude = longitude; }
 }

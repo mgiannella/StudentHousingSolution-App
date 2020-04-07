@@ -86,16 +86,42 @@ public class ListingRequest implements Serializable {
     private boolean hasHeat;
 
     @ApiModelProperty(notes="Add photo",example="hi.jpg",required=true)
-    private List<String> photos;
+    private String photos;
 
-    public List<String> getPhotos() {
+    @ApiModelProperty(notes="Latitude",example="5.0",required=true)
+    private String latitude;
+
+
+    @ApiModelProperty(notes="Longitude",example="5.0",required=true)
+    private String longitude;
+
+
+
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getPhotos() {
         return photos;
     }
-    public void setPhotos(List <String> photos) {
+
+    public void setPhotos(String photos) {
         this.photos = photos;
     }
 
-    public String 
 
     public int getSleeps() { return sleeps; }
     public void setSleeps(int sleeps) { this.sleeps =sleeps; }
@@ -250,7 +276,8 @@ public class ListingRequest implements Serializable {
                           BigDecimal price, int numBedrooms, float numBathrooms, String renovationDate, boolean hasAC,
                           int parkingspots, boolean hasLaundry, boolean allowPets, boolean allowSmoking, boolean hasWater,
                           boolean hasGasElec, boolean isFurnished, boolean hasAppliances, boolean hasTrashPickup, boolean hasHeat,
-                          int sleeps, List<String> photos) {
+                          int sleeps, String photos, String latitude, String longitude) {
+
         this.title = title;
         this.address = address;
         this.city = city;
@@ -274,6 +301,8 @@ public class ListingRequest implements Serializable {
         this.desc=description;
         this.sleeps=sleeps;
         this.photos = photos;
+        this.latitude=latitude;
+        this.longitude=longitude;
     }
 
 
