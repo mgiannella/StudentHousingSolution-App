@@ -13,8 +13,13 @@ import com.softwareengineeringgroup8.studenthousingsolution.model.User;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+
+import com.sun.javaws.jnl.PropertyDesc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+import java.nio.file.Path;
+import java.util.stream.Stream;
 
 import javax.validation.Valid;
 
@@ -89,6 +94,66 @@ public class ListingService {
             //photosRepository.save(photos);
             propRepository.save(createProp);
     }
+
+
+
+    public void updateListing(Properties property, ListingUpdate update) {
+      property.getDescription().setDescContent("Updated");
+      propRepository.save(property);
+
+      /* description.setDescContent(update.getDesc());
+       descRepository.save(description);
+
+
+
+
+        amenities.setPrice(update.getPrice());
+        amenities.setNumBedrooms(update.getNumBedrooms());
+        amenities.setNumBathrooms(update.getNumBathrooms());
+
+        String renDate = update.getRenovationDate();
+        amenities.setRenovationDate(Date.valueOf(renDate));
+
+        amenities.setHasAC(update.isHasAC());
+        amenities.setParkingSpots(update.getParkingspots());
+        amenities.setHasLaundry(update.isHasLaundry());
+        amenities.setSmokingAllowed(update.isAllowPets());
+        amenities.setSmokingAllowed(update.isAllowSmoking());
+        amenities.setWaterUtility(update.isHasWater());
+        amenities.setGasElectricUtil(update.isHasGasElec());
+        amenities.setFurnished(update.isFurnished());
+        amenities.setHasAppliances(update.isHasAppliances());
+        amenities.setTrashPickedUpl(update.isHasTrashPickup());
+        amenities.setHasHeat(update.isHasHeat());
+        amenities.setSleeps(update.getSleeps());
+
+        amenRepository.save(amenities);
+
+
+        property.setTitle(update.getTitle());
+
+
+        //photosRepository.save(photos);
+        propRepository.save(property);
+       */
+    }
+
+
+
+
+
+
+
+    public Properties getPropertyById(int id) throws ValidationException {
+        try{
+            return propRepository.findByPropertyID(id);
+        }catch(Exception e){
+            throw new ValidationException("Couldn't find Property By Id");
+        }
+    }
+
+
+
 
 
     public void updateLease() {

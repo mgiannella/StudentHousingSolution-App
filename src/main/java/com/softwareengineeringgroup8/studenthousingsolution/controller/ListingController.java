@@ -49,17 +49,34 @@ public class ListingController{
                 return false;
             }
             listingService.createListingRequest(request,landlord);
-            test();
+            //test();
             return true;
         }
         catch (Error | NotFoundException e) {
             System.out.println(e);
             return false;
         }
-
-
-
     }
+
+    //update
+    @PostMapping("/{id}")
+    @ApiOperation(value = "Update Property")
+    public Boolean updateRequest(@PathVariable("id") int id, @RequestHeader("Authorization") String authString, @RequestBody ListingUpdate update) {
+        try {
+            User user = userPermissionService.loadUserByJWT(authString);
+            if (!userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
+                return false;
+            }
+            Properties prop = listingService.getPropertyById(id);
+            listingService.updateListing(prop,update);
+            return true;
+        } catch (Error | NotFoundException e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+
+
 
     @GetMapping("/test")
     @JsonView(PropertyView.ExtendedInfo.class)
