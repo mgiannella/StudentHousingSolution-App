@@ -41,6 +41,8 @@ public class PropertyService {
         return propertyRepository.findAll();
     }
 
+    public Properties getById(int id){ return propertyRepository.findByPropertyID(id); }
+
     public Properties getPropertyByGroup(TenantGroups group){ return propertyRepository.findByGroup(group); }
 
     public Properties getPropertyByLandlord(User landlord){ return propertyRepository.findByLandlord(landlord); }
