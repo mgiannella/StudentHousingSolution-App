@@ -43,7 +43,7 @@ public class PropertyService {
 
     public Properties getPropertyByGroup(TenantGroups group){ return propertyRepository.findByGroup(group); }
 
-    public Properties getPropertyByLandlord(User landlord){ return propertyRepository.findByLandlord(landlord); }
+    public List<Properties> getPropertyByLandlord(User landlord){ return propertyRepository.findByLandlord(landlord); }
 
 
     // returns all properties within a certain zip code

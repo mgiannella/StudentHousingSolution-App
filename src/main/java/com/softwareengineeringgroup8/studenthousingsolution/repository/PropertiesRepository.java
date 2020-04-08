@@ -18,7 +18,7 @@ public interface PropertiesRepository extends JpaRepository<Properties, Integer>
     Properties findByGroup(TenantGroups group);
 
     @Query("SELECT prop FROM Properties prop WHERE prop.landlord = ?1")
-    Properties findByLandlord(User landlord);
+    List<Properties> findByLandlord(User landlord);
 
     @Query("SELECT prop FROM Properties prop WHERE prop.id = ?1")
     Properties findByPropertyID(int id);

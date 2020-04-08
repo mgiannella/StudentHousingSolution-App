@@ -47,9 +47,50 @@ public class ListingUpdate {
 
         private String photos;
 
+        private int propertyID;
 
 
 
+        public String address;
+        public String city;
+        public String state;
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
+
+    public String zipCode;
+
+        public int getPropertyID() { return propertyID;}
+        public void setPropertyID(int propertyID) {this.propertyID=propertyID;}
 
         public String getPhotos() {
             return photos;
@@ -181,10 +222,18 @@ public class ListingUpdate {
 
 
 
-        public ListingUpdate(String title, String description, BigDecimal price, int numBedrooms, float numBathrooms, String renovationDate, boolean hasAC,
+
+
+
+        public ListingUpdate(int propertyID, String address, String city, String state, String zipCode, String title, String description, BigDecimal price, int numBedrooms, float numBathrooms, String renovationDate, boolean hasAC,
                               int parkingspots, boolean hasLaundry, boolean allowPets, boolean allowSmoking, boolean hasWater,
                               boolean hasGasElec, boolean isFurnished, boolean hasAppliances, boolean hasTrashPickup, boolean hasHeat,
                               int sleeps, String photos) {
+            this.propertyID=propertyID;
+            this.address=address;
+            this.city=city;
+            this.state=state;
+            this.zipCode=zipCode;
             this.title = title;
             this.price = price;
             this.numBedrooms = numBedrooms;

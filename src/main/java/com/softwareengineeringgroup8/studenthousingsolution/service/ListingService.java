@@ -40,6 +40,8 @@ public class ListingService {
     @Autowired
     private UserRepository userRepository;
 
+
+
     public void createListingRequest(ListingRequest request, User landlord){
             //add TenantGroup stuff, fix date stuff, add back landlord to properties
              String latitude = request.getLatitude();
@@ -52,9 +54,6 @@ public class ListingService {
             String city = request.getCity();
             String state = request.getState();
             String zip = request.getZipCode();
-
-            String latitude = request.getLatitude();
-            String longitude = request.getLongitude();
 
 
             PropertyLocations createLocation = new PropertyLocations(address,city,state,zip,latitude,longitude);
@@ -94,9 +93,7 @@ public class ListingService {
             List<PropertyPhotos> photos = new ArrayList<PropertyPhotos>();
 
             Properties createProp = new Properties(landlord,title, createAmen, createDesc, createLocation, 0,photos);
-            for (int i=0; i<request.getPhotos().size();i++) {
-                createProp.getPhotos().add(new PropertyPhotos(i+1,request.getPhotos().get(i),createProp));
-            }
+
 
             /*
             if (!request.getPhotos().equals("")) {
@@ -104,50 +101,57 @@ public class ListingService {
             }
              */
             //photosRepository.save(photos);
+            for (int i=0; i<request.getPhotos().size(); i++) {
+                createProp.getPhotos().add(new PropertyPhotos(i+1,request.getPhotos().get(i),createProp));
+            }
+
             propRepository.save(createProp);
     }
 
 
 
-    public void updateListing(Properties property, ListingUpdate update) {
-      property.getDescription().setDescContent("Updated");
+
+    public void updateListing(ListingUpdate update) {
+
+    int id = update.getPropertyID();
+    Properties property=getPropertyById(id);
+
+    property.getLocation().setAddress(update.getAddress());
+    property.getLocation().setCity(update.getCity());
+    property.getLocation().setState(update.getState());
+    property.getLocation().setZip(update.getZipCode());
+
+
+
+
+     property.getDescription().setDescContent(update.getDesc());
+
+
+      property.getAmenities().setPrice(update.getPrice());
+      property.getAmenities().setNumBedrooms(update.getNumBedrooms());
+      property.getAmenities().setNumBathrooms(update.getNumBathrooms());
+
+      String renDate = update.getRenovationDate();
+      property.getAmenities().setRenovationDate(Date.valueOf(renDate));
+      property.getAmenities().setHasAC(update.isHasAC());
+      property.getAmenities().setParkingSpots(update.getParkingspots());
+      property.getAmenities().setHasLaundry(update.isHasLaundry());
+      property.getAmenities().setSmokingAllowed(update.isAllowPets());
+      property.getAmenities().setSmokingAllowed(update.isAllowSmoking());
+      property.getAmenities().setWaterUtility(update.isHasWater());
+      property.getAmenities().setGasElectricUtil(update.isHasGasElec());
+      property.getAmenities().setFurnished(update.isFurnished());
+      property.getAmenities().setHasAppliances(update.isHasAppliances());
+      property.getAmenities().setTrashPickedUpl(update.isHasTrashPickup());
+      property.getAmenities().setHasHeat(update.isHasHeat());
+      property.getAmenities().setSleeps(update.getSleeps());
+
+      property.setTitle(update.getTitle());
+
       propRepository.save(property);
 
-      /* description.setDescContent(update.getDesc());
-       descRepository.save(description);
 
 
-
-
-        amenities.setPrice(update.getPrice());
-        amenities.setNumBedrooms(update.getNumBedrooms());
-        amenities.setNumBathrooms(update.getNumBathrooms());
-
-        String renDate = update.getRenovationDate();
-        amenities.setRenovationDate(Date.valueOf(renDate));
-
-        amenities.setHasAC(update.isHasAC());
-        amenities.setParkingSpots(update.getParkingspots());
-        amenities.setHasLaundry(update.isHasLaundry());
-        amenities.setSmokingAllowed(update.isAllowPets());
-        amenities.setSmokingAllowed(update.isAllowSmoking());
-        amenities.setWaterUtility(update.isHasWater());
-        amenities.setGasElectricUtil(update.isHasGasElec());
-        amenities.setFurnished(update.isFurnished());
-        amenities.setHasAppliances(update.isHasAppliances());
-        amenities.setTrashPickedUpl(update.isHasTrashPickup());
-        amenities.setHasHeat(update.isHasHeat());
-        amenities.setSleeps(update.getSleeps());
-
-        amenRepository.save(amenities);
-
-
-        property.setTitle(update.getTitle());
-
-
-        //photosRepository.save(photos);
-        propRepository.save(property);
-       */
     }
 
 
