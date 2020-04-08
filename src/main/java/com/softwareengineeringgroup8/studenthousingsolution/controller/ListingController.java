@@ -109,8 +109,8 @@ public class ListingController{
 
     //update
     @PostMapping("/updateListing")
-    @ApiOperation(value = "Update Property")
-    public Boolean updateRequest(@RequestHeader("Authorization") String authString, @RequestBody ListingUpdate update) {
+    @ApiOperation(value = "Update Property", notes="updating property")
+    public Boolean updateRequest(@RequestBody ListingUpdate update, @RequestHeader("Authorization") String authString) throws ValidationException {
         try {
             User user = userPermissionService.loadUserByJWT(authString);
             if (!userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
