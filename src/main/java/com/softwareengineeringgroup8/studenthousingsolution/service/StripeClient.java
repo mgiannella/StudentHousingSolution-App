@@ -76,7 +76,7 @@ public class StripeClient {
     }
 
     //Creates customer with a card
-    public String createCharge(String name_card, String email, String card_num, String monthNum, String yearNum, String ccv, String firstName, String lastName, String address, String city, String state, String zip, String country, String phone, User tenant) throws StripeException {
+    public String createCharge(String name_card, String email, String card_num, String monthNum, String yearNum, String ccv, String firstName, String lastName, String address, String city, String state, String zip, String country, String phone, User tenant, int propID) throws StripeException {
 
         Map<String, Object> customerParameter = new HashMap<String, Object>();
         String CustomerId = null;
@@ -140,10 +140,14 @@ public class StripeClient {
 
         }
 
-        List<TenantGroups> tglist = tenantGroupsService.getGroupByTenant(tenant);
-        List<Properties> propList = propertiesRepository.findByTenantGroup(tglist.get(0));
 
-        Properties x = propList.get(0);
+        //List<TenantGroups> tglist = tenantGroupsService.getGroupByTenant(tenant);
+        //List<Properties> propList = propertiesRepository.findByTenantGroup(tglist.get(0));
+
+        //Properties x=propList.get(0);
+
+
+
 
             // Gets property description from front end selection
         /*
@@ -163,8 +167,10 @@ public class StripeClient {
 
             String ptypeDesc = "TENANT_MONTHLY";
 
+            Properties property= propertiesRepository.findByPropertyID(propID);
 
-            PaymentRecord paymentRecord = new PaymentRecord(new Date(new java.util.Date().getTime()), x, tenant, paymentTypeRepository.findBypTypeDesc(ptypeDesc), new BigDecimal(1245));
+
+            PaymentRecord paymentRecord = new PaymentRecord(new Date(new java.util.Date().getTime()), property, tenant, paymentTypeRepository.findBypTypeDesc(ptypeDesc), new BigDecimal(1245));
 
             paymentRecordRepository.save(paymentRecord);
 
