@@ -10,6 +10,7 @@ import com.softwareengineeringgroup8.studenthousingsolution.service.ListingServi
 import com.softwareengineeringgroup8.studenthousingsolution.service.*;
 import com.softwareengineeringgroup8.studenthousingsolution.service.UserPermissionService;
 import com.softwareengineeringgroup8.studenthousingsolution.controller.UserController;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
 import javassist.NotFoundException;
@@ -41,13 +42,13 @@ public class ListingController{
     private PropertyService propertyService;
 
 
-    @PostMapping("/viewLandlordProperties")
+    @GetMapping("/viewLandlordProperties")
     @ApiOperation(value="View Landlord Properties",notes="View list of properties that landlord owns")
     public List<Properties> listProperties(@RequestHeader("Authorization") String authString) {
         try {
             User user = userPermissionService.loadUserByJWT(authString);
-
            List<Properties> props = propertyService.getPropertiesByLandlord(user);
+           int size = props.size();
            return props;
 
         } catch (Error | NotFoundException e) {
@@ -74,6 +75,34 @@ public class ListingController{
             System.out.println(e);
             return false;
         }
+    }
+
+    @GetMapping("/{propertyID}")
+    @ApiOperation(value="View Listing Data")
+    public Properties viewListingData(@PathVariable("propertyID") int propertyID, @RequestHeader("Authorization") String authString) {
+        try {
+            User user = userPermissionService.loadUserByJWT(authString);
+            Properties property=propertyService.getPropertyByID(propertyID);
+
+            if (userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
+
+                if (property.getLandlord().equals(user)) {
+                    return property;
+                } else {
+                    throw new ValidationException("User isn't a landlord for this property.");
+                }
+            }
+            else {
+                throw new ValidationException("User is not a landlord.");
+            }
+
+        } catch (Error | NotFoundException e) {
+
+            System.out.println(e);
+            return null;
+        }
+
+
     }
 
 
