@@ -4,6 +4,7 @@ package com.softwareengineeringgroup8.studenthousingsolution.controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.softwareengineeringgroup8.studenthousingsolution.model.ChargeRequest;
+import com.softwareengineeringgroup8.studenthousingsolution.model.StripeLandlordRequest;
 import com.softwareengineeringgroup8.studenthousingsolution.model.User;
 import com.softwareengineeringgroup8.studenthousingsolution.model.UserRoles;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.PropertiesRepository;
@@ -105,6 +106,27 @@ public class PaymentController {
             }
 
             //return "Success! Your charge id is " + chargeId + " Your transaction id: " + transferId;
+
+            return true;
+        } catch (Error | NotFoundException e) {
+            System.out.println(e);
+            return false;
+            //return "error";
+        }
+    }
+
+    @PostMapping("/create-landlord acct")
+    public Boolean createLandAcct(@RequestBody StripeLandlordRequest req, @RequestHeader("Authorization") String str) throws StripeException {
+        try {
+            User landlord = userPermissionService.loadUserByJWT(str);
+            if (!userPermissionService.assertPermission(landlord, UserRoles.ROLE_LANDLORD)) {
+                return false;
+                //;
+            }
+            //listingService.createListingRequest(request,landlord);
+            String accountId= stripeClient.createLandlordAcct(req.getEmail());
+
+            //return "Success! Your account has been created;
 
             return true;
         } catch (Error | NotFoundException e) {
