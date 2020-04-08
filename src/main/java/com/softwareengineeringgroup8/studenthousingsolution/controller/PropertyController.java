@@ -26,6 +26,17 @@ public class PropertyController {
         this.userService = userService;
     }
 
+    @GetMapping("/view/{id}")
+    @ApiOperation(value="Property Information", notes="Gets all information about a property")
+    @JsonView(PropertyView.ViewProperty.class)
+    public Properties viewProperty(@PathVariable("id") int id) throws ValidationException {
+        try{
+            return propertyService.getById(id);
+        }catch(Error e){
+            throw new ValidationException("Invalid input, try again.");
+        }
+    }
+
     @GetMapping("/view")
     @ApiOperation(value="Search By Zip Code", notes="Gets all properties within a certain zip code")
     @JsonView(PropertyView.Search.class)

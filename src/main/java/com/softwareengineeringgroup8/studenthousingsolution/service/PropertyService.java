@@ -42,7 +42,7 @@ public class PropertyService {
 
     public List<Properties> getPropertiesByLandlord(User landlord){ return propertyRepository.findByLandlord(landlord); }
 
-   public Properties getPropertyByID(int id){ return propertyRepository.findById(id); }
+   public Properties getById(int id){ return propertyRepository.findById(id); }
 
 
 
