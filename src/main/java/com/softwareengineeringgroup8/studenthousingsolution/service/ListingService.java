@@ -162,7 +162,7 @@ public class ListingService {
 
     public Properties getPropertyById(int id) throws ValidationException {
         try{
-            return propRepository.findByPropertyID(id);
+            return propRepository.findById(id);
         }catch(Exception e){
             throw new ValidationException("Couldn't find Property By Id");
         }

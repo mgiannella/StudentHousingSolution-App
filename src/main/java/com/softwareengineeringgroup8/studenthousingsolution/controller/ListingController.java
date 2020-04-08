@@ -7,7 +7,7 @@ import com.softwareengineeringgroup8.studenthousingsolution.model.*;
 
 
 import com.softwareengineeringgroup8.studenthousingsolution.service.ListingService;
-import com.softwareengineeringgroup8.studenthousingsolution.service.PropertyService;
+import com.softwareengineeringgroup8.studenthousingsolution.service.*;
 import com.softwareengineeringgroup8.studenthousingsolution.service.UserPermissionService;
 import com.softwareengineeringgroup8.studenthousingsolution.controller.UserController;
 import io.swagger.annotations.ApiModel;
@@ -47,7 +47,7 @@ public class ListingController{
         try {
             User user = userPermissionService.loadUserByJWT(authString);
 
-           List<Properties> props = propertyService.getPropertyByLandlord(user);
+           List<Properties> props = propertyService.getPropertiesByLandlord(user);
            return props;
 
         } catch (Error | NotFoundException e) {

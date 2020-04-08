@@ -3,7 +3,6 @@ package com.softwareengineeringgroup8.studenthousingsolution.repository;
 import com.softwareengineeringgroup8.studenthousingsolution.model.User;
 import com.softwareengineeringgroup8.studenthousingsolution.model.Properties;
 import com.softwareengineeringgroup8.studenthousingsolution.model.Amenities;
-import com.softwareengineeringgroup8.studenthousingsolution.model.Properties;
 import com.softwareengineeringgroup8.studenthousingsolution.model.PropertyLocations;
 import com.softwareengineeringgroup8.studenthousingsolution.model.TenantGroups;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,7 +20,11 @@ public interface PropertiesRepository extends JpaRepository<Properties, Integer>
     List<Properties> findByLandlord(User landlord);
 
     @Query("SELECT prop FROM Properties prop WHERE prop.id = ?1")
-    Properties findByPropertyID(int id);
+
+
+
+    Properties findById(int id);
+
 
     @Query("Select p FROM Properties p WHERE (p.amenities IN ?1) and (p.location in ?2)")
     List<Properties> findByAmenityAndLocation(List<Amenities> a, List<PropertyLocations> pl);
