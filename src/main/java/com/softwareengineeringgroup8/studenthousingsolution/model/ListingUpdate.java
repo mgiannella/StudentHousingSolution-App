@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 public class ListingUpdate {
 
@@ -45,10 +46,9 @@ public class ListingUpdate {
 
         private boolean hasHeat;
 
-        private String photos;
+        private List<String> photos;
 
-        private int propertyID;
-
+        private int id;
 
 
         public String address;
@@ -89,15 +89,16 @@ public class ListingUpdate {
 
     public String zipCode;
 
-        public int getPropertyID() { return propertyID;}
-        public void setPropertyID(int propertyID) {this.propertyID=propertyID;}
+    public int getId() { return id;}
+    public void setId(int id) {this.id=id;}
 
-        public String getPhotos() {
-            return photos;
-        }
-        public void setPhotos(String photos) {
-            this.photos = photos;
-        }
+
+    public List<String> getPhotos() {
+        return photos;
+    }
+    public void setPhotos(List<String> photos) {
+        this.photos = photos;
+    }
 
 
         public int getSleeps() { return sleeps; }
@@ -225,11 +226,11 @@ public class ListingUpdate {
 
 
 
-        public ListingUpdate(int propertyID, String address, String city, String state, String zipCode, String title, String description, BigDecimal price, int numBedrooms, float numBathrooms, String renovationDate, boolean hasAC,
+        public ListingUpdate(int id, String address, String city, String state, String zipCode, String title, String description, BigDecimal price, int numBedrooms, float numBathrooms, String renovationDate, boolean hasAC,
                               int parkingspots, boolean hasLaundry, boolean allowPets, boolean allowSmoking, boolean hasWater,
                               boolean hasGasElec, boolean isFurnished, boolean hasAppliances, boolean hasTrashPickup, boolean hasHeat,
-                              int sleeps, String photos) {
-            this.propertyID=propertyID;
+                              int sleeps, List<String> photos) {
+            this.id=id;
             this.address=address;
             this.city=city;
             this.state=state;

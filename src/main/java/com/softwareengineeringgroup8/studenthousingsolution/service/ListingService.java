@@ -113,7 +113,7 @@ public class ListingService {
 
     public void updateListing(ListingUpdate update) {
 
-    int id = update.getPropertyID();
+    int id = update.getId();
     Properties property=getPropertyById(id);
 
     property.getLocation().setAddress(update.getAddress());
@@ -146,7 +146,17 @@ public class ListingService {
       property.getAmenities().setHasHeat(update.isHasHeat());
       property.getAmenities().setSleeps(update.getSleeps());
 
+
       property.setTitle(update.getTitle());
+
+
+/*
+      for (int i=property.getPhotos().size(); i<update.getPhotos().size();i++) {
+          property.getPhotos().add(new PropertyPhotos(i+1,update.getPhotos().get(i),property));
+        }
+
+*/
+
 
       propRepository.save(property);
 
