@@ -50,6 +50,10 @@ public class User {
     @JsonView(PropertyView.ExtendedInfo.class)
     private UserType type;
 
+    @OneToOne(mappedBy = "user")
+    @JsonView(PropertyView.ViewProperty.class)
+    private UserPhotos photo;
+
     public User() {
     }
 
@@ -116,6 +120,14 @@ public class User {
     public UserType getType(){ return this.type; }
 
     public void setType(UserType type) {this.type = type;}
+
+    public UserPhotos getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(UserPhotos photo) {
+        this.photo = photo;
+    }
 
     public User(String username, String password, String email, String firstName, String lastName, String phone, String phoneCode, UserType type) {
         this.username = username;

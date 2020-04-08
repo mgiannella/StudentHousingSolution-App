@@ -2,8 +2,10 @@ package com.softwareengineeringgroup8.studenthousingsolution.service;
 
 import com.softwareengineeringgroup8.studenthousingsolution.exceptions.ValidationException;
 import com.softwareengineeringgroup8.studenthousingsolution.model.RegisterRequest;
+import com.softwareengineeringgroup8.studenthousingsolution.model.UserPhotos;
 import com.softwareengineeringgroup8.studenthousingsolution.model.UserType;
 import com.softwareengineeringgroup8.studenthousingsolution.model.User;
+import com.softwareengineeringgroup8.studenthousingsolution.repository.UserPhotosRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.UserRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.UserTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserService {
 
+    @Autowired
+    private UserPhotosRepository userPhotosRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -29,8 +33,16 @@ public class UserService {
         String phone = registerRequest.getPhone();
         String phoneCode = registerRequest.getPhoneCode();
         String email = registerRequest.getEmail();
+        String photoLoc = registerRequest.getPhoto();
         UserType type = userTypeRepository.findByType(registerRequest.getUserType());
-        userRepository.save(new User(username, encodedPassword, email, firstName, lastName, phone, phoneCode,type));
+        User newUser = new User(username, encodedPassword, email, firstName, lastName, phone, phoneCode,type);
+        if(photoLoc.equals("")){
+            userRepository.save(newUser);
+            return;
+        }
+        UserPhotos photo = new UserPhotos(newUser, photoLoc);
+        userRepository.save(newUser);
+        userPhotosRepository.save(photo);
     }
     // delete user
     public void deleteUser(User user) throws ValidationException{

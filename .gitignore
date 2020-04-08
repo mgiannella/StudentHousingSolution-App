@@ -30,4 +30,4 @@ build/
 ### VS Code ###
 .vscode/
 .DS_Store
-src/main/resources/studenthousingsolution-68992-firebase-adminsdk-f0lvb-9b4ae5112c.json
+src/main/resources/shs-firebase.json
