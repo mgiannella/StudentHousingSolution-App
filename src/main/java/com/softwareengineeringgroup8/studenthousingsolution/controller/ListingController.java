@@ -125,6 +125,32 @@ public class ListingController{
     }
 
 
+    @DeleteMapping("/delete/{deleteID}")
+    @ApiOperation(value="Delete Property ")
+    public Boolean deleteListing(@PathVariable("deleteID") int deleteID, @RequestHeader("Authorization") String authString) throws ValidationException {
+        try {
+            User user = userPermissionService.loadUserByJWT(authString);
+            Properties property=propertyService.getById(deleteID);
+
+            if (userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
+
+                if (property.getLandlord().equals(user)) {
+                    listingService.deleteProp(property);
+                    return true;
+                } else {
+                    throw new ValidationException("Cannot delete another landlord's property ");
+                }
+            }
+            else {
+                throw new ValidationException("User is not a landlord.");
+            }
+
+        } catch (Error | NotFoundException e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+
 
 
 

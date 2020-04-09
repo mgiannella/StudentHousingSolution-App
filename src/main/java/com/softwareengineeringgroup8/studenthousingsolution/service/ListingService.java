@@ -95,16 +95,16 @@ public class ListingService {
             Properties createProp = new Properties(landlord,title, createAmen, createDesc, createLocation, 0,photos);
 
 
-            /*
+
             if (!request.getPhotos().equals("")) {
                 createProp.getPhotos().add(new PropertyPhotos(1,request.getPhotos(),createProp));
             }
-             */
+
             //photosRepository.save(photos);
-            for (int i=0; i<request.getPhotos().size(); i++) {
+            /* for (int i=0; i<request.getPhotos().size(); i++) {
                 createProp.getPhotos().add(new PropertyPhotos(i+1,request.getPhotos().get(i),createProp));
             }
-
+             */
             propRepository.save(createProp);
     }
 
@@ -115,6 +115,7 @@ public class ListingService {
 
     int id = update.getId();
     Properties property=getPropertyById(id);
+
 
     property.getLocation().setAddress(update.getAddress());
     property.getLocation().setCity(update.getCity());
@@ -164,7 +165,9 @@ public class ListingService {
 
 
 
-
+    public void deleteProp(Properties property) {
+        propRepository.delete(property);
+    }
 
 
     public Properties getPropertyById(int id) throws ValidationException {
