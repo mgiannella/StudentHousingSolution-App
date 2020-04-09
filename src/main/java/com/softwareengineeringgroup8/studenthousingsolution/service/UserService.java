@@ -55,7 +55,8 @@ public class UserService {
     public void updateUser(User user, RegisterRequest changes){
         user.setEmail(changes.getEmail());
         user.setFullname(changes.getFirstName(), changes.getLastName());
-        user.setPhone(changes.getPhoneCode() + changes.getPhone());
+        user.setPhoneCode(changes.getPhoneCode());
+        user.setPhone(changes.getPhone());
         UserType type = userTypeRepository.findByType(changes.getUserType());
         user.setType(type);
         userRepository.save(user);
