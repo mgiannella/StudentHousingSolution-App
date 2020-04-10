@@ -30,12 +30,11 @@ public class TenantGroupsService {
 
     // returns true if user is in the group
     public boolean inGroup(User user, TenantGroups group){
-        List<User> userList = tenantGroupMembersRepository.findByGroup(group);
-        if(userList.contains(user)){
-            return true;
+        if(tenantGroupMembersRepository.findTenantGroupMembersByUserAndGroup(user, group).equals(null)){
+            return false;
         }
 
-        return false;
+        return true;
     }
 
     public TenantGroups createGroup(User leadTenant, String groupName) throws ValidationException{
@@ -147,4 +146,30 @@ public class TenantGroupsService {
         }
     }
 
+    public void declineInvitation(User user, TenantGroups group) throws ValidationException {
+        TenantGroupMembers member = tenantGroupMembersRepository.findInvitesByUserAndGroup(user, group);
+        if(member.equals(null)){
+            throw new ValidationException("Member did not have an invitation to that group");
+        }
+        tenantGroupMembersRepository.delete(member);
+    }
+
+    public void acceptInvitation(User user, TenantGroups group) throws ValidationException {
+        TenantGroupMembers member = tenantGroupMembersRepository.findInvitesByUserAndGroup(user,group);
+        if(member.equals(null)){
+            throw new ValidationException("Member did not have an invitation to that group");
+        }
+        member.setSubscribed(true);
+        member.setInvited(false);
+        tenantGroupMembersRepository.save(member);
+    }
+
+    public void signLease(User user, TenantGroups group) throws ValidationException {
+        TenantGroupMembers member = tenantGroupMembersRepository.findTenantGroupMembersByUserAndGroup(user,group);
+        if(member.equals(null)){
+            throw new ValidationException("Member is not a part of that group");
+        }
+        member.setSignedLease(true);
+        tenantGroupMembersRepository.save(member);
+    }
 }
