@@ -60,6 +60,8 @@ public class TenantGroupsService {
         if(!group.getLeadTenant().equals(inviter)){
             throw new ValidationException("Lead tenant needs to invite");
         }
+        if(!tenantGroupMembersRepository.findInvitesByUserAndGroup(invitee, group).equals(null))
+            throw new ValidationException("Already sent an invite to this user");
         // Check to make sure invitee isn't in 2 groups already
         List<TenantGroups> groupsList = tenantGroupMembersRepository.findTenantGroupByMember(invitee);
         if(groupsList.size() > 1){
@@ -171,5 +173,9 @@ public class TenantGroupsService {
         }
         member.setSignedLease(true);
         tenantGroupMembersRepository.save(member);
+    }
+
+    public List<TenantGroupMembers> viewInvitations(User user) {
+        return tenantGroupMembersRepository.findInvitesByUser(user);
     }
 }

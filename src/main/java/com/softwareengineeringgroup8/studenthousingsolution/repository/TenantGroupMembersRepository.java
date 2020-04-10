@@ -21,6 +21,9 @@ public interface TenantGroupMembersRepository extends JpaRepository<TenantGroupM
     @Query("SELECT u FROM TenantGroupMembers u WHERE (u.tenant = ?1) AND (u.subscribed = false) AND (u.group = ?2)")
     TenantGroupMembers findInvitesByUserAndGroup(User user, TenantGroups group);
 
+    @Query("SELECT u FROM TenantGroupMembers u WHERE (u.tenant = ?1) AND (u.subscribed = false)")
+    List<TenantGroupMembers>findInvitesByUser(User user);
+
     @Query("Select u from TenantGroupMembers u where (u.group = ?1)")
     List<TenantGroupMembers> findTenantGroupMembersByGroup(TenantGroups group);
 
