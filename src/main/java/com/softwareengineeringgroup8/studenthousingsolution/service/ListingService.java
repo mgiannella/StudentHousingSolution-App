@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.math.BigDecimal;
 import java.sql.Date;
 
-import com.sun.javaws.jnl.PropertyDesc;
+//import com.sun.javaws.jnl.PropertyDesc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -95,16 +95,16 @@ public class ListingService {
             Properties createProp = new Properties(landlord,title, createAmen, createDesc, createLocation, 0,photos);
 
 
-
+/*
             if (!request.getPhotos().equals("")) {
                 createProp.getPhotos().add(new PropertyPhotos(1,request.getPhotos(),createProp));
             }
-
+*/
             //photosRepository.save(photos);
-            /* for (int i=0; i<request.getPhotos().size(); i++) {
+            for (int i=0; i<request.getPhotos().size(); i++) {
                 createProp.getPhotos().add(new PropertyPhotos(i+1,request.getPhotos().get(i),createProp));
             }
-             */
+            
             propRepository.save(createProp);
     }
 
@@ -135,6 +135,7 @@ public class ListingService {
       String renDate = update.getRenovationDate();
       property.getAmenities().setRenovationDate(Date.valueOf(renDate));
       property.getAmenities().setHasAC(update.isHasAC());
+      property.getAmenities().setPetsAllowed(update.isAllowPets());
       property.getAmenities().setParkingSpots(update.getParkingspots());
       property.getAmenities().setHasLaundry(update.isHasLaundry());
       property.getAmenities().setSmokingAllowed(update.isAllowPets());
@@ -166,6 +167,12 @@ public class ListingService {
 
 
     public void deleteProp(Properties property) {
+        PropertyLocations location = locRepository.findById(property.getLocation().getId());
+        locRepository.delete(location);
+        Amenities amenities = amenRepository.findById(property.getAmenities().getAmenityId());
+        amenRepository.delete(amenities);
+        PropertyDescriptions description = descRepository.findById(property.getDescription().getId());
+        descRepository.delete(description);
         propRepository.delete(property);
     }
 
