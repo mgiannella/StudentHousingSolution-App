@@ -44,7 +44,7 @@ public class ReviewsController {
             }
 
             // connect with review service
-            Boolean acceptReview=reviewsService.createReview(req.getReviewDescription(),req.getCleanlinessRating(),req.getSecurityRating(), req.getCommunicatingRating(), req.getLocationRating(), req.getTotalRating(), tenant);
+            Boolean acceptReview=reviewsService.createReview(req.getReviewDescription(),req.getCleanlinessRating(),req.getSecurityRating(), req.getCommunicationRating(), req.getLocationRating(), req.getTotalRating(), tenant, req.getProp());
             if (acceptReview==false){
                 return false;
             }

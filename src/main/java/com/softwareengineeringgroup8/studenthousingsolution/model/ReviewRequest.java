@@ -5,11 +5,14 @@ import java.io.Serializable;
 
 public class ReviewRequest implements Serializable{
     private String reviewDescription;
-    private int cleanlinessRating;
-    private int securityRating;
-    private int communicatingRating;
-    private int locationRating;
-    private int totalRating;
+    private float cleanlinessRating;
+    private float securityRating;
+    private float communicationRating;
+    private float locationRating;
+    private float totalRating;
+
+    public ReviewRequest(){
+    }
 
     public String getReviewDescription() {
         return reviewDescription;
@@ -19,51 +22,63 @@ public class ReviewRequest implements Serializable{
         this.reviewDescription = reviewDescription;
     }
 
-    public int getCleanlinessRating() {
+    public float getCleanlinessRating() {
         return cleanlinessRating;
     }
 
-    public void setCleanlinessRating(int cleanlinessRating) {
+    public void setCleanlinessRating(float cleanlinessRating) {
         this.cleanlinessRating = cleanlinessRating;
     }
 
-    public int getSecurityRating() {
+    public float getSecurityRating() {
         return securityRating;
     }
 
-    public void setSecurityRating(int securityRating) {
+    public void setSecurityRating(float securityRating) {
         this.securityRating = securityRating;
     }
 
-    public int getCommunicatingRating() { return communicatingRating; }
+    public float getCommunicationRating() { return communicationRating; }
 
-    public void setCommunicatingRating(int communicatingRating) {
-        this.communicatingRating = communicatingRating;
+    public void setCommunicationRating(float communicationRating) {
+        this.communicationRating = communicationRating;
     }
 
-    public int getLocationRating() {
+    public float getLocationRating() {
         return locationRating;
     }
 
-    public void setLocationRating(int locationRating) {
+    public void setLocationRating(float locationRating) {
         this.locationRating = locationRating;
     }
 
-    public int getTotalRating() {
+    public float getTotalRating() {
         return totalRating;
     }
 
-    public void setTotalRating(int totalRating) {
+    public void setTotalRating(float totalRating) {
         this.totalRating = totalRating;
     }
 
-    public ReviewRequest(String reviewDescription, int cleanlinessRating,int securityRating,int communicatingRating,int locationRating,int totalRating){
+
+    private int prop;
+
+    public int getProp() {
+        return prop;
+    }
+
+    public void setProp(int prop) {
+        this.prop = prop;
+    }
+
+    public ReviewRequest(String reviewDescription, float cleanlinessRating,float securityRating,float communicationRating,float locationRating,float totalRating, int prop){
         this.reviewDescription=reviewDescription;
         this.cleanlinessRating=cleanlinessRating;
         this.securityRating=securityRating;
-        this.communicatingRating=communicatingRating;
+        this.communicationRating=communicationRating;
         this.locationRating=locationRating;
         this.totalRating=totalRating;
+        this.prop = prop;
 
     }
 }

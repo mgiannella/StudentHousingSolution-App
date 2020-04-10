@@ -29,19 +29,19 @@ public class Reviews {
     private String reviewDescription;
 
     @Column(name="CleanlinessRating")
-    private int cleanlinessRating;
+    private float cleanlinessRating;
 
-    @Column(name="Security Rating")
-    private int securityRating;
+    @Column(name="SecurityRating")
+    private float securityRating;
 
-    @Column(name="CommunicatingRating")
-    private int communicatingRating;
+    @Column(name="CommunicationRating")
+    private float communicationRating;
 
     @Column(name="LocationRating")
-    private int locationRating;
+    private float locationRating;
 
     @Column(name="TotalRating")
-    private int totalRating;
+    private float totalRating;
 
 
     public int getId() {
@@ -76,53 +76,53 @@ public class Reviews {
         this.reviewDescription = reviewDescription;
     }
 
-    public int getCleanlinessRating() {
+    public float getCleanlinessRating() {
         return cleanlinessRating;
     }
 
-    public void setCleanlinessRating(int cleanlinessRating) {
+    public void setCleanlinessRating(float cleanlinessRating) {
         this.cleanlinessRating = cleanlinessRating;
     }
 
-    public int getSecurityRating() {
+    public float getSecurityRating() {
         return securityRating;
     }
 
-    public void setSecurityRating(int securityRating) {
+    public void setSecurityRating(float securityRating) {
         this.securityRating = securityRating;
     }
 
-    public int getCommunicatingRating() {
-        return communicatingRating;
+    public float getCommunicationRating() {
+        return communicationRating;
     }
 
-    public void setCommunicatingRating(int communicatingRating) {
-        this.communicatingRating = communicatingRating;
+    public void setCommunicationRating(float communicationRating) {
+        this.communicationRating = communicationRating;
     }
 
-    public int getLocationRating() {
+    public float getLocationRating() {
         return locationRating;
     }
 
-    public void setLocationRating(int locationRating) {
+    public void setLocationRating(float locationRating) {
         this.locationRating = locationRating;
     }
 
-    public int getTotalRating() {
+    public float getTotalRating() {
         return totalRating;
     }
 
-    public void setTotalRating(int totalRating) {
+    public void setTotalRating(float totalRating) {
         this.totalRating = totalRating;
     }
 
-    public Reviews(Properties prop,User tenant,String reviewDescription, int cleanlinessRating, int securityRating, int communicatingRating, int locationRating, int totalRating ){
+    public Reviews(Properties prop,User tenant,String reviewDescription, float cleanlinessRating, float securityRating, float communicationRating, float locationRating, float totalRating ){
         this.prop= prop;
         this.tenant = tenant;
         this.reviewDescription=reviewDescription;
         this.cleanlinessRating=cleanlinessRating;
         this.securityRating=securityRating;
-        this.communicatingRating=communicatingRating;
+        this.communicationRating=communicationRating;
         this.locationRating=locationRating;
         this.totalRating=totalRating;
     }

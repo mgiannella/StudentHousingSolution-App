@@ -4,6 +4,7 @@ package com.softwareengineeringgroup8.studenthousingsolution.controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.softwareengineeringgroup8.studenthousingsolution.model.ChargeRequest;
+import com.softwareengineeringgroup8.studenthousingsolution.model.PendingPaymentRequest;
 import com.softwareengineeringgroup8.studenthousingsolution.model.StripeLandlordRequest;
 import com.softwareengineeringgroup8.studenthousingsolution.model.User;
 import com.softwareengineeringgroup8.studenthousingsolution.model.UserRoles;
@@ -14,6 +15,7 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
 import com.stripe.model.Charge;
 import com.stripe.model.Token;
+
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
@@ -54,6 +56,8 @@ public class PaymentController {
     @Autowired
     private PropertyService propertyService;
     @Autowired
+    private PendingPaymentService pendingPaymentService;
+    @Autowired
     private PropertiesRepository propertiesRepository;
 /*
     public PaymentController(StripeClient stripeClient) {
@@ -67,8 +71,8 @@ public class PaymentController {
 
 
     @GetMapping("/viewTenantProperties")
-    @ApiOperation(value =  "View Tenant Properties")
-    public List<Properties> listProperties(@RequestHeader("Authorization") String authString){
+    @ApiOperation(value = "View Tenant Properties")
+    public List<Properties> listProperties(@RequestHeader("Authorization") String authString) {
         try {
             User user = userPermissionService.loadUserByJWT(authString);
             List<Properties> propertiesList = new ArrayList<Properties>();
@@ -88,6 +92,15 @@ public class PaymentController {
 
 
     }
+/*
+    @GetMapping("/viewTenants")
+    @ApiOperation(value = "View Tenants on Property")
+    public Properties properties(@RequestHeader("Authorization") String authString) {
+        try {
+            User user = userPermissionService.loadUserByJWT(authString);
+    }
+*/
+
     @PostMapping("/create-charge")
     public Boolean createCharge(@RequestBody ChargeRequest req, @RequestHeader("Authorization") String str) throws StripeException {
         try {
@@ -97,9 +110,11 @@ public class PaymentController {
                 //;
             }
             //listingService.createListingRequest(request,landlord);
-            String chargeId= stripeClient.createCharge(req.getName_card(), req.getEmail(), req.getCard_num(), req.getMonthNum(), req.getYearNum(), req.getCcv(), req.getFirstName(), req.getLastName(), req.getAddress(), req.getCity(), req.getState(), req.getZip(), req.getCountry(), req.getPhone(), tenant, req.getProp());
 
-            String transferId=stripeClient.transferCharge(req.getEmail());
+            //took out tenant id for now  tenant,
+            String chargeId = stripeClient.createCharge(req.getName_card(), req.getEmail(), req.getCard_num(), req.getMonthNum(), req.getYearNum(), req.getCcv(), req.getFirstName(), req.getLastName(), req.getAddress(), req.getCity(), req.getState(), req.getZip(), req.getCountry(), req.getPhone(), req.getProp());
+
+            String transferId = stripeClient.transferCharge(req.getEmail());
             if (chargeId == null) {
                 //return "An error occurred while trying to create a charge.";
                 return false;
@@ -124,7 +139,7 @@ public class PaymentController {
                 //;
             }
             //listingService.createListingRequest(request,landlord);
-            String accountId= stripeClient.createLandlordAcct(req.getEmail());
+            String accountId = stripeClient.createLandlordAcct(req.getEmail());
 
             //return "Success! Your account has been created;
 
@@ -133,6 +148,22 @@ public class PaymentController {
             System.out.println(e);
             return false;
             //return "error";
+        }
+    }
+
+    @PostMapping("/create-payment request")
+    public Boolean createPaymentRequest(@RequestBody PendingPaymentRequest req, @RequestHeader("Authorization") String str) throws StripeException {
+        try {
+            User landlord = userPermissionService.loadUserByJWT(str);
+            if (!userPermissionService.assertPermission(landlord, UserRoles.ROLE_LANDLORD)) {
+                return false;
+                //;
+            }
+            Boolean payRequest = pendingPaymentService.createPaymentRequest(req.getPropID(), req.getTenantID(), req.getAmount(), req.getPtype());
+            return true;
+        } catch (Error | NotFoundException e) {
+            System.out.println(e);
+            return false;
         }
     }
 }

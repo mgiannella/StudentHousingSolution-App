@@ -35,24 +35,35 @@ public class ReviewsService {
     private PropertiesRepository propertiesRepository;
 
 
-    public Boolean createReview(String reviewDescription, int cleanlinessRating, int securityRating, int communicatingRating, int locationRating, int totalRating, User tenant) throws Exception{
+    public Boolean createReview(String reviewDescription, float cleanlinessRating, float securityRating, float communicationRating, float locationRating, float totalRating, User tenant, int propID) throws Exception{
 
+        String clR= String.valueOf(cleanlinessRating);
+        String sR= String.valueOf(securityRating);
+        String cR= String.valueOf(communicationRating);
+        String lR= String.valueOf(locationRating);
+        String tR= String.valueOf(totalRating);
 
+        try {
 
-        try{
-            //if ()
-            return false;
+            if (clR == null || sR == null || cR == null || lR == null || tR == null) {
+                return false;
+            }
+            else if(cleanlinessRating > 5 || securityRating > 5|| communicationRating > 5 || locationRating > 5|| totalRating> 5){
+                return false;
+            }
+
         }catch (Exception ex) {
             ex.printStackTrace();
+
         }
 
-        List<TenantGroups> tglist = tenantGroupsService.getGroupByTenant(tenant);
-        List<Properties> propList = propertiesRepository.findByTenantGroup(tglist.get(0));
+        Properties property= propertiesRepository.findByPropertyID(propID);
 
-        Properties x = propList.get(0);
-
-        Reviews reviews = new Reviews( x, tenant,reviewDescription, cleanlinessRating, securityRating, communicatingRating,  locationRating,  totalRating  );
+        Reviews reviews = new Reviews(property, tenant,reviewDescription, cleanlinessRating, securityRating, communicationRating,  locationRating,  totalRating );
+        reviewsRepository.save(reviews);
 
         return true;
+
+
     }
 }

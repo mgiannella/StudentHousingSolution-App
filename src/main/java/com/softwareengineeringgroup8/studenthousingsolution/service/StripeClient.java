@@ -76,7 +76,8 @@ public class StripeClient {
     }
 
     //Creates customer with a card
-    public String createCharge(String name_card, String email, String card_num, String monthNum, String yearNum, String ccv, String firstName, String lastName, String address, String city, String state, String zip, String country, String phone, User tenant, int propID) throws StripeException {
+    //took out tenant id for now User tenant,
+    public String createCharge(String name_card, String email, String card_num, String monthNum, String yearNum, String ccv, String firstName, String lastName, String address, String city, String state, String zip, String country, String phone, int propID) throws StripeException {
 
         Map<String, Object> customerParameter = new HashMap<String, Object>();
         String CustomerId = null;
@@ -149,31 +150,14 @@ public class StripeClient {
 
 
 
+            //String ptypeDesc = "TENANT_MONTHLY";
 
-            // Gets property description from front end selection
-        /*
-           if (chargeDescription== "Complete Rent"){
-            ptypeDesc="TENANT_MONTHLY"
-           }else if(chargeDescription== "Utilities"){
-            ptypeDesc="UTILITIES"
-          }else if(chargeDescription== "Security Deposit"){
-            ptypeDesc="SECURITY_DEPOSIT"
-           }else if (chargeDescription == "Amenities"){
-           ptypeDesc="AMENITIES_FEE"
-           }else {
-           ptypeDesc="PARKING_FEE"
-           }
-           }
-         */
-
-            String ptypeDesc = "TENANT_MONTHLY";
-
-            Properties property= propertiesRepository.findByPropertyID(propID);
+            //Properties property= propertiesRepository.findByPropertyID(propID);
 
 
-            PaymentRecord paymentRecord = new PaymentRecord(new Date(new java.util.Date().getTime()), property, tenant, paymentTypeRepository.findBypTypeDesc(ptypeDesc), new BigDecimal(1245));
+            //PaymentRecord paymentRecord = new PaymentRecord(new Date(new java.util.Date().getTime()), property, tenant, paymentTypeRepository.findBypTypeDesc(ptypeDesc), new BigDecimal(1245));
 
-            paymentRecordRepository.save(paymentRecord);
+            //paymentRecordRepository.save(paymentRecord);
 
             return chargeId;
 

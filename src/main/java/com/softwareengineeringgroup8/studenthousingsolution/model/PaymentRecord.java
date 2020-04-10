@@ -86,15 +86,29 @@ public class PaymentRecord {
         this.paymentDate = paymentDate;
     }
 
+
+
+    @Column(name="PaymentDueDate")
+    private Date paymentDueDate;
+
+    public Date getPaymentDueDate() {
+        return paymentDueDate;
+    }
+
+    public void setPaymentDueDate(Date paymentDueDate) {
+        this.paymentDueDate = paymentDueDate;
+    }
+
     public PaymentRecord() {
 
     }
 
-    public PaymentRecord(Date paymentDate, Properties prop, User tenant, PaymentType paymentId, BigDecimal paymentAmount) {
+    public PaymentRecord(Date paymentDate, Properties prop, User tenant, PaymentType paymentId, BigDecimal paymentAmount, Date paymentDueDate) {
         this.paymentDate = paymentDate;
         this.prop = prop;
         this.tenant = tenant;
         this.paymentId = paymentId;
         this.paymentAmount = paymentAmount;
+        this.paymentDueDate = paymentDueDate;
     }
 }
