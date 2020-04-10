@@ -42,7 +42,7 @@ public class ReviewsService {
         String cR= String.valueOf(communicationRating);
         String lR= String.valueOf(locationRating);
         String tR= String.valueOf(totalRating);
-
+// cannot be null nor greater than 5
         try {
 
             if (clR == null || sR == null || cR == null || lR == null || tR == null) {
