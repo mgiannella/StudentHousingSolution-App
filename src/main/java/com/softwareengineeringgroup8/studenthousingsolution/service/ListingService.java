@@ -104,7 +104,7 @@ public class ListingService {
             for (int i=0; i<request.getPhotos().size(); i++) {
                 createProp.getPhotos().add(new PropertyPhotos(i+1,request.getPhotos().get(i),createProp));
             }
-            
+
             propRepository.save(createProp);
     }
 
@@ -167,13 +167,13 @@ public class ListingService {
 
 
     public void deleteProp(Properties property) {
-        PropertyLocations location = locRepository.findById(property.getLocation().getId());
-        locRepository.delete(location);
-        Amenities amenities = amenRepository.findById(property.getAmenities().getAmenityId());
-        amenRepository.delete(amenities);
-        PropertyDescriptions description = descRepository.findById(property.getDescription().getId());
-        descRepository.delete(description);
         propRepository.delete(property);
+        PropertyLocations location = property.getLocation();
+        locRepository.delete(location);
+        Amenities amenities = property.getAmenities();
+        amenRepository.delete(amenities);
+        PropertyDescriptions description = property.getDescription();
+        descRepository.delete(description);
     }
 
 
