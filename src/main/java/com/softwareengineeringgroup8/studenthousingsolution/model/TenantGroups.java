@@ -23,8 +23,7 @@ public class TenantGroups {
     public TenantGroups() {
     }
 
-    public TenantGroups(int id, User leadTenant, String name) {
-        this.id = id;
+    public TenantGroups(User leadTenant, String name) {
         this.leadTenant = leadTenant;
         this.name = name;
     }
