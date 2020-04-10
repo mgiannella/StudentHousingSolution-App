@@ -152,10 +152,19 @@ public class ListingService {
       property.setTitle(update.getTitle());
 
 
-      property.getPhotos().add(new PropertyPhotos(2,update.getPhotos(),property));
+      //property.getPhotos().add(new PropertyPhotos(2,update.getPhotos(),property));
+        List<PropertyPhotos> photos = property.getPhotos();
+        int size = photos.size();
+        for (int i=size; i<update.getPhotos().size();i++) {
+            int j=0;
+            property.getPhotos().add(new PropertyPhotos(i+1,update.getPhotos().get(j),property));
+            j++;
+        }
 
-
-
+        /* for (int i=0; i<request.getPhotos().size(); i++) {
+            createProp.getPhotos().add(new PropertyPhotos(i+1,request.getPhotos().get(i),createProp));
+        }
+    */
 
       propRepository.save(property);
 

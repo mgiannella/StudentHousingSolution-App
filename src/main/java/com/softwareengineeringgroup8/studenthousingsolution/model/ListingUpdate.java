@@ -46,7 +46,7 @@ public class ListingUpdate {
 
         private boolean hasHeat;
 
-        private String photos;
+        private List<String> photos;
 
         private int id;
 
@@ -93,10 +93,10 @@ public class ListingUpdate {
     public void setId(int id) {this.id=id;}
 
 
-    public String getPhotos() {
+    public List<String> getPhotos() {
         return photos;
     }
-    public void setPhotos(String photos) {
+    public void setPhotos(List<String> photos) {
         this.photos = photos;
     }
 
@@ -229,7 +229,7 @@ public class ListingUpdate {
         public ListingUpdate(int id, String address, String city, String state, String zipCode, String title, String description, BigDecimal price, int numBedrooms, float numBathrooms, String renovationDate, boolean hasAC,
                               int parkingspots, boolean hasLaundry, boolean allowPets, boolean allowSmoking, boolean hasWater,
                               boolean hasGasElec, boolean isFurnished, boolean hasAppliances, boolean hasTrashPickup, boolean hasHeat,
-                              int sleeps, String photos) {
+                              int sleeps, List<String> photos) {
             this.id=id;
             this.address=address;
             this.city=city;
