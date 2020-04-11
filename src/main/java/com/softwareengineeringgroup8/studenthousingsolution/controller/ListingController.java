@@ -9,10 +9,12 @@ import com.softwareengineeringgroup8.studenthousingsolution.model.*;
 import com.softwareengineeringgroup8.studenthousingsolution.service.ListingService;
 import com.softwareengineeringgroup8.studenthousingsolution.service.*;
 import com.softwareengineeringgroup8.studenthousingsolution.service.UserPermissionService;
+import com.softwareengineeringgroup8.studenthousingsolution.service.HousingAgreementService;
 import com.softwareengineeringgroup8.studenthousingsolution.controller.UserController;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import javassist.NotFoundException;
 import java.sql.Date;
 
@@ -40,6 +42,25 @@ public class ListingController{
 
     @Autowired
     private PropertyService propertyService;
+
+    @Autowired
+    private HousingAgreementService agreementService;
+
+
+    @GetMapping("/viewLease/{propertyID}")
+    @ApiOperation(value="View Lease")
+    public HousingAgreement tenantLease(@RequestHeader("Authorization") String authString, @PathVariable("propertyID") int propertyID){
+        try{
+            User user = userPermissionService.loadUserByJWT(authString);
+            Properties prop = propertyService.getById(propertyID);
+            return agreementService.getHousingAgreement(prop);
+        } catch (Error | NotFoundException e) {
+            System.out.println(e);
+            return null;
+        }
+
+    }
+
 
 
     @GetMapping("/viewLandlordProperties")
