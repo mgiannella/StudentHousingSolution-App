@@ -155,7 +155,7 @@ public class ListingService {
       //property.getPhotos().add(new PropertyPhotos(2,update.getPhotos(),property));
         List<PropertyPhotos> photos = property.getPhotos();
         int size = photos.size();
-        for (int i=size; i<update.getPhotos().size();i++) {
+        for (int i=size; i<(update.getPhotos().size() + size);i++) {
             int j=0;
             property.getPhotos().add(new PropertyPhotos(i+1,update.getPhotos().get(j),property));
             j++;
