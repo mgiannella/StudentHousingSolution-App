@@ -38,6 +38,8 @@ public class ListingService {
     private PropertyPhotosRepository photosRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private HousingAgreementRepository agreementRepository;
 
 
 
@@ -153,10 +155,15 @@ public class ListingService {
             j++;
         }
 
+        //HousingAgreement lease = new HousingAgreement(property, update.getLease(), update.getStartDate(), update.getEndDate());
+        //property.setLease(lease);
+
         /* for (int i=0; i<request.getPhotos().size(); i++) {
             createProp.getPhotos().add(new PropertyPhotos(i+1,request.getPhotos().get(i),createProp));
         }
     */
+       HousingAgreement lease = new HousingAgreement(property, update.getLease(), update.getStartDate(), update.getEndDate());
+       agreementRepository.save(lease);
 
       propRepository.save(property);
 
