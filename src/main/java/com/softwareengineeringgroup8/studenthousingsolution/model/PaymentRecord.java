@@ -31,12 +31,16 @@ public class PaymentRecord {
     private User tenant;
 
     @ManyToOne
-    @JoinColumn(name = "PaymentTypeID")
+    @JoinColumn(name ="PaymentTypeID")
     private PaymentType paymentId;
 
 
     @Column(name="PaymentAmount")
     private BigDecimal paymentAmount;
+
+    @Column(name="PaymentDueDate")
+    private Date paymentDueDate;
+
 
     public int getId() {
         return id;
@@ -86,22 +90,12 @@ public class PaymentRecord {
         this.paymentDate = paymentDate;
     }
 
+    public Date getPaymentDueDate() { return paymentDueDate; }
 
+    public void setPaymentDueDate(Date paymentDueDate) { this.paymentDueDate = paymentDueDate; }
 
-    @Column(name="PaymentDueDate")
-    private Date paymentDueDate;
+    public PaymentRecord() { }
 
-    public Date getPaymentDueDate() {
-        return paymentDueDate;
-    }
-
-    public void setPaymentDueDate(Date paymentDueDate) {
-        this.paymentDueDate = paymentDueDate;
-    }
-
-    public PaymentRecord() {
-
-    }
 
     public PaymentRecord(Date paymentDate, Properties prop, User tenant, PaymentType paymentId, BigDecimal paymentAmount, Date paymentDueDate) {
         this.paymentDate = paymentDate;

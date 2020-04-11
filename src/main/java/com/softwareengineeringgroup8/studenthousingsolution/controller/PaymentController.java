@@ -120,6 +120,21 @@ public class PaymentController {
         }
     }
 
+    @PostMapping("/viewPayments")
+    @ApiOperation(value= "View Payments")
+    public List<PaymentRecord> viewPayments(@RequestHeader("Authorization") String authString){
+        try {
+            User user = userPermissionService.loadUserByJWT(authString);
+            if (!userPermissionService.assertPermission(user, UserRoles.ROLE_TENANT)) {
+                return null;
+            }
+            return pendingPaymentService.getPaymentRecordByUser(user);
+        } catch (Error| NotFoundException e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+
 
     @PostMapping("/create-charge")
     public Boolean createCharge(@RequestBody ChargeRequest req, @RequestHeader("Authorization") String str) throws StripeException {
@@ -180,12 +195,33 @@ public class PaymentController {
                 //;
             }
             Boolean payRequest = pendingPaymentService.createPaymentRequest(req.getPropID(), req.getTenantID(), req.getAmount(), req.getPtype(), req.getDueDate());
+            if (payRequest==false){
+                return false;
+            }
             return true;
         } catch (Error | NotFoundException e) {
             System.out.println(e);
             return false;
         }
     }
+
+    /*
+    @PostMapping("/viewPendingPayments")
+    @ApiOperation(value = "View Pending Payments")
+    public List<PaymentRecord> viewPendingPayments(@RequestHeader("Authorization") String authString){
+        try {
+            User user = userPermissionService.loadUserByJWT(authString);
+            if (!userPermissionService.assertPermission(user, UserRoles.ROLE_TENANT) {
+                return null;
+            }
+
+        } catch (Error| NotFoundException e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+
+     */
 }
         /*
         //Creates customer with card
