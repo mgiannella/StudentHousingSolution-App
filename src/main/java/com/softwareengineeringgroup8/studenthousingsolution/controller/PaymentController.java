@@ -75,6 +75,12 @@ public class PaymentController {
     public List<Properties> listProperties(@RequestHeader("Authorization") String authString) {
         try {
             User user = userPermissionService.loadUserByJWT(authString);
+
+          /*  if (!userPermissionService.assertPermission(user, UserRoles.ROLE_TENANT)) {
+                return null;
+                //;
+            }*/
+
             List<Properties> propertiesList = new ArrayList<Properties>();
             List<TenantGroups> tenantGroupsList = tenantGroupsService.getGroupByTenant(user);
             int size = tenantGroupsList.size();
@@ -92,14 +98,28 @@ public class PaymentController {
 
 
     }
-/*
+
     @GetMapping("/viewTenants")
     @ApiOperation(value = "View Tenants on Property")
     public Properties properties(@RequestHeader("Authorization") String authString) {
         try {
             User user = userPermissionService.loadUserByJWT(authString);
+
+            if (!userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
+                return null;
+                //;
+            }
+
+            Properties properties = propertyService.getPropertyByLandlord(user);
+
+            return properties;
+        } catch (Error | NotFoundException e) {
+
+            System.out.println(e);
+            return null;
+        }
     }
-*/
+
 
     @PostMapping("/create-charge")
     public Boolean createCharge(@RequestBody ChargeRequest req, @RequestHeader("Authorization") String str) throws StripeException {
@@ -139,7 +159,7 @@ public class PaymentController {
                 //;
             }
             //listingService.createListingRequest(request,landlord);
-            String accountId = stripeClient.createLandlordAcct(req.getEmail());
+            String accountId = stripeClient.createLandlordAcct(req.getEmail(),landlord);
 
             //return "Success! Your account has been created;
 
@@ -159,7 +179,7 @@ public class PaymentController {
                 return false;
                 //;
             }
-            Boolean payRequest = pendingPaymentService.createPaymentRequest(req.getPropID(), req.getTenantID(), req.getAmount(), req.getPtype());
+            Boolean payRequest = pendingPaymentService.createPaymentRequest(req.getPropID(), req.getTenantID(), req.getAmount(), req.getPtype(), req.getDueDate());
             return true;
         } catch (Error | NotFoundException e) {
             System.out.println(e);

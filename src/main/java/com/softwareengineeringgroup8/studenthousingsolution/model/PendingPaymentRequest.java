@@ -9,6 +9,7 @@ public class PendingPaymentRequest implements Serializable{
     private int tenantID;
     private String amount;
     private String ptype;
+    private String dueDate;
 
     public int getPropID() {
         return propID;
@@ -42,13 +43,22 @@ public class PendingPaymentRequest implements Serializable{
         this.ptype = ptype;
     }
 
+    public String getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(String dueDate) {
+        this.dueDate = dueDate;
+    }
+
     public PendingPaymentRequest(){}
 
-    public PendingPaymentRequest(int propID, int tenantID, String amount, String ptype){
+    public PendingPaymentRequest(int propID, int tenantID, String amount, String ptype, String dueDate){
         this.propID = propID;
         this.tenantID = tenantID;
         this.amount = amount;
         this.ptype = ptype;
+        this.dueDate = dueDate;
     }
 
 }

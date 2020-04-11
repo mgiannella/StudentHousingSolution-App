@@ -3,14 +3,9 @@ package com.softwareengineeringgroup8.studenthousingsolution.service;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.softwareengineeringgroup8.studenthousingsolution.model.PaymentRecord;
+import com.softwareengineeringgroup8.studenthousingsolution.model.*;
 import com.softwareengineeringgroup8.studenthousingsolution.model.Properties;
-import com.softwareengineeringgroup8.studenthousingsolution.model.TenantGroups;
-import com.softwareengineeringgroup8.studenthousingsolution.model.User;
-import com.softwareengineeringgroup8.studenthousingsolution.repository.PaymentRecordRepository;
-import com.softwareengineeringgroup8.studenthousingsolution.repository.PaymentTypeRepository;
-import com.softwareengineeringgroup8.studenthousingsolution.repository.PropertiesRepository;
-import com.softwareengineeringgroup8.studenthousingsolution.repository.UserRepository;
+import com.softwareengineeringgroup8.studenthousingsolution.repository.*;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
@@ -26,7 +21,7 @@ import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-
+import java.text.SimpleDateFormat;
 
 import static java.lang.String.valueOf;
 
@@ -48,6 +43,8 @@ public class StripeClient {
     private PropertyService propertyService;
     @Autowired
     private PropertiesRepository propertiesRepository;
+    @Autowired
+    private LandlordAccountsRepository landlordAccountsRepository;
 
     StripeClient() {
         Stripe.apiKey = "sk_test_OmrxXx3SrMP0kubI9Mmkm5rP00UhLqD8c7";
@@ -167,7 +164,7 @@ public class StripeClient {
          return null;
         }
 
-    public String createLandlordAcct(String email) throws StripeException {
+    public String createLandlordAcct(String email, User landlord) throws StripeException {
 
         String accountId = null;
     //creating a landlord account
@@ -202,6 +199,9 @@ public class StripeClient {
             ex.printStackTrace();
         }
 
+
+        LandlordAccounts landlordAccounts= new LandlordAccounts(landlord, accountId);
+        landlordAccountsRepository.save(landlordAccounts);
 
         return accountId;
     }
