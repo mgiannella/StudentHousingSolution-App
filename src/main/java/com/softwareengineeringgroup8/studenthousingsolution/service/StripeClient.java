@@ -74,7 +74,13 @@ public class StripeClient {
 
     //Creates customer with a card
     //took out tenant id for now User tenant,
-    public String createCharge(String name_card, String email, String card_num, String monthNum, String yearNum, String ccv, String firstName, String lastName, String address, String city, String state, String zip, String country, String phone, int propID) throws StripeException {
+    public String createCharge(String name_card, String email, String card_num, String monthNum, String yearNum, String ccv, String firstName, String lastName, String address, String city, String state, String zip, String country, String phone, int paymentRecordID) throws StripeException {
+
+        PaymentRecord paymentRecord= paymentRecordRepository.findByPaymentRecordID(paymentRecordID);
+
+        BigDecimal amount= paymentRecord.getPaymentAmount();
+        Double amountToDouble= amount.doubleValue();
+
 
         Map<String, Object> customerParameter = new HashMap<String, Object>();
         String CustomerId = null;
@@ -121,7 +127,7 @@ public class StripeClient {
 
             //Stripe.apiKey = "sk_test_OmrxXx3SrMP0kubI9Mmkm5rP00UhLqD8c7";
             Map<String, Object> chargeParam = new HashMap<String, Object>();
-            chargeParam.put("amount", 1245 * 100);
+            chargeParam.put("amount", amountToDouble * 100);
             chargeParam.put("currency", "usd");
             chargeParam.put("customer", CustomerId);
 
@@ -156,13 +162,17 @@ public class StripeClient {
 
             //paymentRecordRepository.save(paymentRecord);
 
+            paymentRecord.setPaymentDate(new Date(new java.util.Date().getTime()));
+
+            paymentRecordRepository.save(paymentRecord);
+
             return chargeId;
 
         }
 
-        public String bankCharge(String email, String firstName, String lastName, String address, String city, String state, String zip, String country, String phone, User tenant,String name_bank, String account_num, String routing_num) throws StripeException {
+       /* public String bankCharge(String email, String firstName, String lastName, String address, String city, String state, String zip, String country, String phone, User tenant,String name_bank, String account_num, String routing_num) throws StripeException {
          return null;
-        }
+        }*/
 
     public String createLandlordAcct(String email, User landlord) throws StripeException {
 
@@ -188,7 +198,7 @@ public class StripeClient {
 
             Map<String, Object> tosAcceptanceParams = new HashMap<>();
             tosAcceptanceParams.put("date", (long) System.currentTimeMillis() / 1000L);
-            tosAcceptanceParams.put("ip", "137.36.251.66"); // Assumes you're not using a proxy
+            tosAcceptanceParams.put("ip", "137.36.251.66"); // We're not using a proxy
 
             Map<String, Object> parameter = new HashMap<>();
             parameter.put("tos_acceptance", tosAcceptanceParams);

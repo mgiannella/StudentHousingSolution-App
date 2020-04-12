@@ -22,8 +22,6 @@ import org.springframework.stereotype.Service;
 @Component
 public class PendingPaymentService {
     @Autowired
-    private PaymentRecordRepository paymentRecordRepository;
-    @Autowired
     private PaymentTypeRepository paymentTypeRepository;
     @Autowired
     private UserRepository userRepository;
@@ -35,28 +33,17 @@ public class PendingPaymentService {
     private PropertiesRepository propertiesRepository;
     @Autowired
     private LandlordAccountsRepository landlordAccountsRepository;
+    @Autowired
+    private PaymentRecordRepository paymentRecordRepository;
 
     public Boolean createPaymentRequest(int propID, int tenantID, String amount, String ptype, String dueDate)  {
 
         // Gets property description from front end selection
-        String ptypeDesc = null;
 
         try {
-            if (ptype == "Complete Rent") {
-                ptypeDesc = "TENANT_MONTHLY";
-            } else if (ptype == "Utilities") {
-                ptypeDesc = "UTILITIES";
-            } else if (ptype == "Security Deposit") {
-                ptypeDesc = "SECURITY_DEPOSIT";
-            } else if (ptype == "Amenities") {
-                ptypeDesc = "AMENITIES_FEE";
-            } else if (ptype == "Parking Fees"){
-                ptypeDesc = "PARKING_FEE";
-            }else{
+            if (ptype == null || dueDate==null || amount==null) {
                 return false;
             }
-
-
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -69,7 +56,7 @@ public class PendingPaymentService {
         User tenant = userRepository.findById(tenantID);
 
 
-        PaymentRecord paymentRecord = new PaymentRecord(null, property, tenant, paymentTypeRepository.findBypTypeDesc(ptypeDesc), new BigDecimal(a),dDate);
+        PaymentRecord paymentRecord = new PaymentRecord(null, property, tenant, paymentTypeRepository.findBypTypeDesc(ptype), new BigDecimal(a),dDate);
         paymentRecordRepository.save(paymentRecord);
 
         if (paymentRecord==null){
@@ -82,5 +69,7 @@ public class PendingPaymentService {
 
     //public PaymentRecord getByUser(User tenant)
 
-    public List<PaymentRecord> getPaymentRecordByUser(User tenant){return paymentRecordRepository.findByUser(tenant);}
+    public List<PaymentRecord> getPaymentRecordByUser(User tenant){
+       // List<PaymentRecord> complete = new
+        return paymentRecordRepository.findByUser(tenant);}
 }

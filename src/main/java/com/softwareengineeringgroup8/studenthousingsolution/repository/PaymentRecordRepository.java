@@ -12,6 +12,7 @@ public interface PaymentRecordRepository extends JpaRepository<PaymentRecord,Int
        @Query("SELECT u FROM PaymentRecord u WHERE u.tenant = ?1")
         List<PaymentRecord> findByUser(User tenant);
 
-
+       @Query("SELECT u FROM PaymentRecord u WHERE u.id = ?1")
+        PaymentRecord findByPaymentRecordID(int id);
 
 }
