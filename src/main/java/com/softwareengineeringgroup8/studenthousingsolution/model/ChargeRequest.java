@@ -170,7 +170,7 @@ public class ChargeRequest implements Serializable {
         this.phone = phone;
     }
 
-/*
+
     private int paymentRecordID;
 
     public int getPaymentRecordID() {
@@ -181,9 +181,9 @@ public class ChargeRequest implements Serializable {
         this.paymentRecordID = paymentRecordID;
     }
 
- */
 
-    public ChargeRequest(String name_card, String email, String card_num, String monthNum, String yearNum, String ccv, String firstName, String lastName, String address, String city, String state, String zip, String country, String phone) {//, Date paymentDate, String description) {
+
+    public ChargeRequest(String name_card, String email, String card_num, String monthNum, String yearNum, String ccv, String firstName, String lastName, String address, String city, String state, String zip, String country, String phone,int paymentRecordID) {//, Date paymentDate, String description) {
         this.name_card= name_card;
         this.email = email;
         this.card_num = card_num;
@@ -198,7 +198,7 @@ public class ChargeRequest implements Serializable {
         this.zip=zip;
         this.country=country;
         this.phone=phone;
-       // this.paymentRecordID=paymentRecordID;
+        this.paymentRecordID=paymentRecordID;
         //this.prop=prop;
         //this.paymentDate = paymentDate;
         //this.description = description;

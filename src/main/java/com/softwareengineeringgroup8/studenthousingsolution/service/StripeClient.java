@@ -51,6 +51,8 @@ public class StripeClient {
     }
 
     public String transferCharge(String email) throws StripeException {
+        // Properties prop=paymentRecord.getProp();
+        //User Landlord= prop.getLandlord();
 
         String transactionId = null;
 
@@ -76,11 +78,17 @@ public class StripeClient {
     //took out tenant id for now User tenant,
     public String createCharge(String name_card, String email, String card_num, String monthNum, String yearNum, String ccv, String firstName, String lastName, String address, String city, String state, String zip, String country, String phone, PaymentRecord paymentRecord) throws StripeException {
 
+
+/*
         BigDecimal amount= paymentRecord.getPaymentAmount();
-        Double amountToDouble= amount.doubleValue();
+        Integer amountToDouble= amount.IntegerValue();
+        amountToDouble=amountToDouble*100;
+        String amountToString= Double.toString(amountToDouble);
+*/
 
 
         Map<String, Object> customerParameter = new HashMap<String, Object>();
+
         String CustomerId = null;
 
         customerParameter.put("description", "Customer for " + email);
@@ -125,7 +133,7 @@ public class StripeClient {
 
             //Stripe.apiKey = "sk_test_OmrxXx3SrMP0kubI9Mmkm5rP00UhLqD8c7";
             Map<String, Object> chargeParam = new HashMap<String, Object>();
-            chargeParam.put("amount", amountToDouble * 100);
+            chargeParam.put("amount", "134");
             chargeParam.put("currency", "usd");
             chargeParam.put("customer", CustomerId);
 
@@ -160,9 +168,12 @@ public class StripeClient {
 
             //paymentRecordRepository.save(paymentRecord);
 
+        if(chargeId!=null){
             paymentRecord.setPaymentDate(new Date(new java.util.Date().getTime()));
 
-            paymentRecordRepository.save(paymentRecord);
+            //paymentRecordRepository.save(paymentRecord);
+        }
+
 
             return chargeId;
 
