@@ -4,6 +4,7 @@ package com.softwareengineeringgroup8.studenthousingsolution.controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.softwareengineeringgroup8.studenthousingsolution.model.ChargeRequest;
+import com.softwareengineeringgroup8.studenthousingsolution.model.PaymentRecordRequest;
 import com.softwareengineeringgroup8.studenthousingsolution.model.PendingPaymentRequest;
 import com.softwareengineeringgroup8.studenthousingsolution.model.StripeLandlordRequest;
 import com.softwareengineeringgroup8.studenthousingsolution.model.User;
@@ -143,7 +144,7 @@ public class PaymentController {
 
     @PostMapping("/{id}")
     @ApiOperation(value= "Complete Pending Payment Request")
-    public Boolean createCharge(@PathVariable("id") int paymentRecordId, @RequestHeader("Authorization") String str, @RequestBody ChargeRequest req) throws StripeException {
+    public Boolean createCharge(@PathVariable("id") int paymentRecordId, @RequestHeader("Authorization") String str, @RequestBody ChargeRequest req, @RequestBody PaymentRecordRequest preq) throws StripeException {
         try {
             User tenant = userPermissionService.loadUserByJWT(str);
             if (!userPermissionService.assertPermission(tenant, UserRoles.ROLE_TENANT)) {
@@ -153,7 +154,7 @@ public class PaymentController {
             //listingService.createListingRequest(request,landlord);
 
             //took out tenant id for now  tenant,
-            PaymentRecord paymentRecord= pendingPaymentService.getPaymentRecordById(paymentRecordId);
+            PaymentRecord paymentRecord= pendingPaymentService.getPaymentRecordById(preq.getPaymentRecordId());
             String chargeId = stripeClient.createCharge(req.getName_card(), req.getEmail(), req.getCard_num(), req.getMonthNum(), req.getYearNum(), req.getCcv(), req.getFirstName(), req.getLastName(), req.getAddress(), req.getCity(), req.getState(), req.getZip(), req.getCountry(), req.getPhone(), paymentRecord);
 
             String transferId = stripeClient.transferCharge(req.getEmail());
