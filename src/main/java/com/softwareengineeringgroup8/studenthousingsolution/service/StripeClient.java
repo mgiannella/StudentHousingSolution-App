@@ -74,9 +74,7 @@ public class StripeClient {
 
     //Creates customer with a card
     //took out tenant id for now User tenant,
-    public String createCharge(String name_card, String email, String card_num, String monthNum, String yearNum, String ccv, String firstName, String lastName, String address, String city, String state, String zip, String country, String phone, int paymentRecordID) throws StripeException {
-
-        PaymentRecord paymentRecord= paymentRecordRepository.findByPaymentRecordID(paymentRecordID);
+    public String createCharge(String name_card, String email, String card_num, String monthNum, String yearNum, String ccv, String firstName, String lastName, String address, String city, String state, String zip, String country, String phone, PaymentRecord paymentRecord) throws StripeException {
 
         BigDecimal amount= paymentRecord.getPaymentAmount();
         Double amountToDouble= amount.doubleValue();

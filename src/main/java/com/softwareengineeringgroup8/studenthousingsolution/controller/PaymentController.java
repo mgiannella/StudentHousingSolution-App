@@ -8,6 +8,7 @@ import com.softwareengineeringgroup8.studenthousingsolution.model.PendingPayment
 import com.softwareengineeringgroup8.studenthousingsolution.model.StripeLandlordRequest;
 import com.softwareengineeringgroup8.studenthousingsolution.model.User;
 import com.softwareengineeringgroup8.studenthousingsolution.model.UserRoles;
+import com.softwareengineeringgroup8.studenthousingsolution.repository.PaymentRecordRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.PropertiesRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.service.StripeClient;
 import com.stripe.Stripe;
@@ -59,6 +60,8 @@ public class PaymentController {
     private PendingPaymentService pendingPaymentService;
     @Autowired
     private PropertiesRepository propertiesRepository;
+    @Autowired
+    private PaymentRecordRepository paymentRecordRepository;
 /*
     public PaymentController(StripeClient stripeClient) {
         this.stripeClient = stripeClient;
@@ -137,10 +140,9 @@ public class PaymentController {
     }
 
 
-
-    @PostMapping("/create-charge")
+    @PostMapping("/{id}")
     @ApiOperation(value= "Complete Pending Payment Request")
-    public Boolean createCharge(@PathVariable("paymentRecordId") int paymentRecordId, @RequestHeader("Authorization") String str,@RequestBody ChargeRequest req) throws StripeException {
+    public Boolean createCharge(@PathVariable("id") int paymentRecordId, @RequestHeader("Authorization") String str,@RequestBody ChargeRequest req) throws StripeException {
         try {
             User tenant = userPermissionService.loadUserByJWT(str);
             if (!userPermissionService.assertPermission(tenant, UserRoles.ROLE_TENANT)) {
@@ -150,7 +152,8 @@ public class PaymentController {
             //listingService.createListingRequest(request,landlord);
 
             //took out tenant id for now  tenant,
-            String chargeId = stripeClient.createCharge(req.getName_card(), req.getEmail(), req.getCard_num(), req.getMonthNum(), req.getYearNum(), req.getCcv(), req.getFirstName(), req.getLastName(), req.getAddress(), req.getCity(), req.getState(), req.getZip(), req.getCountry(), req.getPhone(), paymentRecordId);
+            PaymentRecord paymentRecord= paymentRecordRepository.findByPaymentRecordID(paymentRecordId);
+            String chargeId = stripeClient.createCharge(req.getName_card(), req.getEmail(), req.getCard_num(), req.getMonthNum(), req.getYearNum(), req.getCcv(), req.getFirstName(), req.getLastName(), req.getAddress(), req.getCity(), req.getState(), req.getZip(), req.getCountry(), req.getPhone(), paymentRecord);
 
             String transferId = stripeClient.transferCharge(req.getEmail());
             if (chargeId == null) {
