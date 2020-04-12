@@ -62,6 +62,7 @@ public class PaymentController {
     private PropertiesRepository propertiesRepository;
     @Autowired
     private PaymentRecordRepository paymentRecordRepository;
+
 /*
     public PaymentController(StripeClient stripeClient) {
         this.stripeClient = stripeClient;
@@ -142,7 +143,7 @@ public class PaymentController {
 
     @PostMapping("/{id}")
     @ApiOperation(value= "Complete Pending Payment Request")
-    public Boolean createCharge(@PathVariable("id") int paymentRecordId, @RequestHeader("Authorization") String str,@RequestBody ChargeRequest req) throws StripeException {
+    public Boolean createCharge(@PathVariable("id") int paymentRecordId, @RequestHeader("Authorization") String str, @RequestBody ChargeRequest req) throws StripeException {
         try {
             User tenant = userPermissionService.loadUserByJWT(str);
             if (!userPermissionService.assertPermission(tenant, UserRoles.ROLE_TENANT)) {
@@ -152,7 +153,7 @@ public class PaymentController {
             //listingService.createListingRequest(request,landlord);
 
             //took out tenant id for now  tenant,
-            PaymentRecord paymentRecord= paymentRecordRepository.findByPaymentRecordID(paymentRecordId);
+            PaymentRecord paymentRecord= pendingPaymentService.getPaymentRecordById(paymentRecordId);
             String chargeId = stripeClient.createCharge(req.getName_card(), req.getEmail(), req.getCard_num(), req.getMonthNum(), req.getYearNum(), req.getCcv(), req.getFirstName(), req.getLastName(), req.getAddress(), req.getCity(), req.getState(), req.getZip(), req.getCountry(), req.getPhone(), paymentRecord);
 
             String transferId = stripeClient.transferCharge(req.getEmail());

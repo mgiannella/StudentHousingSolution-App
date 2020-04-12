@@ -72,4 +72,7 @@ public class PendingPaymentService {
     public List<PaymentRecord> getPaymentRecordByUser(User tenant){
        // List<PaymentRecord> complete = new
         return paymentRecordRepository.findByUser(tenant);}
+
+    public PaymentRecord getPaymentRecordById(int id){
+        return paymentRecordRepository.findByPaymentRecordID(id);}
 }
