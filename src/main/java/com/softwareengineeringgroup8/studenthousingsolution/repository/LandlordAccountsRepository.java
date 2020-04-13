@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 @Repository
 public interface LandlordAccountsRepository extends JpaRepository<LandlordAccounts, Integer>{
 
-    //@Query("SELECT StripeID FROM LandlordAccounts l WHERE l.LandlordID=?1")
-    //String findBYLandlordID(User landlordID);
+    @Query("SELECT u FROM LandlordAccounts u WHERE u.landlord = ?1")
+    LandlordAccounts findByUser(User landlord);
 
 }

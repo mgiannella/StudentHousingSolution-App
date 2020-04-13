@@ -50,18 +50,29 @@ public class StripeClient {
         Stripe.apiKey = "sk_test_OmrxXx3SrMP0kubI9Mmkm5rP00UhLqD8c7";
     }
 
-    public String transferCharge(String email) throws StripeException {
-        // Properties prop=paymentRecord.getProp();
-        //User Landlord= prop.getLandlord();
+    public String transferCharge(PaymentRecord paymentRecord) throws StripeException {
+        Properties prop=paymentRecord.getProp();
+        User Landlord= prop.getLandlord();
+        LandlordAccounts account=landlordAccountsRepository.findByUser(Landlord);
+
+        String accountId=account.getStripeID();
+
+
+
+        BigDecimal amount= paymentRecord.getPaymentAmount();
+        Double amountToDouble=amount.doubleValue();
+        amountToDouble=amountToDouble*100;
+        Long amountToLong=amountToDouble.longValue();
+
 
         String transactionId = null;
 
         try {
             Map<String, Object> transferParam = new HashMap<>();
-            transferParam.put("amount", 1245 * 100);
+            transferParam.put("amount", amountToLong);
             transferParam.put("currency", "usd");
-            transferParam.put("description", "Payment transferred from" + email);
-            transferParam.put("destination", "acct_1GOGv2BFw11Oh6lO");
+            //transferParam.put("description", "Payment transferred from" + email);
+            transferParam.put("destination", accountId);
             transferParam.put("transfer_group", "testTrans");
             Transfer transfer = Transfer.create(transferParam);
 
@@ -79,12 +90,19 @@ public class StripeClient {
     public String createCharge(String name_card, String email, String card_num, String monthNum, String yearNum, String ccv, String firstName, String lastName, String address, String city, String state, String zip, String country, String phone, PaymentRecord paymentRecord) throws StripeException {
 
 
-/*
+
         BigDecimal amount= paymentRecord.getPaymentAmount();
-        Integer amountToDouble= amount.IntegerValue();
+
+        Double amountToDouble=amount.doubleValue();
+
         amountToDouble=amountToDouble*100;
-        String amountToString= Double.toString(amountToDouble);
-*/
+
+        Long amountToLong=amountToDouble.longValue();
+
+        //Integer amountToInteger=amountToLong.intValue();
+
+
+
 
 
         Map<String, Object> customerParameter = new HashMap<String, Object>();
@@ -133,7 +151,7 @@ public class StripeClient {
 
             //Stripe.apiKey = "sk_test_OmrxXx3SrMP0kubI9Mmkm5rP00UhLqD8c7";
             Map<String, Object> chargeParam = new HashMap<String, Object>();
-            chargeParam.put("amount", "134");
+            chargeParam.put("amount", amountToLong);
             chargeParam.put("currency", "usd");
             chargeParam.put("customer", CustomerId);
 
@@ -167,6 +185,7 @@ public class StripeClient {
             //PaymentRecord paymentRecord = new PaymentRecord(new Date(new java.util.Date().getTime()), property, tenant, paymentTypeRepository.findBypTypeDesc(ptypeDesc), new BigDecimal(1245));
 
             //paymentRecordRepository.save(paymentRecord);
+
 
         if(chargeId!=null){
             paymentRecord.setPaymentDate(new Date(new java.util.Date().getTime()));

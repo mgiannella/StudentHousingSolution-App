@@ -38,6 +38,7 @@ import com.softwareengineeringgroup8.studenthousingsolution.service.*;
 import javassist.NotFoundException;
 
 import javax.servlet.http.HttpServletResponse;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -178,16 +179,22 @@ public class PaymentController {
             //took out tenant id for now  tenant,
             //int pId= Integer.parseInt(paymentRecordId);
             PaymentRecord paymentRecord= pendingPaymentService.getPaymentRecordById(paymentRecordId);
-            String chargeId = stripeClient.createCharge(req.getName_card(), req.getEmail(), req.getCard_num(), req.getMonthNum(), req.getYearNum(), req.getCcv(), req.getFirstName(), req.getLastName(), req.getAddress(), req.getCity(), req.getState(), req.getZip(), req.getCountry(), req.getPhone(), paymentRecord);
+            Date paymentDate=paymentRecord.getPaymentDate();
 
-            String transferId = stripeClient.transferCharge(req.getEmail());
-            if (chargeId == null || transferId==null) {
-                //return "An error occurred while trying to create a charge.";
+            if (paymentDate!=null){
                 return false;
             }
+            else {
+                String chargeId = stripeClient.createCharge(req.getName_card(), req.getEmail(), req.getCard_num(), req.getMonthNum(), req.getYearNum(), req.getCcv(), req.getFirstName(), req.getLastName(), req.getAddress(), req.getCity(), req.getState(), req.getZip(), req.getCountry(), req.getPhone(), paymentRecord);
 
-            //return "Success! Your charge id is " + chargeId + " Your transaction id: " + transferId;
+                String transferId = stripeClient.transferCharge(paymentRecord);
+                if (chargeId == null || transferId == null) {
+                    //return "An error occurred while trying to create a charge.";
+                    return false;
+                }
 
+                //return "Success! Your charge id is " + chargeId + " Your transaction id: " + transferId;
+            }
             return true;
         } catch (Error | NotFoundException e) {
             System.out.println(e);
