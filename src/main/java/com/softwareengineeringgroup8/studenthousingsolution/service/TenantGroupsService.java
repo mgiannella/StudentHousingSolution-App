@@ -71,18 +71,16 @@ public class TenantGroupsService {
         tenantGroupMembersRepository.save(new TenantGroupMembers(group, invitee, false, true, false));
     }
 
-    public void leaveGroup(User remover, User user, TenantGroups group) throws ValidationException{
+    public void leaveGroup(User user, TenantGroups group) throws ValidationException{
         // Checks to make sure user is in group
         if(!inGroup(user,group)){
             throw new ValidationException("User not a part of group");
         }
         // Checks if remover is lead tenant
         TenantGroupMembers member = tenantGroupMembersRepository.findTenantGroupMembersByUserAndGroup(user, group);
-        if(group.getLeadTenant().equals(user)) {
-            tenantGroupMembersRepository.delete(member);
-        }else{
-            throw new ValidationException("Remover is not lead tenant");
-        }
+        if(member.isSignedLease())
+            throw new ValidationException("User already signed lease");
+        tenantGroupMembersRepository.delete(member);
     }
 
     public void deleteUser(User lead, TenantGroups group, User delete) throws ValidationException {
@@ -177,5 +175,13 @@ public class TenantGroupsService {
 
     public List<TenantGroupMembers> viewInvitations(User user) {
         return tenantGroupMembersRepository.findInvitesByUser(user);
+    }
+
+    public TenantGroups findById(int id){
+        return tenantGroupsRepository.findById(id);
+    }
+
+    public List<TenantGroupMembers> findByGroup(TenantGroups group){
+        return tenantGroupMembersRepository.findTenantGroupMembersByGroup(group);
     }
 }
