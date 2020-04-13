@@ -13,4 +13,7 @@ public class ValidationException extends RuntimeException {
         return msg;
     }
 
+    @Override
+    public String getMessage() { return msg; }
+
 }
