@@ -145,6 +145,41 @@ public class PaymentController {
     }
 
 
+
+    @GetMapping("/{id}")
+    @ApiOperation(value= "Display Pending Payment Request")
+    public PaymentRecord displayCharge(@PathVariable("id") int paymentRecordId, @RequestHeader("Authorization") String str) throws StripeException {
+        try {
+            User tenant = userPermissionService.loadUserByJWT(str);
+            PaymentRecord paymentRecord= pendingPaymentService.getPaymentRecordById(paymentRecordId);
+            if (!userPermissionService.assertPermission(tenant, UserRoles.ROLE_TENANT)) {
+                return null;
+                //;
+            }
+            return paymentRecord;
+
+            //listingService.createListingRequest(request,landlord);
+
+            //took out tenant id for now  tenant,
+            //int pId= Integer.parseInt(paymentRecordId);
+
+           /*String chargeId = stripeClient.createCharge(req.getName_card(), req.getEmail(), req.getCard_num(), req.getMonthNum(), req.getYearNum(), req.getCcv(), req.getFirstName(), req.getLastName(), req.getAddress(), req.getCity(), req.getState(), req.getZip(), req.getCountry(), req.getPhone(), paymentRecord);
+
+            String transferId = stripeClient.transferCharge(req.getEmail());
+            if (chargeId == null || transferId==null) {
+                //return "An error occurred while trying to create a charge.";
+                return false;
+
+
+            }
+            */
+            //return "Success! Your charge id is " + chargeId + " Your transaction id: " + transferId;
+        } catch (Error | NotFoundException e) {
+            System.out.println(e);
+            return null;
+            //return "error";
+        }
+    }
     @PostMapping("/create-charge/{id}")
     @ApiOperation(value= "Complete Pending Payment Request")
     public Boolean createCharge(@PathVariable("id") int paymentRecordId, @RequestHeader("Authorization") String str, @RequestBody ChargeRequest req) throws StripeException {
@@ -176,7 +211,6 @@ public class PaymentController {
             //return "error";
         }
     }
-
     @PostMapping("/create-landlord acct")
     public Boolean createLandAcct(@RequestBody StripeLandlordRequest req, @RequestHeader("Authorization") String str) throws StripeException {
         try {
