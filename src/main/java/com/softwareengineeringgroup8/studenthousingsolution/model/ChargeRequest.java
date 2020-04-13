@@ -11,10 +11,39 @@ public class ChargeRequest implements Serializable {
     private String monthNum;
     private String yearNum;
     private String ccv;
+    private String firstName;
+    private String lastName;
+    private String address;
+    private String city;
+    private String state;
+    private String zip;
+    private String country;
+    private String phone;
 
 
-    public ChargeRequest() {
+    public ChargeRequest() { }
 
+
+
+    public ChargeRequest(String name_card, String email, String card_num, String monthNum, String yearNum, String ccv, String firstName, String lastName, String address, String city, String state, String zip, String country, String phone) {//, Date paymentDate, String description) {
+        this.name_card= name_card;
+        this.email = email;
+        this.card_num = card_num;
+        this.monthNum = monthNum;
+        this.yearNum = yearNum;
+        this.ccv = ccv;
+        this.firstName= firstName;
+        this.lastName = lastName;
+        this.address=address;
+        this.city=city;
+        this.state=state;
+        this.zip=zip;
+        this.country=country;
+        this.phone=phone;
+        //this.paymentRecordID=paymentRecordID;
+        //this.prop=prop;
+        //this.paymentDate = paymentDate;
+        //this.description = description;
     }
 
     public String getName_card() {
@@ -95,16 +124,6 @@ public class ChargeRequest implements Serializable {
         this.description = description;
     }
 */
-
-    private String firstName;
-    private String lastName;
-    private String address;
-    private String city;
-    private String state;
-    private String zip;
-    private String country;
-    private String phone;
-
     public String getFirstName() {
         return firstName;
     }
@@ -170,7 +189,7 @@ public class ChargeRequest implements Serializable {
         this.phone = phone;
     }
 
-
+/*
     private int paymentRecordID;
 
     public int getPaymentRecordID() {
@@ -180,29 +199,8 @@ public class ChargeRequest implements Serializable {
     public void setPaymentRecordID(int paymentRecordID) {
         this.paymentRecordID = paymentRecordID;
     }
+*/
 
-
-
-    public ChargeRequest(String name_card, String email, String card_num, String monthNum, String yearNum, String ccv, String firstName, String lastName, String address, String city, String state, String zip, String country, String phone,int paymentRecordID) {//, Date paymentDate, String description) {
-        this.name_card= name_card;
-        this.email = email;
-        this.card_num = card_num;
-        this.monthNum = monthNum;
-        this.yearNum = yearNum;
-        this.ccv = ccv;
-        this.firstName= firstName;
-        this.lastName = lastName;
-        this.address=address;
-        this.city=city;
-        this.state=state;
-        this.zip=zip;
-        this.country=country;
-        this.phone=phone;
-        this.paymentRecordID=paymentRecordID;
-        //this.prop=prop;
-        //this.paymentDate = paymentDate;
-        //this.description = description;
-    }
 }
 
 

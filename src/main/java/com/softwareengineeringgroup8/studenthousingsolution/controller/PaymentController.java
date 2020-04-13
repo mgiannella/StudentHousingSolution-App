@@ -19,6 +19,7 @@ import com.stripe.model.Charge;
 import com.stripe.model.Token;
 
 import javassist.NotFoundException;
+import org.hibernate.type.CustomType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -30,11 +31,14 @@ import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import com.softwareengineeringgroup8.studenthousingsolution.model.*;
 import com.softwareengineeringgroup8.studenthousingsolution.service.*;
 import javassist.NotFoundException;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -142,9 +146,9 @@ public class PaymentController {
     }
 
 
-    @PostMapping("/{id}")
+    @PostMapping("/create-charge/{paymentRecordId}")
     @ApiOperation(value= "Complete Pending Payment Request")
-    public Boolean createCharge(@PathVariable("id") int paymentRecordId, @RequestHeader("Authorization") String str, @RequestBody ChargeRequest req) throws StripeException {
+    public Boolean createCharge(@ModelAttribute int paymentRecordId, @RequestHeader("Authorization") String str, @RequestBody ChargeRequest req) throws StripeException {
         try {
             User tenant = userPermissionService.loadUserByJWT(str);
             if (!userPermissionService.assertPermission(tenant, UserRoles.ROLE_TENANT)) {
@@ -154,7 +158,8 @@ public class PaymentController {
             //listingService.createListingRequest(request,landlord);
 
             //took out tenant id for now  tenant,
-            PaymentRecord paymentRecord= pendingPaymentService.getPaymentRecordById(req.getPaymentRecordID());
+            //int pId= Integer.parseInt(paymentRecordId);
+            PaymentRecord paymentRecord= pendingPaymentService.getPaymentRecordById(paymentRecordId);
             String chargeId = stripeClient.createCharge(req.getName_card(), req.getEmail(), req.getCard_num(), req.getMonthNum(), req.getYearNum(), req.getCcv(), req.getFirstName(), req.getLastName(), req.getAddress(), req.getCity(), req.getState(), req.getZip(), req.getCountry(), req.getPhone(), paymentRecord);
 
             String transferId = stripeClient.transferCharge(req.getEmail());
@@ -170,6 +175,16 @@ public class PaymentController {
             System.out.println(e);
             return false;
             //return "error";
+        }
+    }
+
+    @ControllerAdvice
+    public class GlobalControllerAdvice {
+
+        @ModelAttribute("paymentRecordId")
+        public int getCustomType(@PathVariable int paymentRecordId) {
+            int result = paymentRecordId;
+            return result;
         }
     }
 
