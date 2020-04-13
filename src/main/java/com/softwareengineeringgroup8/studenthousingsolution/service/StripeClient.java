@@ -171,7 +171,7 @@ public class StripeClient {
         if(chargeId!=null){
             paymentRecord.setPaymentDate(new Date(new java.util.Date().getTime()));
 
-            //paymentRecordRepository.save(paymentRecord);
+            paymentRecordRepository.save(paymentRecord);
         }
 
 
