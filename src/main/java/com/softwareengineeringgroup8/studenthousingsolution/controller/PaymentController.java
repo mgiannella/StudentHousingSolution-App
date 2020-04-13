@@ -19,7 +19,6 @@ import com.stripe.model.Charge;
 import com.stripe.model.Token;
 
 import javassist.NotFoundException;
-import org.hibernate.type.CustomType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -146,9 +145,9 @@ public class PaymentController {
     }
 
 
-    @PostMapping("/create-charge/{paymentRecordId}")
+    @PostMapping("/create-charge/{id}")
     @ApiOperation(value= "Complete Pending Payment Request")
-    public Boolean createCharge(@ModelAttribute int paymentRecordId, @RequestHeader("Authorization") String str, @RequestBody ChargeRequest req) throws StripeException {
+    public Boolean createCharge(@PathVariable("id") int paymentRecordId, @RequestHeader("Authorization") String str, @RequestBody ChargeRequest req) throws StripeException {
         try {
             User tenant = userPermissionService.loadUserByJWT(str);
             if (!userPermissionService.assertPermission(tenant, UserRoles.ROLE_TENANT)) {
@@ -175,16 +174,6 @@ public class PaymentController {
             System.out.println(e);
             return false;
             //return "error";
-        }
-    }
-
-    @ControllerAdvice
-    public class GlobalControllerAdvice {
-
-        @ModelAttribute("paymentRecordId")
-        public int getCustomType(@PathVariable int paymentRecordId) {
-            int result = paymentRecordId;
-            return result;
         }
     }
 
