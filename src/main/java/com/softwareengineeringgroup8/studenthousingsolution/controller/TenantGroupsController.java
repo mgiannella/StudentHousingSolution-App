@@ -8,6 +8,7 @@ import com.softwareengineeringgroup8.studenthousingsolution.service.UserPermissi
 import com.softwareengineeringgroup8.studenthousingsolution.service.UserService;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,8 +43,8 @@ public class TenantGroupsController {
 
             return tenantGroupsService.viewInvitations(user);
         } catch (Exception e) {
-            System.out.println(e);
-            throw new ValidationException(e.toString());
+            System.out.println(e.getMessage());
+            throw new ValidationException(e.getMessage());
         }
     }
 
@@ -56,8 +57,8 @@ public class TenantGroupsController {
                 throw new ValidationException("User is not a tenant");
             return tenantGroupsService.getGroupByTenant(user);
         } catch (Exception e) {
-            System.out.println(e);
-            throw new ValidationException(e.toString());
+            System.out.println(e.getMessage());
+            throw new ValidationException(e.getMessage());
         }
     }
 
@@ -77,8 +78,8 @@ public class TenantGroupsController {
             }
             return tenantGroupsService.findByGroup(group);
         } catch (Exception e) {
-            System.out.println(e);
-            throw new ValidationException(e.toString());
+            System.out.println(e.getMessage());
+            throw new ValidationException(e.getMessage());
         }
     }
 
@@ -101,8 +102,8 @@ public class TenantGroupsController {
             tenantGroupsService.inviteUser(inviter, group, invitee);
             return true;
         } catch (Exception e) {
-            System.out.println(e);
-            throw new ValidationException(e.toString());
+            System.out.println(e.getMessage());
+            throw new ValidationException(e.getMessage());
         }
     }
 
@@ -117,8 +118,8 @@ public class TenantGroupsController {
 
             return group;
         } catch (Exception e) {
-            System.out.println(e);
-            throw new ValidationException(e.toString());
+            System.out.println(e.getMessage());
+            throw new ValidationException(e.getMessage());
         }
     }
 
@@ -136,8 +137,9 @@ public class TenantGroupsController {
             tenantGroupsService.deleteGroup(user, group);
             return true;
         } catch (Exception e) {
-            System.out.println(e.toString());
-            return false;
+            System.out.println(e.getMessage());
+            throw new ValidationException(e.getMessage());
+            //return false;
         }
     }
 
@@ -159,8 +161,8 @@ public class TenantGroupsController {
             tenantGroupsService.deleteUser(user, group, deletee);
             return true;
         } catch (Exception e) {
-            System.out.println(e);
-            return false;
+            System.out.println(e.getMessage());
+            throw new ValidationException(e.getMessage());
         }
     }
 
@@ -182,8 +184,8 @@ public class TenantGroupsController {
             tenantGroupsService.changeLeader(user, newLead, group);
             return true;
         } catch (Exception e) {
-            System.out.println(e);
-            return false;
+            System.out.println(e.getMessage());
+            throw new ValidationException(e.getMessage());
         }
     }
     @GetMapping("/{id}/leave")
@@ -200,8 +202,8 @@ public class TenantGroupsController {
             tenantGroupsService.leaveGroup(user, group);
             return true;
         }catch(Exception e){
-            System.out.println(e);
-            return false;
+            System.out.println(e.getMessage());
+            throw new ValidationException(e.getMessage());
         }
     }
 
@@ -219,8 +221,8 @@ public class TenantGroupsController {
             tenantGroupsService.acceptInvitation(user, group);
             return true;
         }catch(Exception e){
-            System.out.println(e);
-            return false;
+            System.out.println(e.getMessage());
+            throw new ValidationException(e.getMessage());
         }
     }
 
@@ -238,8 +240,8 @@ public class TenantGroupsController {
             tenantGroupsService.declineInvitation(user, group);
             return true;
         }catch(Exception e){
-            System.out.println(e);
-            return false;
+            System.out.println(e.getMessage());
+            throw new ValidationException(e.getMessage());
         }
     }
 }
