@@ -1,10 +1,7 @@
 package com.softwareengineeringgroup8.studenthousingsolution.service;
 
 import com.softwareengineeringgroup8.studenthousingsolution.exceptions.ValidationException;
-import com.softwareengineeringgroup8.studenthousingsolution.model.TenantGroupMembers;
-import com.softwareengineeringgroup8.studenthousingsolution.model.TenantGroups;
-import com.softwareengineeringgroup8.studenthousingsolution.model.User;
-import com.softwareengineeringgroup8.studenthousingsolution.model.UserRoles;
+import com.softwareengineeringgroup8.studenthousingsolution.model.*;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.TenantGroupMembersRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.TenantGroupsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +27,7 @@ public class TenantGroupsService {
 
     // returns true if user is in the group
     public boolean inGroup(User user, TenantGroups group){
-        if(tenantGroupMembersRepository.findTenantGroupMembersByUserAndGroup(user, group).equals(null)){
+        if(tenantGroupMembersRepository.findTenantGroupMembersByUserAndGroup(user, group) == null){
             return false;
         }
 
@@ -60,7 +57,7 @@ public class TenantGroupsService {
         if(!group.getLeadTenant().equals(inviter)){
             throw new ValidationException("Lead tenant needs to invite");
         }
-        if(!tenantGroupMembersRepository.findInvitesByUserAndGroup(invitee, group).equals(null))
+        if(tenantGroupMembersRepository.findInvitesByUserAndGroup(invitee, group) != null)
             throw new ValidationException("Already sent an invite to this user");
         // Check to make sure invitee isn't in 2 groups already
         List<TenantGroups> groupsList = tenantGroupMembersRepository.findTenantGroupByMember(invitee);
@@ -102,7 +99,8 @@ public class TenantGroupsService {
             throw new ValidationException("User that deletes needs to be lead tenant");
         }
         // if group is currently assigned a property don't delete
-        if(!propertyService.getPropertyByGroup(group).equals(null)){
+        Properties prop = propertyService.getPropertyByGroup(group);
+        if(prop != null){
             throw new ValidationException("Group is assigned to a property");
         }
 
@@ -148,7 +146,7 @@ public class TenantGroupsService {
 
     public void declineInvitation(User user, TenantGroups group) throws ValidationException {
         TenantGroupMembers member = tenantGroupMembersRepository.findInvitesByUserAndGroup(user, group);
-        if(member.equals(null)){
+        if(member == null){
             throw new ValidationException("Member did not have an invitation to that group");
         }
         tenantGroupMembersRepository.delete(member);
@@ -156,7 +154,7 @@ public class TenantGroupsService {
 
     public void acceptInvitation(User user, TenantGroups group) throws ValidationException {
         TenantGroupMembers member = tenantGroupMembersRepository.findInvitesByUserAndGroup(user,group);
-        if(member.equals(null)){
+        if(member == null){
             throw new ValidationException("Member did not have an invitation to that group");
         }
         member.setSubscribed(true);
@@ -166,7 +164,7 @@ public class TenantGroupsService {
 
     public void signLease(User user, TenantGroups group) throws ValidationException {
         TenantGroupMembers member = tenantGroupMembersRepository.findTenantGroupMembersByUserAndGroup(user,group);
-        if(member.equals(null)){
+        if(member == null){
             throw new ValidationException("Member is not a part of that group");
         }
         member.setSignedLease(true);
