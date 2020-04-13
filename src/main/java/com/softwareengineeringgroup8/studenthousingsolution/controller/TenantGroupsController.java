@@ -1,18 +1,17 @@
 package com.softwareengineeringgroup8.studenthousingsolution.controller;
 
 import com.softwareengineeringgroup8.studenthousingsolution.exceptions.ValidationException;
-import com.softwareengineeringgroup8.studenthousingsolution.model.TenantGroupMembers;
-import com.softwareengineeringgroup8.studenthousingsolution.model.TenantGroups;
-import com.softwareengineeringgroup8.studenthousingsolution.model.User;
-import com.softwareengineeringgroup8.studenthousingsolution.model.UserRoles;
+import com.softwareengineeringgroup8.studenthousingsolution.model.*;
 import com.softwareengineeringgroup8.studenthousingsolution.service.PropertyService;
 import com.softwareengineeringgroup8.studenthousingsolution.service.TenantGroupsService;
 import com.softwareengineeringgroup8.studenthousingsolution.service.UserPermissionService;
+import com.softwareengineeringgroup8.studenthousingsolution.service.UserService;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.Validation;
 import java.util.List;
 
@@ -30,8 +29,11 @@ public class TenantGroupsController {
     @Autowired
     private PropertyService propertyService;
 
-    @GetMapping("/view/invites")
-    @ApiOperation(value="Display inviations", notes="Get all of your pending invites")
+    @Autowired
+    private UserService userService;
+
+    @GetMapping("/invites/view")
+    @ApiOperation(value = "Display inviations", notes = "Get all of your pending invites")
     public List<TenantGroupMembers> viewInvites(@RequestHeader("Authorization") String authString) throws ValidationException {
         try {
             User user = userPermissionService.loadUserByJWT(authString);
@@ -39,24 +41,205 @@ public class TenantGroupsController {
                 throw new ValidationException("User is not a tenant");
 
             return tenantGroupsService.viewInvitations(user);
-        }catch(Exception e){
-           System.out.println(e);
-           throw new ValidationException(e.toString());
+        } catch (Exception e) {
+            System.out.println(e);
+            throw new ValidationException(e.toString());
         }
     }
 
-    @GetMapping("/view/groups")
-    @ApiOperation(value="Display Groups", notes="Get all of your subscribed group")
+    @GetMapping("/view")
+    @ApiOperation(value = "Display Groups", notes = "Get all of your subscribed group")
     public List<TenantGroups> viewGroups(@RequestHeader("Authorization") String authString) throws ValidationException {
         try {
             User user = userPermissionService.loadUserByJWT(authString);
             if (!userPermissionService.assertPermission(user, UserRoles.ROLE_TENANT))
                 throw new ValidationException("User is not a tenant");
             return tenantGroupsService.getGroupByTenant(user);
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e);
             throw new ValidationException(e.toString());
         }
     }
 
+    @GetMapping("/{id}/view")
+    @ApiOperation(value = "View Members/Invites of Group", notes = "View Members/Invites of a Group (id)")
+    public List<TenantGroupMembers> viewMembers(@RequestHeader("Authorization") String authString, @PathVariable("id") int id) throws ValidationException {
+        try {
+            User user = userPermissionService.loadUserByJWT(authString);
+            if (!userPermissionService.assertPermission(user, UserRoles.ROLE_TENANT))
+                throw new ValidationException("User is not a tenant");
+            TenantGroups group = tenantGroupsService.findById(id);
+            if (group.equals(null)) {
+                throw new ValidationException("Group doesn't exist with that ID");
+            }
+            if (!tenantGroupsService.inGroup(user, group)) {
+                throw new ValidationException("User not in group");
+            }
+            return tenantGroupsService.findByGroup(group);
+        } catch (Exception e) {
+            System.out.println(e);
+            throw new ValidationException(e.toString());
+        }
+    }
+
+    @PostMapping("/{id}/invite")
+    @ApiOperation(value = "Invite to Group", notes = "Invite a member to group (id), needs to be done by lead tenant")
+    public boolean inviteMember(@RequestHeader("Authorization") String authString, @PathVariable("id") int id, @RequestBody int userId) throws ValidationException {
+        try {
+            User inviter = userPermissionService.loadUserByJWT(authString);
+            if (!userPermissionService.assertPermission(inviter, UserRoles.ROLE_TENANT)) {
+                throw new ValidationException("User is not a tenant");
+            }
+            TenantGroups group = tenantGroupsService.findById(id);
+            if (group.equals(null)) {
+                throw new ValidationException("Group is not valid");
+            }
+            User invitee = userService.getUserById(userId);
+            if (invitee.equals(null)) {
+                throw new ValidationException("Invitee is not a valid user");
+            }
+            tenantGroupsService.inviteUser(inviter, group, invitee);
+            return true;
+        } catch (Exception e) {
+            System.out.println(e);
+            throw new ValidationException(e.toString());
+        }
+    }
+
+    @PostMapping("/create")
+    @ApiOperation(value = "Create TenantGroup", notes = "Create a new TenantGroup")
+    public TenantGroups createGroup(@RequestHeader("Authorization") String authString, @RequestBody String name) throws ValidationException {
+        try {
+            User user = userPermissionService.loadUserByJWT(authString);
+            if (!userPermissionService.assertPermission(user, UserRoles.ROLE_TENANT))
+                throw new ValidationException("User is not a tenant");
+            TenantGroups group = tenantGroupsService.createGroup(user, name);
+
+            return group;
+        } catch (Exception e) {
+            System.out.println(e);
+            throw new ValidationException(e.toString());
+        }
+    }
+
+    @GetMapping("/{id}/delete")
+    @ApiOperation(value = "Delete TenantGroup", notes = "Delete TenantGroup by id, must be intiated by lead member")
+    public boolean deleteGroup(@RequestHeader("Authorization") String authString, @PathVariable("id") int id) throws ValidationException {
+        try {
+            User user = userPermissionService.loadUserByJWT(authString);
+            if (!userPermissionService.assertPermission(user, UserRoles.ROLE_TENANT))
+                throw new ValidationException("User is not a tenant");
+            TenantGroups group = tenantGroupsService.findById(id);
+            if (group.equals(null)) {
+                throw new ValidationException("Group doesn't exist with that ID");
+            }
+            tenantGroupsService.deleteGroup(user, group);
+            return true;
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+
+    @GetMapping("/{id}/users/{uid}/remove")
+    @ApiOperation(value = "Remove User from Group", notes = "Remove tenant from group, must be initiated by lead member")
+    public boolean removeUser(@RequestHeader("Authorization") String authString, @PathVariable("id") int id, @PathVariable("uid") int userId) throws ValidationException {
+        try {
+            User user = userPermissionService.loadUserByJWT(authString);
+            if (!userPermissionService.assertPermission(user, UserRoles.ROLE_TENANT))
+                throw new ValidationException("User is not a tenant");
+            TenantGroups group = tenantGroupsService.findById(id);
+            if (group.equals(null)) {
+                throw new ValidationException("Group doesn't exist with that ID");
+            }
+            User deletee = userService.getUserById(userId);
+            if (deletee.equals(null)) {
+                throw new ValidationException("User to be deleted doesn't exist");
+            }
+            tenantGroupsService.deleteUser(user, group, deletee);
+            return true;
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+
+    @PostMapping("/{id}/users/{uid}/makelead")
+    @ApiOperation(value = "Change Leader", notes = "Make user (uid) the new leader of group (id), must be initiated by lead member")
+    public boolean changeLead(@RequestHeader("Authorization") String authString, @PathVariable("id") int id, @PathVariable("uid") int userId) throws ValidationException {
+        try {
+            User user = userPermissionService.loadUserByJWT(authString);
+            if (!userPermissionService.assertPermission(user, UserRoles.ROLE_TENANT))
+                throw new ValidationException("User is not a tenant");
+            TenantGroups group = tenantGroupsService.findById(id);
+            if (group.equals(null)) {
+                throw new ValidationException("Group doesn't exist with that ID");
+            }
+            User newLead = userService.getUserById(userId);
+            if (newLead.equals(null)) {
+                throw new ValidationException("User to be leader doesn't exist");
+            }
+            tenantGroupsService.changeLeader(user, newLead, group);
+            return true;
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+    @GetMapping("/{id}/leave")
+    @ApiOperation(value="Leave Group", notes="Leaves group that user is a part of")
+    public boolean leaveGroup(@RequestHeader("Authorization") String authString, @PathVariable("id") int id) throws ValidationException {
+        try {
+            User user = userPermissionService.loadUserByJWT(authString);
+            if(!userPermissionService.assertPermission(user, UserRoles.ROLE_TENANT))
+                throw new ValidationException("User is not a tenant");
+            TenantGroups group = tenantGroupsService.findById(id);
+            if(group.equals(null)){
+                throw new ValidationException("Group doesn't exist with that ID");
+            }
+            tenantGroupsService.leaveGroup(user, group);
+            return true;
+        }catch(Exception e){
+            System.out.println(e);
+            return false;
+        }
+    }
+
+    @GetMapping("/invites/{id}/join")
+    @ApiOperation(value="Join Group", notes="Join Group that you've been invited to")
+    public boolean joinGroup(@RequestHeader("Authorization") String authString, @PathVariable("id") int id) throws ValidationException {
+        try {
+            User user = userPermissionService.loadUserByJWT(authString);
+            if(!userPermissionService.assertPermission(user, UserRoles.ROLE_TENANT))
+                throw new ValidationException("User is not a tenant");
+            TenantGroups group = tenantGroupsService.findById(id);
+            if(group.equals(null)){
+                throw new ValidationException("Group doesn't exist with that ID");
+            }
+            tenantGroupsService.acceptInvitation(user, group);
+            return true;
+        }catch(Exception e){
+            System.out.println(e);
+            return false;
+        }
+    }
+
+    @GetMapping("/invites/{id}/decline")
+    @ApiOperation(value="Decline Group Invite", notes="Decline invitation for group that you've been invited to")
+    public boolean declineInvite(@RequestHeader("Authorization") String authString, @PathVariable("id") int id) throws ValidationException {
+        try {
+            User user = userPermissionService.loadUserByJWT(authString);
+            if(!userPermissionService.assertPermission(user, UserRoles.ROLE_TENANT))
+                throw new ValidationException("User is not a tenant");
+            TenantGroups group = tenantGroupsService.findById(id);
+            if(group.equals(null)){
+                throw new ValidationException("Group doesn't exist with that ID");
+            }
+            tenantGroupsService.declineInvitation(user, group);
+            return true;
+        }catch(Exception e){
+            System.out.println(e);
+            return false;
+        }
+    }
 }

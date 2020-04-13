@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface TenantGroupsRepository extends JpaRepository<TenantGroups, Integer> {
-
+    TenantGroups findById(int id);
 }
