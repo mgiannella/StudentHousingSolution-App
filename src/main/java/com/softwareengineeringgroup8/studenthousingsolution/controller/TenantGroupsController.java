@@ -69,7 +69,7 @@ public class TenantGroupsController {
             if (!userPermissionService.assertPermission(user, UserRoles.ROLE_TENANT))
                 throw new ValidationException("User is not a tenant");
             TenantGroups group = tenantGroupsService.findById(id);
-            if (group.equals(null)) {
+            if (group == null) {
                 throw new ValidationException("Group doesn't exist with that ID");
             }
             if (!tenantGroupsService.inGroup(user, group)) {
@@ -91,11 +91,11 @@ public class TenantGroupsController {
                 throw new ValidationException("User is not a tenant");
             }
             TenantGroups group = tenantGroupsService.findById(id);
-            if (group.equals(null)) {
+            if (group == null) {
                 throw new ValidationException("Group is not valid");
             }
             User invitee = userService.getUserById(userId);
-            if (invitee.equals(null)) {
+            if (invitee == null) {
                 throw new ValidationException("Invitee is not a valid user");
             }
             tenantGroupsService.inviteUser(inviter, group, invitee);
@@ -130,13 +130,13 @@ public class TenantGroupsController {
             if (!userPermissionService.assertPermission(user, UserRoles.ROLE_TENANT))
                 throw new ValidationException("User is not a tenant");
             TenantGroups group = tenantGroupsService.findById(id);
-            if (group.equals(null)) {
+            if (group == null) {
                 throw new ValidationException("Group doesn't exist with that ID");
             }
             tenantGroupsService.deleteGroup(user, group);
             return true;
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println(e.toString());
             return false;
         }
     }
@@ -149,11 +149,11 @@ public class TenantGroupsController {
             if (!userPermissionService.assertPermission(user, UserRoles.ROLE_TENANT))
                 throw new ValidationException("User is not a tenant");
             TenantGroups group = tenantGroupsService.findById(id);
-            if (group.equals(null)) {
+            if (group == null) {
                 throw new ValidationException("Group doesn't exist with that ID");
             }
             User deletee = userService.getUserById(userId);
-            if (deletee.equals(null)) {
+            if (deletee == null) {
                 throw new ValidationException("User to be deleted doesn't exist");
             }
             tenantGroupsService.deleteUser(user, group, deletee);
@@ -172,11 +172,11 @@ public class TenantGroupsController {
             if (!userPermissionService.assertPermission(user, UserRoles.ROLE_TENANT))
                 throw new ValidationException("User is not a tenant");
             TenantGroups group = tenantGroupsService.findById(id);
-            if (group.equals(null)) {
+            if (group == null) {
                 throw new ValidationException("Group doesn't exist with that ID");
             }
             User newLead = userService.getUserById(userId);
-            if (newLead.equals(null)) {
+            if (newLead == null) {
                 throw new ValidationException("User to be leader doesn't exist");
             }
             tenantGroupsService.changeLeader(user, newLead, group);
@@ -194,7 +194,7 @@ public class TenantGroupsController {
             if(!userPermissionService.assertPermission(user, UserRoles.ROLE_TENANT))
                 throw new ValidationException("User is not a tenant");
             TenantGroups group = tenantGroupsService.findById(id);
-            if(group.equals(null)){
+            if(group == null){
                 throw new ValidationException("Group doesn't exist with that ID");
             }
             tenantGroupsService.leaveGroup(user, group);
@@ -213,7 +213,7 @@ public class TenantGroupsController {
             if(!userPermissionService.assertPermission(user, UserRoles.ROLE_TENANT))
                 throw new ValidationException("User is not a tenant");
             TenantGroups group = tenantGroupsService.findById(id);
-            if(group.equals(null)){
+            if(group == null){
                 throw new ValidationException("Group doesn't exist with that ID");
             }
             tenantGroupsService.acceptInvitation(user, group);
@@ -232,7 +232,7 @@ public class TenantGroupsController {
             if(!userPermissionService.assertPermission(user, UserRoles.ROLE_TENANT))
                 throw new ValidationException("User is not a tenant");
             TenantGroups group = tenantGroupsService.findById(id);
-            if(group.equals(null)){
+            if(group == null){
                 throw new ValidationException("Group doesn't exist with that ID");
             }
             tenantGroupsService.declineInvitation(user, group);
