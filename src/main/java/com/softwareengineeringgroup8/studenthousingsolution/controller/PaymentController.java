@@ -3,6 +3,7 @@ package com.softwareengineeringgroup8.studenthousingsolution.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.softwareengineeringgroup8.studenthousingsolution.exceptions.ValidationException;
 import com.softwareengineeringgroup8.studenthousingsolution.model.ChargeRequest;
 import com.softwareengineeringgroup8.studenthousingsolution.model.PaymentRecordRequest;
 import com.softwareengineeringgroup8.studenthousingsolution.model.PendingPaymentRequest;
@@ -155,7 +156,7 @@ public class PaymentController {
 
     @GetMapping("/{id}")
     @ApiOperation(value= "Display Pending Payment Request")
-    public ArrayList<String> displayCharge(@PathVariable("id") int paymentRecordId, @RequestHeader("Authorization") String str) throws StripeException {
+    public ArrayList<String> displayCharge(@PathVariable("id") int paymentRecordId, @RequestHeader("Authorization") String str) throws ValidationException {
         try {
             User tenant = userPermissionService.loadUserByJWT(str);
 
@@ -163,7 +164,8 @@ public class PaymentController {
             PaymentRecord paymentRecord= pendingPaymentService.getPaymentRecordById(paymentRecordId);
 
             ArrayList<String>pendingPayment=new ArrayList<String>();
-            int pId= paymentRecord.getId();
+            int payId= paymentRecord.getId();
+            PaymentType payTypeId=paymentRecord.getPaymentTypeId();
             BigDecimal amount=paymentRecord.getPaymentAmount();
 
             Date dueDate= paymentRecord.getPaymentDueDate();
@@ -171,17 +173,19 @@ public class PaymentController {
 
 
 
-            PaymentType paymentType = paymentTypeRepository.findByPaymentTypeID(pId);
 
-            String p_id=String.valueOf(pId);
-            String paymentDescription= paymentType.getpTypeDesc();
+
+            String pay_id=String.valueOf(payId);
+            String paymentDescription= payTypeId.getpTypeDesc();
             String a=amount.toString();
             String dDate=df.format(dueDate);
 
+            String a1=a.substring(0,a.length()-1);
+            String a2=a.substring(0, a1.length()-1);
 
-            pendingPayment.add(p_id);
+            pendingPayment.add(pay_id);
             pendingPayment.add(paymentDescription);
-            pendingPayment.add(a);
+            pendingPayment.add(a2);
             pendingPayment.add(dDate);
 
 
