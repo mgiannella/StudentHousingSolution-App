@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 public class ListingUpdate {
 
@@ -45,18 +46,59 @@ public class ListingUpdate {
 
         private boolean hasHeat;
 
-        private String photos;
+        private List<String> photos;
+
+        private int id;
 
 
+        public String address;
+        public String city;
+        public String state;
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
+
+    public String zipCode;
+
+    public int getId() { return id;}
+    public void setId(int id) {this.id=id;}
 
 
-
-        public String getPhotos() {
-            return photos;
-        }
-        public void setPhotos(String photos) {
-            this.photos = photos;
-        }
+    public List<String> getPhotos() {
+        return photos;
+    }
+    public void setPhotos(List<String> photos) {
+        this.photos = photos;
+    }
 
 
         public int getSleeps() { return sleeps; }
@@ -181,10 +223,18 @@ public class ListingUpdate {
 
 
 
-        public ListingUpdate(String title, String description, BigDecimal price, int numBedrooms, float numBathrooms, String renovationDate, boolean hasAC,
+
+
+
+        public ListingUpdate(int id, String address, String city, String state, String zipCode, String title, String description, BigDecimal price, int numBedrooms, float numBathrooms, String renovationDate, boolean hasAC,
                               int parkingspots, boolean hasLaundry, boolean allowPets, boolean allowSmoking, boolean hasWater,
                               boolean hasGasElec, boolean isFurnished, boolean hasAppliances, boolean hasTrashPickup, boolean hasHeat,
-                              int sleeps, String photos) {
+                              int sleeps, List<String> photos) {
+            this.id=id;
+            this.address=address;
+            this.city=city;
+            this.state=state;
+            this.zipCode=zipCode;
             this.title = title;
             this.price = price;
             this.numBedrooms = numBedrooms;

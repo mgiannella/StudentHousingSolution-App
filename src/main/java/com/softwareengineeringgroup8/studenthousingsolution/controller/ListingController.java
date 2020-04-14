@@ -7,9 +7,10 @@ import com.softwareengineeringgroup8.studenthousingsolution.model.*;
 
 
 import com.softwareengineeringgroup8.studenthousingsolution.service.ListingService;
-import com.softwareengineeringgroup8.studenthousingsolution.service.PropertyService;
+import com.softwareengineeringgroup8.studenthousingsolution.service.*;
 import com.softwareengineeringgroup8.studenthousingsolution.service.UserPermissionService;
 import com.softwareengineeringgroup8.studenthousingsolution.controller.UserController;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
 import javassist.NotFoundException;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +40,23 @@ public class ListingController{
 
     @Autowired
     private PropertyService propertyService;
+
+
+    @GetMapping("/viewLandlordProperties")
+    @ApiOperation(value="View Landlord Properties",notes="View list of properties that landlord owns")
+    public List<Properties> listProperties(@RequestHeader("Authorization") String authString) {
+        try {
+            User user = userPermissionService.loadUserByJWT(authString);
+           List<Properties> props = propertyService.getPropertiesByLandlord(user);
+           int size = props.size();
+           return props;
+
+        } catch (Error | NotFoundException e) {
+
+            System.out.println(e);
+            return null;
+        }
+    }
 
 
     @PostMapping("/create")
@@ -58,23 +77,80 @@ public class ListingController{
         }
     }
 
+    @GetMapping("/{propertyID}")
+    @ApiOperation(value="View Listing Data")
+    @JsonView(PropertyView.ViewProperty.class)
+    public Properties viewListingData(@PathVariable("propertyID") int propertyID, @RequestHeader("Authorization") String authString) {
+        try {
+            User user = userPermissionService.loadUserByJWT(authString);
+            Properties property=propertyService.getById(propertyID);
+
+            if (userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
+
+                if (property.getLandlord().equals(user)) {
+                    return property;
+                } else {
+                    throw new ValidationException("User isn't a landlord for this property.");
+                }
+            }
+            else {
+                throw new ValidationException("User is not a landlord.");
+            }
+
+        } catch (Error | NotFoundException e) {
+
+            System.out.println(e);
+            return null;
+        }
+
+
+    }
+
+
     //update
-    @PostMapping("/{id}")
-    @ApiOperation(value = "Update Property")
-    public Boolean updateRequest(@PathVariable("id") int id, @RequestHeader("Authorization") String authString, @RequestBody ListingUpdate update) {
+    @PostMapping("/updateListing")
+    @ApiOperation(value = "Update Property", notes="updating property")
+    public Boolean updateRequest(@RequestBody ListingUpdate update, @RequestHeader("Authorization") String authString) throws ValidationException {
         try {
             User user = userPermissionService.loadUserByJWT(authString);
             if (!userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
                 return false;
             }
-            Properties prop = listingService.getPropertyById(id);
-            listingService.updateListing(prop,update);
+            listingService.updateListing(update);
             return true;
         } catch (Error | NotFoundException e) {
             System.out.println(e);
             return false;
         }
     }
+
+
+    @DeleteMapping("/delete/{deleteID}")
+    @ApiOperation(value="Delete Property ")
+    public Boolean deleteListing(@PathVariable("deleteID") int deleteID, @RequestHeader("Authorization") String authString) throws ValidationException {
+        try {
+            User user = userPermissionService.loadUserByJWT(authString);
+            Properties property=propertyService.getById(deleteID);
+
+            if (userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
+
+                if (property.getLandlord().equals(user)) {
+                    listingService.deleteProp(property);
+                    return true;
+                } else {
+                    throw new ValidationException("Cannot delete another landlord's property ");
+                }
+            }
+            else {
+                throw new ValidationException("User is not a landlord.");
+            }
+
+        } catch (Error | NotFoundException e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+
 
 
 
