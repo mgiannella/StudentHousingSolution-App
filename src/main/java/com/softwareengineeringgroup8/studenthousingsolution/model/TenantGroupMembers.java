@@ -8,6 +8,7 @@ import java.util.Objects;
 public class TenantGroupMembers {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
     private int id;
 

@@ -7,6 +7,8 @@ import com.softwareengineeringgroup8.studenthousingsolution.service.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
+import javax.validation.Validation;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @RestController

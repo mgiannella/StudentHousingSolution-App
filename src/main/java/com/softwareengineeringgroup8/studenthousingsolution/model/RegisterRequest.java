@@ -34,12 +34,14 @@ public class RegisterRequest implements Serializable {
     @Size(min=6, max=8)
     @ApiModelProperty(notes="Type of User", example="Tenant", required = true)
     private String userType;
+    @ApiModelProperty(notes="Url to image, leave blank if no image", example="https://mywebsite.com/img.jpg", required=true)
+    private String photo;
 
     public RegisterRequest() {
 
     }
 
-    public RegisterRequest(String username, String password, String email, String phone, String phoneCode, String firstName, String lastName, String userType) {
+    public RegisterRequest(String photo, String username, String password, String email, String phone, String phoneCode, String firstName, String lastName, String userType) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -48,8 +50,16 @@ public class RegisterRequest implements Serializable {
         this.firstName = firstName;
         this.lastName = lastName;
         this.userType = userType;
+        this.photo =photo;
     }
 
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
 
     public String getUsername() {
         return username;

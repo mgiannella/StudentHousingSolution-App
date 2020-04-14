@@ -26,10 +26,10 @@ public interface PropertiesRepository extends JpaRepository<Properties, Integer>
     Properties findById(int id);
 
 
-    @Query("Select p FROM Properties p WHERE (p.amenities IN ?1) and (p.location in ?2)")
+    @Query("Select p FROM Properties p WHERE (p.group is null) and (p.amenities IN ?1) and (p.location in ?2)")
     List<Properties> findByAmenityAndLocation(List<Amenities> a, List<PropertyLocations> pl);
 
-    @Query("Select p FROM Properties p WHERE p.location in ?1")
+    @Query("Select p FROM Properties p WHERE (p.group is null) and (p.location in ?1)")
     List<Properties> findByLocations(List<PropertyLocations> pl);
 
     @Query("Select p FROM Properties p WHERE p.group = ?1")

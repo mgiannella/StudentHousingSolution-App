@@ -37,6 +37,14 @@ public class PropertyService {
         return propertyRepository.findAll();
     }
 
+    public Properties getById(int id){
+        Properties prop=propertyRepository.findByPropertyID(id);
+        if(prop.getGroup() != null){
+            return null;
+        }
+        return prop;
+    }
+
     public Properties getPropertyByGroup(TenantGroups group){ return propertyRepository.findByGroup(group); }
 
 
