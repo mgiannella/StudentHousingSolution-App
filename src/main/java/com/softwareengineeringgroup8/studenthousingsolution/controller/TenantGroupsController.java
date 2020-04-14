@@ -244,4 +244,19 @@ public class TenantGroupsController {
             throw new ValidationException(e.getMessage());
         }
     }
+
+    @PostMapping("/users/search")
+    @ApiOperation(value="Search By Email", notes="Search users by email address")
+    public List<User> searchEmail(@RequestHeader("Authorization") String authString, @RequestBody String email) throws ValidationException {
+        try {
+            User user = userPermissionService.loadUserByJWT(authString);
+            if(!userPermissionService.assertPermission(user, UserRoles.ROLE_TENANT))
+                throw new ValidationException("User is not a tenant");
+            List<User> userList = userService.findByEmail(email);
+            return userList;
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            throw new ValidationException(e.getMessage());
+        }
+    }
 }
