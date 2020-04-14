@@ -1,5 +1,6 @@
 package com.softwareengineeringgroup8.studenthousingsolution.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
@@ -18,6 +19,7 @@ public class Notifications {
 
     @OneToOne
     @JoinColumn(name="userid", referencedColumnName = "userid")
+    @JsonIgnore
     private User user;
 
     @Column(name="notification")

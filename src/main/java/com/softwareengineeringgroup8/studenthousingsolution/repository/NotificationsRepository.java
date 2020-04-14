@@ -16,7 +16,7 @@ import java.util.List;
 
 @Repository
 public interface NotificationsRepository extends JpaRepository<Notifications,Integer> {
-    @Query("SELECT n FROM Notifications n WHERE (n.user = ?1) and (n.alertDT > ?2)")
+    @Query("SELECT n FROM Notifications n WHERE (n.user = ?1) and (n.alertDT < ?2)")
     List<Notifications> getNotificationsByUserAndDate(User u, Timestamp dt);
 
     Notifications findById(int id);
