@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class UserService {
 
@@ -76,6 +78,14 @@ public class UserService {
             return userRepository.findById(id);
         }catch(Exception e){
             throw new ValidationException("Couldn't find User By Id");
+        }
+    }
+
+    public List<User> findByEmail(String email) throws ValidationException {
+        try{
+            return userRepository.searchByEmail(email);
+        }catch(Exception e){
+            throw new ValidationException("Couldn't find user by email");
         }
     }
 }
