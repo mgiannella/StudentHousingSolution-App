@@ -10,6 +10,7 @@ import com.softwareengineeringgroup8.studenthousingsolution.model.StripeLandlord
 import com.softwareengineeringgroup8.studenthousingsolution.model.User;
 import com.softwareengineeringgroup8.studenthousingsolution.model.UserRoles;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.PaymentRecordRepository;
+import com.softwareengineeringgroup8.studenthousingsolution.repository.PaymentTypeRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.PropertiesRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.service.StripeClient;
 import com.stripe.Stripe;
@@ -32,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
 import com.softwareengineeringgroup8.studenthousingsolution.model.*;
 import com.softwareengineeringgroup8.studenthousingsolution.service.*;
@@ -39,6 +41,8 @@ import javassist.NotFoundException;
 
 import javax.servlet.http.HttpServletResponse;
 import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,6 +71,8 @@ public class PaymentController {
     private PropertiesRepository propertiesRepository;
     @Autowired
     private PaymentRecordRepository paymentRecordRepository;
+    @Autowired
+    private PaymentTypeRepository paymentTypeRepository;
 
 /*
     public PaymentController(StripeClient stripeClient) {
@@ -149,15 +155,41 @@ public class PaymentController {
 
     @GetMapping("/{id}")
     @ApiOperation(value= "Display Pending Payment Request")
-    public PaymentRecord displayCharge(@PathVariable("id") int paymentRecordId, @RequestHeader("Authorization") String str) throws StripeException {
+    public ArrayList<String> displayCharge(@PathVariable("id") int paymentRecordId, @RequestHeader("Authorization") String str) throws StripeException {
         try {
             User tenant = userPermissionService.loadUserByJWT(str);
+
+
             PaymentRecord paymentRecord= pendingPaymentService.getPaymentRecordById(paymentRecordId);
+
+            ArrayList<String>pendingPayment=new ArrayList<String>();
+            int pId= paymentRecord.getId();
+            BigDecimal amount=paymentRecord.getPaymentAmount();
+
+            Date dueDate= paymentRecord.getPaymentDueDate();
+            DateFormat df = new SimpleDateFormat("MM dd, yyyy");
+
+
+
+            PaymentType paymentType = paymentTypeRepository.findByPaymentTypeID(pId);
+
+            String p_id=String.valueOf(pId);
+            String paymentDescription= paymentType.getpTypeDesc();
+            String a=amount.toString();
+            String dDate=df.format(dueDate);
+
+
+            pendingPayment.add(p_id);
+            pendingPayment.add(paymentDescription);
+            pendingPayment.add(a);
+            pendingPayment.add(dDate);
+
+
             if (!userPermissionService.assertPermission(tenant, UserRoles.ROLE_TENANT)) {
                 return null;
 
             }
-            return paymentRecord;
+            return pendingPayment;
 
         } catch (Error | NotFoundException e) {
             System.out.println(e);
