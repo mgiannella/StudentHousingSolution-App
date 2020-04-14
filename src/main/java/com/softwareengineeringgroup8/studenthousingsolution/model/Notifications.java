@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
@@ -27,12 +28,12 @@ public class Notifications {
     private NotificationType type;
 
     @Column(name="alertdate")
-    private Date alertDT;
+    private Timestamp alertDT;
 
     public Notifications() {
     }
 
-    public Notifications(User user, String desc, NotificationType type, Date alertDT) {
+    public Notifications(User user, String desc, NotificationType type, Timestamp alertDT) {
         this.user = user;
         this.desc = desc;
         this.type = type;
@@ -71,11 +72,11 @@ public class Notifications {
         this.type = type;
     }
 
-    public Date getAlertDT() {
+    public Timestamp getAlertDT() {
         return alertDT;
     }
 
-    public void setAlertDT(Date alertDT) {
+    public void setAlertDT(Timestamp alertDT) {
         this.alertDT = alertDT;
     }
 

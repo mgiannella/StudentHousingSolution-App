@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface NotificationTypeRepository extends JpaRepository<NotificationType,Integer> {
-
+    NotificationType getNotificationTypeByType(String type);
 }
