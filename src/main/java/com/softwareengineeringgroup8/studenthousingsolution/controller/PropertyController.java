@@ -7,6 +7,8 @@ import com.softwareengineeringgroup8.studenthousingsolution.service.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 import javax.validation.Validation;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -33,7 +35,11 @@ public class PropertyController {
     @JsonView(PropertyView.ViewProperty.class)
     public Properties viewProperty(@PathVariable("id") int id) throws ValidationException {
         try{
-            return propertyService.getById(id);
+            Properties prop = propertyService.getById(id);
+            if(prop == null){
+                throw new ValidationException("Invalid ID");
+            }
+            return prop;
         }catch(Error e){
             throw new ValidationException("Invalid input, try again.");
         }

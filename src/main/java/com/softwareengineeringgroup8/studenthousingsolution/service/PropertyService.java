@@ -38,11 +38,11 @@ public class PropertyService {
     }
 
     public Properties getById(int id){
-        Properties prop=propertyRepository.findByPropertyID(id);
-        if(prop.getGroup() != null){
-            return null;
+        Properties prop=propertyRepository.findById(id);
+        if(prop != null && prop.getGroup() == null){
+            return prop;
         }
-        return prop;
+        return null;
     }
 
     public Properties getPropertyByGroup(TenantGroups group){ return propertyRepository.findByGroup(group); }
@@ -50,7 +50,6 @@ public class PropertyService {
 
     public List<Properties> getPropertiesByLandlord(User landlord){ return propertyRepository.findByLandlord(landlord); }
 
-   public Properties getById(int id){ return propertyRepository.findById(id); }
 
 
 
