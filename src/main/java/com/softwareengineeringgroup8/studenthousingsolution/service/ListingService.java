@@ -117,6 +117,9 @@ public class ListingService {
     Properties property=getPropertyById(id);
 
 
+
+
+
     property.getLocation().setAddress(update.getAddress());
     property.getLocation().setCity(update.getCity());
     property.getLocation().setState(update.getState());
