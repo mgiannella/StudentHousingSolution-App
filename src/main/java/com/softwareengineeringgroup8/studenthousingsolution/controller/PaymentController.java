@@ -1,6 +1,7 @@
 package com.softwareengineeringgroup8.studenthousingsolution.controller;
 
 
+import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.softwareengineeringgroup8.studenthousingsolution.exceptions.ValidationException;
@@ -10,9 +11,7 @@ import com.softwareengineeringgroup8.studenthousingsolution.model.PendingPayment
 import com.softwareengineeringgroup8.studenthousingsolution.model.StripeLandlordRequest;
 import com.softwareengineeringgroup8.studenthousingsolution.model.User;
 import com.softwareengineeringgroup8.studenthousingsolution.model.UserRoles;
-import com.softwareengineeringgroup8.studenthousingsolution.repository.PaymentRecordRepository;
-import com.softwareengineeringgroup8.studenthousingsolution.repository.PaymentTypeRepository;
-import com.softwareengineeringgroup8.studenthousingsolution.repository.PropertiesRepository;
+import com.softwareengineeringgroup8.studenthousingsolution.repository.*;
 import com.softwareengineeringgroup8.studenthousingsolution.service.StripeClient;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
@@ -74,6 +73,11 @@ public class PaymentController {
     private PaymentRecordRepository paymentRecordRepository;
     @Autowired
     private PaymentTypeRepository paymentTypeRepository;
+    @Autowired
+    private TenantGroupMembersRepository tenantGroupMembersRepository;
+    @Autowired
+    private UserRepository userRepository;
+
 
 /*
     public PaymentController(StripeClient stripeClient) {
@@ -87,15 +91,15 @@ public class PaymentController {
 
 
     @GetMapping("/viewTenantProperties")
-    @ApiOperation(value = "View Tenant Properties")
-    public List<Properties> listProperties(@RequestHeader("Authorization") String authString) {
+    @ApiOperation(value = "View Tenant's Properties")
+    public List<Properties> listProperties(@RequestHeader("Authorization") String authString) throws ValidationException {
         try {
             User user = userPermissionService.loadUserByJWT(authString);
 
-          /*  if (!userPermissionService.assertPermission(user, UserRoles.ROLE_TENANT)) {
+            if (!userPermissionService.assertPermission(user, UserRoles.ROLE_TENANT)) {
                 return null;
                 //;
-            }*/
+            }
 
             List<Properties> propertiesList = new ArrayList<Properties>();
             List<TenantGroups> tenantGroupsList = tenantGroupsService.getGroupByTenant(user);
@@ -111,13 +115,12 @@ public class PaymentController {
             System.out.println(e);
             return null;
         }
-
-
     }
 
-    @GetMapping("/viewTenants")
-    @ApiOperation(value = "View Tenants on Property")
-    public Properties properties(@RequestHeader("Authorization") String authString) {
+
+    @GetMapping("/viewLandlordProperties")
+    @ApiOperation(value = "View Landlord's Properties")
+    public Properties landlordProperties(@RequestHeader("Authorization") String authString) throws ValidationException {
         try {
             User user = userPermissionService.loadUserByJWT(authString);
 
@@ -126,8 +129,7 @@ public class PaymentController {
                 //;
             }
 
-            Properties properties = propertyService.getPropertyByLandlord(user);
-            //properties.getGroup();
+            Properties properties= propertiesRepository.findByLandlord(user);
 
             return properties;
         } catch (Error | NotFoundException e) {
@@ -137,9 +139,69 @@ public class PaymentController {
         }
     }
 
-    @GetMapping("/viewPayments")
-    @ApiOperation(value= "View Payments")
-    public List<PaymentRecord> viewPayments(@RequestHeader("Authorization") String authString){
+
+    @GetMapping("/viewTenants/{propId}")
+    @ApiOperation(value = "View Tenants on Property")
+    public List<User> viewTenants(@PathVariable("propId") int propId, @RequestHeader("Authorization") String authString)throws ValidationException {
+        try {
+            User user = userPermissionService.loadUserByJWT(authString);
+
+            if (!userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
+                return null;
+                //;
+            }
+
+            //Properties properties = propertyService.getPropertyByLandlord(user);
+            Properties properties = propertiesRepository.findByPropertyID(propId);
+            TenantGroups tenantGroup=properties.getGroup();
+           //User leadTenant=tenantGroup.getLeadTenant();
+            List<User> tenantGroupMembers = tenantGroupMembersRepository.findByGroup(tenantGroup);
+
+            //TenantGroups tenantGroup=properties.getGroup();
+            //User tenantGroupMembers=tenantGroup.getLeadTenant();
+
+            //properties.getGroup();
+
+            return tenantGroupMembers;
+        } catch (Error | NotFoundException e) {
+
+            System.out.println(e);
+            return null;
+        }
+    }
+
+    @GetMapping("/getTenantsInfo/{tenantId}")
+    @ApiOperation(value = "View selected Tenant info")
+    public User getTenant(@PathVariable("tenantId") int tenantId, @RequestHeader("Authorization") String authString)throws ValidationException {
+        try {
+            User user = userPermissionService.loadUserByJWT(authString);
+
+            if (!userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
+                return null;
+                //;
+            }
+
+            //Properties properties = propertyService.getPropertyByLandlord(user);
+
+
+            //TenantGroups tenantGroup=properties.getGroup();
+            //User tenantGroupMembers=tenantGroup.getLeadTenant();
+
+            //properties.getGroup();
+
+            User tenant = userRepository.findById(tenantId);
+
+            return tenant;
+        } catch (Error | NotFoundException e) {
+
+            System.out.println(e);
+            return null;
+        }
+    }
+
+    @GetMapping("/viewPaymentsOnTenants")
+    @ApiOperation(value= "View Payments on Tenant side")
+    public List<PaymentRecord> viewPaymentsOnTenants(@RequestHeader("Authorization") String authString)throws ValidationException{
         try {
             User user = userPermissionService.loadUserByJWT(authString);
             if (!userPermissionService.assertPermission(user, UserRoles.ROLE_TENANT)) {
@@ -152,7 +214,27 @@ public class PaymentController {
         }
     }
 
-
+    @GetMapping("/viewPaymentsOnLandlord")
+    @ApiOperation(value= "View Payments on Landlord side")
+    public List<List<PaymentRecord>> viewPaymentsOnLandlord(@RequestHeader("Authorization") String authString)throws ValidationException{
+        try {
+            User user = userPermissionService.loadUserByJWT(authString);
+            if (!userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
+                return null;
+            }
+            List<List<PaymentRecord>> paymentRecord = new ArrayList<List<PaymentRecord>>();
+            List<Properties> properties = propertyService.getPropertiesByLandlord(user);
+            int numOfProperties = properties.size();
+            for(int i = 0; i < numOfProperties; i++){
+                Properties prop = properties.get(i);
+                paymentRecord.add(paymentRecordRepository.findByProperties(prop));
+            }
+            return paymentRecord;
+        } catch (Error| NotFoundException e) {
+            System.out.println(e);
+            return null;
+        }
+    }
 
     @GetMapping("/{id}")
     @ApiOperation(value= "Display Pending Payment Request")
@@ -180,12 +262,14 @@ public class PaymentController {
             String a=amount.toString();
             String dDate=df.format(dueDate);
 
-            String a1=a.substring(0,a.length()-1);
-            String a2=a.substring(0, a1.length()-1);
+            //Did unnecessary substring, do a.length-2
+            String a1=a.substring(0,a.length()-2);
+            //String a2=a.substring(0, a1.length()-1);
 
             pendingPayment.add(pay_id);
             pendingPayment.add(paymentDescription);
-            pendingPayment.add(a2);
+            pendingPayment.add(a1);
+            //pendingPayment.add(a2);
             pendingPayment.add(dDate);
 
 
@@ -201,6 +285,9 @@ public class PaymentController {
 
         }
     }
+
+
+
     @PostMapping("/create-charge/{id}")
     @ApiOperation(value= "Complete Pending Payment Request")
     public Boolean createCharge(@PathVariable("id") int paymentRecordId, @RequestHeader("Authorization") String str, @RequestBody ChargeRequest req) throws StripeException {
@@ -259,15 +346,16 @@ public class PaymentController {
         }
     }
 
-    @PostMapping("/create-payment request")
-    public Boolean createPaymentRequest(@RequestBody PendingPaymentRequest req, @RequestHeader("Authorization") String str) throws StripeException {
+    @PostMapping("/create-payment request/{tenantId}")
+    @ApiOperation(value= "Create Pending Payment Request")
+    public Boolean createPaymentRequest(@PathVariable("tenantId") int tenantId,@RequestBody PendingPaymentRequest req, @RequestHeader("Authorization") String str) throws StripeException {
         try {
             User landlord = userPermissionService.loadUserByJWT(str);
             if (!userPermissionService.assertPermission(landlord, UserRoles.ROLE_LANDLORD)) {
                 return false;
                 //;
             }
-            Boolean payRequest = pendingPaymentService.createPaymentRequest(req.getPropID(), req.getTenantID(), req.getAmount(), req.getPtype(), req.getDueDate());
+            Boolean payRequest = pendingPaymentService.createPaymentRequest(req.getPropID(), tenantId, req.getAmount(), req.getPtype(), req.getDueDate());
             if (payRequest==false){
                 return false;
             }

@@ -20,6 +20,9 @@ public interface PropertiesRepository extends JpaRepository<Properties, Integer>
     @Query("SELECT prop FROM Properties prop WHERE prop.landlord = ?1")
     Properties findByLandlord(User landlord);
 
+    @Query("SELECT prop FROM Properties prop WHERE prop.landlord = ?1")
+    List<Properties> findBylandLord(User landlord);
+
     @Query("SELECT prop FROM Properties prop WHERE prop.id = ?1")
     Properties findByPropertyID(int id);
 
