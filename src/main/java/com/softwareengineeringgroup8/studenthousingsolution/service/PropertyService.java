@@ -45,6 +45,10 @@ public class PropertyService {
         return null;
     }
 
+    public Properties getPropertyById(int id){
+        return propertyRepository.findById(id);
+    }
+
     public Properties getPropertyByGroup(TenantGroups group){ return propertyRepository.findByGroup(group); }
 
     public List<Properties> getPropertiesByLandlord(User landlord){ return propertyRepository.findByLandlord(landlord); }

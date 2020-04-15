@@ -52,8 +52,9 @@ public class ListingController{
     public HousingAgreement tenantLease(@RequestHeader("Authorization") String authString, @PathVariable("propertyID") int propertyID){
         try{
             User user = userPermissionService.loadUserByJWT(authString);
-            Properties prop = propertyService.getById(propertyID);
+            Properties prop = propertyService.getPropertyById(propertyID);
             return agreementService.getHousingAgreement(prop);
+
         } catch (Error | NotFoundException e) {
             System.out.println(e);
             return null;

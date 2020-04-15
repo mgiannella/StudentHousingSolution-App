@@ -1,5 +1,7 @@
 package com.softwareengineeringgroup8.studenthousingsolution.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.sql.Date;
 
@@ -12,6 +14,7 @@ public class HousingAgreement {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int agreementID;
 
+    @JsonIgnore
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="PropertyID")
     private Properties property;
