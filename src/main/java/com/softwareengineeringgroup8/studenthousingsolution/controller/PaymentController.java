@@ -117,7 +117,7 @@ public class PaymentController {
         }
     }
 
-
+/*
     @GetMapping("/viewLandlordProperties")
     @ApiOperation(value = "View Landlord's Properties")
     public Properties landlordProperties(@RequestHeader("Authorization") String authString) throws ValidationException {
@@ -139,7 +139,7 @@ public class PaymentController {
         }
     }
 
-
+*/
     @GetMapping("/viewTenants/{propId}")
     @ApiOperation(value = "View Tenants on Property")
     public List<User> viewTenants(@PathVariable("propId") int propId, @RequestHeader("Authorization") String authString)throws ValidationException {
