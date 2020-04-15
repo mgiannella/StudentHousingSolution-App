@@ -47,12 +47,8 @@ public class PropertyService {
 
     public Properties getPropertyByGroup(TenantGroups group){ return propertyRepository.findByGroup(group); }
 
-
     public List<Properties> getPropertiesByLandlord(User landlord){ return propertyRepository.findByLandlord(landlord); }
-
-
-
-
+  
 
     // returns all properties within a certain zip code
     public List<Properties> getByZip(String zip) throws ValidationException{

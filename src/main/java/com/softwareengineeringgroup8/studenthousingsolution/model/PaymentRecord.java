@@ -31,12 +31,16 @@ public class PaymentRecord {
     private User tenant;
 
     @ManyToOne
-    @JoinColumn(name = "PaymentTypeID")
-    private PaymentType paymentId;
+    @JoinColumn(name ="PaymentTypeID")
+    private PaymentType paymentTypeId;
 
 
     @Column(name="PaymentAmount")
     private BigDecimal paymentAmount;
+
+    @Column(name="PaymentDueDate")
+    private Date paymentDueDate;
+
 
     public int getId() {
         return id;
@@ -62,12 +66,12 @@ public class PaymentRecord {
         this.tenant = tenant;
     }
 
-    public PaymentType getPaymentId() {
-        return paymentId;
+    public PaymentType getPaymentTypeId() {
+        return paymentTypeId;
     }
 
-    public void setPaymentId(PaymentType paymentId) {
-        this.paymentId = paymentId;
+    public void setPaymentTypeId(PaymentType paymentTypeId) {
+        this.paymentTypeId = paymentTypeId;
     }
 
     public BigDecimal getPaymentAmount() {
@@ -86,15 +90,19 @@ public class PaymentRecord {
         this.paymentDate = paymentDate;
     }
 
-    public PaymentRecord() {
+    public Date getPaymentDueDate() { return paymentDueDate; }
 
-    }
+    public void setPaymentDueDate(Date paymentDueDate) { this.paymentDueDate = paymentDueDate; }
 
-    public PaymentRecord(Date paymentDate, Properties prop, User tenant, PaymentType paymentId, BigDecimal paymentAmount) {
+    public PaymentRecord() { }
+
+
+    public PaymentRecord(Date paymentDate, Properties prop, User tenant, PaymentType paymentTypeId, BigDecimal paymentAmount, Date paymentDueDate) {
         this.paymentDate = paymentDate;
         this.prop = prop;
         this.tenant = tenant;
-        this.paymentId = paymentId;
+        this.paymentTypeId = paymentTypeId;
         this.paymentAmount = paymentAmount;
+        this.paymentDueDate = paymentDueDate;
     }
 }
