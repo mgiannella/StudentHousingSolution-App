@@ -2,6 +2,7 @@ package com.softwareengineeringgroup8.studenthousingsolution.service;
 
 import java.sql.Date;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import com.softwareengineeringgroup8.studenthousingsolution.exceptions.ValidationException;
@@ -34,7 +35,7 @@ public class MRService {
     public void createMaintenanceRequest(User tenant, MaintenanceRequestData data){
         MaintenanceStatus status = new MaintenanceStatus("pending", 1);
         long millis = System.currentTimeMillis();
-        Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
+        Timestamp date = new java.sql.Timestamp(millis);
         String notes = data.getNotes();
         int id = data.getId();
         Properties prop = propertiesRepository.findById(id);

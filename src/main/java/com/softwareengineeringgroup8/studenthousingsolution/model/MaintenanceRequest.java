@@ -2,6 +2,7 @@ package com.softwareengineeringgroup8.studenthousingsolution.model;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name="MaintenanceRequests")
@@ -17,7 +18,7 @@ public class MaintenanceRequest {
     private Properties prop;
 
     @Column(name="RequestDate")
-    private Date date;
+    private Timestamp date;
 
     @Column(name="MaintenanceNotes")
     private String notes;
@@ -41,8 +42,8 @@ public class MaintenanceRequest {
     public void setProperty(Properties propertyID) { this.prop = prop; }
 
 
-    public Date getDate() { return this.date; }
-    public void setDate(Date date) { this.date = date; }
+    public Timestamp getDate() { return this.date; }
+    public void setDate(Timestamp date) { this.date = date; }
 
     public String getNotes() { return this.notes; }
     public  void setNotes(String notes) { this.notes = notes; }
@@ -53,7 +54,7 @@ public class MaintenanceRequest {
     public User getTenant() { return tenant; }
     public void setTenant(User tenant) { this.tenant = tenant; }
 
-    public MaintenanceRequest(MaintenanceStatus status, Properties prop, Date date, String notes, User tenant){
+    public MaintenanceRequest(MaintenanceStatus status, Properties prop, Timestamp date, String notes, User tenant){
 
         this.status = status;
         this.prop = prop;
