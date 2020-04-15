@@ -3,17 +3,13 @@ package com.softwareengineeringgroup8.studenthousingsolution.service;
 import com.softwareengineeringgroup8.studenthousingsolution.model.Properties;
 import com.softwareengineeringgroup8.studenthousingsolution.model.TenantGroups;
 import com.softwareengineeringgroup8.studenthousingsolution.model.User;
-import com.softwareengineeringgroup8.studenthousingsolution.repository.PropertiesRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.PropertyDescriptionsRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.exceptions.ValidationException;
 import com.softwareengineeringgroup8.studenthousingsolution.model.*;
-import com.softwareengineeringgroup8.studenthousingsolution.model.PropertyDescriptions;
 import com.softwareengineeringgroup8.studenthousingsolution.model.PropertyLocations;
-import com.softwareengineeringgroup8.studenthousingsolution.model.PropertyPhotos;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -41,10 +37,18 @@ public class PropertyService {
         return propertyRepository.findAll();
     }
 
-    public Properties getPropertyByGroup(TenantGroups group){ return propertyRepository.findByGroup(group); }
-    public List<Properties> getPropertiesByLandlord(User landlord){ return propertyRepository.findBylandLord(landlord); }
-    public Properties getPropertyByLandlord(User landlord){ return propertyRepository.findByLandlord(landlord); }
+    public Properties getById(int id){
+        Properties prop=propertyRepository.findById(id);
+        if(prop != null && prop.getGroup() == null){
+            return prop;
+        }
+        return null;
+    }
 
+    public Properties getPropertyByGroup(TenantGroups group){ return propertyRepository.findByGroup(group); }
+
+    public List<Properties> getPropertiesByLandlord(User landlord){ return propertyRepository.findByLandlord(landlord); }
+  
 
     // returns all properties within a certain zip code
     public List<Properties> getByZip(String zip) throws ValidationException{

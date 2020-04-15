@@ -3,7 +3,6 @@ package com.softwareengineeringgroup8.studenthousingsolution.repository;
 import com.softwareengineeringgroup8.studenthousingsolution.model.User;
 import com.softwareengineeringgroup8.studenthousingsolution.model.Properties;
 import com.softwareengineeringgroup8.studenthousingsolution.model.Amenities;
-import com.softwareengineeringgroup8.studenthousingsolution.model.Properties;
 import com.softwareengineeringgroup8.studenthousingsolution.model.PropertyLocations;
 import com.softwareengineeringgroup8.studenthousingsolution.model.TenantGroups;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,7 +17,10 @@ public interface PropertiesRepository extends JpaRepository<Properties, Integer>
     Properties findByGroup(TenantGroups group);
 
     @Query("SELECT prop FROM Properties prop WHERE prop.landlord = ?1")
-    Properties findByLandlord(User landlord);
+    List<Properties> findByLandlord(User landlord);
+
+    @Query("SELECT prop FROM Properties prop WHERE prop.id = ?1")
+    Properties findById(int id);
 
     @Query("SELECT prop FROM Properties prop WHERE prop.landlord = ?1")
     List<Properties> findBylandLord(User landlord);
@@ -26,10 +28,10 @@ public interface PropertiesRepository extends JpaRepository<Properties, Integer>
     @Query("SELECT prop FROM Properties prop WHERE prop.id = ?1")
     Properties findByPropertyID(int id);
 
-    @Query("Select p FROM Properties p WHERE (p.amenities IN ?1) and (p.location in ?2)")
+    @Query("Select p FROM Properties p WHERE (p.group is null) and (p.amenities IN ?1) and (p.location in ?2)")
     List<Properties> findByAmenityAndLocation(List<Amenities> a, List<PropertyLocations> pl);
 
-    @Query("Select p FROM Properties p WHERE p.location in ?1")
+    @Query("Select p FROM Properties p WHERE (p.group is null) and (p.location in ?1)")
     List<Properties> findByLocations(List<PropertyLocations> pl);
 
     @Query("Select p FROM Properties p WHERE p.group = ?1")

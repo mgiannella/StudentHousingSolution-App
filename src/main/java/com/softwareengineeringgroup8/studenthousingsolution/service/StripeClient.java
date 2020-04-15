@@ -4,7 +4,6 @@ package com.softwareengineeringgroup8.studenthousingsolution.service;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.softwareengineeringgroup8.studenthousingsolution.model.*;
-import com.softwareengineeringgroup8.studenthousingsolution.model.Properties;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.*;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;

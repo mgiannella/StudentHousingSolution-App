@@ -13,5 +13,12 @@ public interface PropertyLocationsRepository extends JpaRepository<PropertyLocat
 
     List<PropertyLocations> findByZip(String zip);
 
+    List<PropertyLocations> findByLatitude(String latitude);
+    List<PropertyLocations> findByLongitude(String longitude);
+
+    Boolean existsByLatitude(String latitude);
+    Boolean existsByLongitude(String longitude);
+
+
     PropertyLocations findById(int id);
 }
