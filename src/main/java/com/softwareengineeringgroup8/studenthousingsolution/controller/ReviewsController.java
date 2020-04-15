@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.softwareengineeringgroup8.studenthousingsolution.exceptions.ValidationException;
 import com.softwareengineeringgroup8.studenthousingsolution.model.*;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.PropertiesRepository;
+import com.softwareengineeringgroup8.studenthousingsolution.repository.ReviewsRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.service.*;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
@@ -42,6 +43,8 @@ public class ReviewsController {
     private TenantGroupsService tenantGroupsService;
     @Autowired
     private PropertyService propertyService;
+    @Autowired
+    private ReviewsRepository reviewsRepository;
 
     @Autowired
     ReviewsController(ReviewsService reviewsService) {
@@ -93,6 +96,79 @@ public class ReviewsController {
         } catch (Error | NotFoundException e) {
             System.out.println(e);
             return null;
+
+        }
+    }
+
+    @GetMapping("display-reviews/{propId}")
+    @ApiOperation(value= "Display reviews on selected property")
+    public List<Reviews> displayReviews(@PathVariable("propId") int propId, @RequestHeader("Authorization") String str) throws ValidationException {
+        try {
+            User tenant = userPermissionService.loadUserByJWT(str);
+
+            Properties prop= propertiesRepository.findByPropertyID(propId);
+            List<Reviews> reviews= reviewsRepository.findByProperty(prop);
+
+            if (!userPermissionService.assertPermission(tenant, UserRoles.ROLE_TENANT)) {
+                return null;
+
+            }
+            return reviews;
+
+        } catch (Error | NotFoundException e) {
+            System.out.println(e);
+            return null;
+
+        }
+    }
+
+    @PostMapping("delete review/{reviewId}")
+    @ApiOperation(value= "Delete reviews on selected property")
+    public Boolean deleteReview(@PathVariable("reviewId") int reviewId, @RequestHeader("Authorization") String str) throws ValidationException{
+        try {
+            User tenant = userPermissionService.loadUserByJWT(str);
+
+
+            if (!userPermissionService.assertPermission(tenant, UserRoles.ROLE_TENANT)) {
+                return false;
+
+            }
+
+            Boolean delete=reviewsService.deleteReview(reviewId);
+
+            return true;
+
+        } catch (Error | NotFoundException e) {
+            System.out.println(e);
+            return false;
+
+        }
+    }
+
+    @PostMapping("update review/{reviewId}")
+    @ApiOperation(value= "Update review on selected property")
+    public Boolean updateReview(@PathVariable("reviewId") int reviewId, @RequestBody ReviewRequest req, @RequestHeader("Authorization") String str) throws Exception {
+        try {
+            User tenant = userPermissionService.loadUserByJWT(str);
+
+
+            if (!userPermissionService.assertPermission(tenant, UserRoles.ROLE_TENANT)) {
+                return false;
+
+            }
+
+            String reviewDescription=null;
+            if (req.getReviewDescription()!=""){
+                reviewDescription=req.getReviewDescription();
+            }
+
+            Boolean update=reviewsService.updateReview(reviewId,reviewDescription,req.getCleanlinessRating(),req.getSecurityRating(), req.getCommunicationRating(), req.getLocationRating(), req.getTotalRating());
+
+            return true;
+
+        } catch (Error | NotFoundException e) {
+            System.out.println(e);
+            return false;
 
         }
     }
