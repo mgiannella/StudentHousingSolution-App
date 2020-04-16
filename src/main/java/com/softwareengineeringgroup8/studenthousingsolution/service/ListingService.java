@@ -15,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.math.BigDecimal;
 import java.sql.Date;
 
-//import com.sun.javaws.jnl.PropertyDesc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,6 +38,8 @@ public class ListingService {
     private PropertyPhotosRepository photosRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private HousingAgreementRepository agreementRepository;
 
 
 
@@ -54,7 +55,6 @@ public class ListingService {
             String city = request.getCity();
             String state = request.getState();
             String zip = request.getZipCode();
-
 
             PropertyLocations createLocation = new PropertyLocations(address,city,state,zip,latitude,longitude);
             locRepository.save(createLocation);
@@ -94,12 +94,6 @@ public class ListingService {
 
             Properties createProp = new Properties(landlord,title, createAmen, createDesc, createLocation, 0,photos);
 
-
-/*
-            if (!request.getPhotos().equals("")) {
-                createProp.getPhotos().add(new PropertyPhotos(1,request.getPhotos(),createProp));
-            }
-*/
             //photosRepository.save(photos);
             for (int i=0; i<request.getPhotos().size(); i++) {
                 createProp.getPhotos().add(new PropertyPhotos(i+1,request.getPhotos().get(i),createProp));
@@ -164,10 +158,15 @@ public class ListingService {
             j++;
         }
 
+        //HousingAgreement lease = new HousingAgreement(property, update.getLease(), update.getStartDate(), update.getEndDate());
+        //property.setLease(lease);
+
         /* for (int i=0; i<request.getPhotos().size(); i++) {
             createProp.getPhotos().add(new PropertyPhotos(i+1,request.getPhotos().get(i),createProp));
         }
     */
+       HousingAgreement lease = new HousingAgreement(property, update.getLease(), update.getStartDate(), update.getEndDate());
+       agreementRepository.save(lease);
 
       propRepository.save(property);
 

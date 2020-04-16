@@ -32,11 +32,12 @@ public class PropertyLocations {
     @JsonView(PropertyView.Search.class)
     private String zip;
 
+    @JsonView(PropertyView.Search.class)
     @Column(name="latitude")
     private String latitude;
 
-
     @Column(name="longitude")
+    @JsonView(PropertyView.Search.class)
     private String longitude;
 
 

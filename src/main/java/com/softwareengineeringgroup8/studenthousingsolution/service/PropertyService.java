@@ -37,15 +37,22 @@ public class PropertyService {
         return propertyRepository.findAll();
     }
 
+    public Properties getById(int id){
+        Properties prop=propertyRepository.findById(id);
+        if(prop != null && prop.getGroup() == null){
+            return prop;
+        }
+        return null;
+    }
+
+    public Properties getPropertyById(int id){
+        return propertyRepository.findById(id);
+    }
+
     public Properties getPropertyByGroup(TenantGroups group){ return propertyRepository.findByGroup(group); }
 
-
     public List<Properties> getPropertiesByLandlord(User landlord){ return propertyRepository.findByLandlord(landlord); }
-
-   public Properties getById(int id){ return propertyRepository.findById(id); }
-
-
-
+  
 
     // returns all properties within a certain zip code
     public List<Properties> getByZip(String zip) throws ValidationException{
