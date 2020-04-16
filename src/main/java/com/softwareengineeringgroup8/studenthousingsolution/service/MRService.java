@@ -58,17 +58,30 @@ public class MRService {
 
 
     public void updateMaintenanceRequest(MaintenanceRequest request, MaintenanceUpdateData data) {
+        long millis = System.currentTimeMillis();
+        Timestamp date = new java.sql.Timestamp(millis);
+        String dateString = date.toString();
         String statusDesc = data.getStatusDesc();
+        String msg;
         MaintenanceStatus status;
+        Properties prop = request.getProperty();
+        PropertyLocations location = prop.getLocation();
+        String address = location.getAddress();
+        User tenant = request.getTenant();
         if (statusDesc.equals("in progress")) {
             status = new MaintenanceStatus("in progress", 2);
+            msg = "Your maintenance request for " + address + " is in progress." ;
         } else if (statusDesc.equals("resolved")) {
             status = new MaintenanceStatus("resolved", 3);
+            msg = "Your maintenance request for " + address + " has been resolved";
         } else {
             status = new MaintenanceStatus("denied", 4);
+            msg = "Your maintenance request for " + address + " has been denied.";
         }
         request.setStatus(status);
+
         mrRepository.save(request);
+        notifService.createNotification(tenant, msg, "MAINTENANCE", dateString);
 
     }
 
