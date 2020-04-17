@@ -9,10 +9,12 @@ import com.softwareengineeringgroup8.studenthousingsolution.model.*;
 import com.softwareengineeringgroup8.studenthousingsolution.service.ListingService;
 import com.softwareengineeringgroup8.studenthousingsolution.service.*;
 import com.softwareengineeringgroup8.studenthousingsolution.service.UserPermissionService;
+import com.softwareengineeringgroup8.studenthousingsolution.service.HousingAgreementService;
 import com.softwareengineeringgroup8.studenthousingsolution.controller.UserController;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import javassist.NotFoundException;
 import java.sql.Date;
 
@@ -26,50 +28,47 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-
 @RestController
 @CrossOrigin(origins="http://localhost:3000")
-@ApiModel(description="Controller for schedule")
+@ApiModel(description="Schedule Controller")
 @RequestMapping("/schedule")
-public class ScheduleController {
-        @Autowired
-        private PropertyService propertyService;
+public class ScheduleController{
 
-        @Autowired
-        private UserPermissionService userPermissionService;
+    @Autowired
+    private ScheduleService scheduleService;
 
-        @Autowired
-        private ScheduleService scheduleSerivce;
+    @Autowired
+    private UserPermissionService userPermissionService;
+
+    @Autowired
+    private PropertyService propertyService;
+
+    @Autowired
+    private HousingAgreementService agreementService;
 
 
-        //createSchedule
-    @PostMapping("/createSchedule")
-    @ApiOperation(value="Landlord Create Schedule",notes="Landlord chooses available times")
-    public Boolean newSchedule(@RequestBody ScheduleRequest sched, @RequestHeader("Authorization") String str) throws ValidationException {
+
+
+
+    @PostMapping("/newschedule")
+    @ApiOperation(value="Create Listing",notes="Create new schedule.")
+    public Boolean newListing(@RequestBody ScheduleRequest request, @RequestHeader("Authorization") String str) throws ValidationException {
         try {
             User landlord = userPermissionService.loadUserByJWT(str);
             if (!userPermissionService.assertPermission(landlord, UserRoles.ROLE_LANDLORD)) {
                 return false;
             }
-            scheduleSerivce.createSchedule(sched,landlord);
+            scheduleService.createSchedule(request,landlord);
+            //test();
             return true;
-        } catch (NotFoundException e) {
+        }
+
+        catch (Error | NotFoundException e) {
             System.out.println(e);
             return false;
         }
     }
 
+    }
 
 
-    //viewSchedule (tenant) GET
-
-    //viewSchedule (landlord) GET
-
-    //editSchedule (landlord) POST
-
-    //create event (tenant) POST
-
-    //edit event (tenant or landlord) POST
-
-    //delete event (landlord or tenant) DELETE
-}

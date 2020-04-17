@@ -3,11 +3,18 @@ package com.softwareengineeringgroup8.studenthousingsolution.service;
 import com.softwareengineeringgroup8.studenthousingsolution.exceptions.ValidationException;
 import com.softwareengineeringgroup8.studenthousingsolution.model.*;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.*;
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.sql.Date;
 import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 @Component
@@ -18,48 +25,76 @@ public class ScheduleService {
     @Autowired
     private ScheduleRepository scheduleRepository;
 
-    @Autowired
-    private EventRepository eventRepository;
 
     @Autowired
     private UserRepository userRepository;
 
 
-    //create schedule
-
     public void createSchedule(ScheduleRequest request, User landlord) {
-        List<String> days = request.getAvailableDays();
-        List<String> list = request.getAvailableTimes();
-        List<Time> times = new ArrayList<Time>();
+         List<String> eventDates = request.getEventDates();
+         List<Timestamp> meetingTimes = new ArrayList<Timestamp>();
 
-        for (int i = 0; i < list.size(); i++) {
-            String str = list.get(i);
-            times.set(i, Time.valueOf(str));
+         for (int i=0; i<eventDates.size();i++) {
+             Timestamp addEvent = Timestamp.valueOf(eventDates.get(i));
+             meetingTimes.add(addEvent);
+         }
+
+         List<Schedule> LLSched = new ArrayList<Schedule>();
+         for (int i=0;i<meetingTimes.size();i++) {
+             LLSched.add(new Schedule(landlord,meetingTimes.get(i)));
+             scheduleRepository.save(LLSched.get(i));
+         }
+
+
+      /*
+         List<LocalDate> localDates = new ArrayList<LocalDate>();
+
+         for (int i=0;i<dates.size();i++) {
+             LocalDate addLocalDate = LocalDate.parse(dates.get(i));
+             localDates.add(addLocalDate);
+            // System.out.println(localDates.get(i));
+         }
+
+
+         List<Integer> dayConvert= new ArrayList<Integer>();
+
+
+         for (int i=0;i<dates.size();i++) {
+             DayOfWeek d1 = DayOfWeek.from(localDates.get(i));
+             int whatDay = d1.getValue();
+             dayConvert.add(whatDay);
+             //System.out.println(whatDay);
+         }
+
+         List<Integer> fulldays = new ArrayList<Integer>();
+         List <Timestamp> meetingTimes = new ArrayList<Timestamp>();
+
+         for (int i =0; i<dates.size(); i++) {
+             for (int j = 0; j<days.size(); j++) { //
+                 int currDay = days.get(i);  //1=mon,2=tues,3=wed,4=thurs,5=fri,6=sat, 7 = sunday
+                 if (currDay==dayConvert.get(i)) {
+                     Timestamp datetime = Timestamp.valueOf(dates.get(i) + times.get(j));
+                     System.out.println(datetime);
+                 }
+
+             }
+         }
+       */
+
         }
 
 
-        Schedule createSchedule = new Schedule(landlord, days, times);
-    }
 
-    //edit schedule
+
+
+
+
+
+//edit schedule (landlord)
     public void editSchedule() {
 
     }
 
 
-    //create event
-    public void createEvent(EventRequest request, User tenant) {
 
-    }
-
-    //edit event (EVERYTHING BUT DATE)
-    public void editEvent() {
-
-
-    }
-
-
-    //delete event
-    public void deleteEvent() {
-    }
 }
