@@ -24,8 +24,6 @@ public class Schedule {
     private Timestamp meetingTimes;
 
 
-
-
     public User getLandlord() {
         return landlord;
     }

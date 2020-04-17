@@ -31,6 +31,7 @@ public class ScheduleService {
 
 
     public void createSchedule(ScheduleRequest request, User landlord) {
+
          List<String> eventDates = request.getEventDates();
          List<Timestamp> meetingTimes = new ArrayList<Timestamp>();
 
@@ -46,7 +47,13 @@ public class ScheduleService {
          }
 
 
-      /*
+
+        /*
+         List<String> dates= request.getDates();
+         List<Integer> days = request.getDays();
+         List<String> times = request.getTimes();
+
+
          List<LocalDate> localDates = new ArrayList<LocalDate>();
 
          for (int i=0;i<dates.size();i++) {
@@ -68,18 +75,22 @@ public class ScheduleService {
 
          List<Integer> fulldays = new ArrayList<Integer>();
          List <Timestamp> meetingTimes = new ArrayList<Timestamp>();
-
+         //for start day
          for (int i =0; i<dates.size(); i++) {
              for (int j = 0; j<days.size(); j++) { //
                  int currDay = days.get(i);  //1=mon,2=tues,3=wed,4=thurs,5=fri,6=sat, 7 = sunday
                  if (currDay==dayConvert.get(i)) {
-                     Timestamp datetime = Timestamp.valueOf(dates.get(i) + times.get(j));
+                     Timestamp datetime = Timestamp.valueOf(dates.get(i)+" "+times.get(j));
                      System.out.println(datetime);
                  }
-
+                 if ((j+1)!=days.size()) {
+                     if (days.get(j)!=days.get(j+1)) {
+                         break;
+                     }
+                 }
              }
          }
-       */
+*/
 
         }
 

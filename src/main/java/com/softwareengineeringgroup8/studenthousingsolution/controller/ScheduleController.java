@@ -51,7 +51,7 @@ public class ScheduleController{
 
 
     @PostMapping("/newschedule")
-    @ApiOperation(value="Create Listing",notes="Create new schedule.")
+    @ApiOperation(value="Create Schedule",notes="Create new schedule.")
     public Boolean newListing(@RequestBody ScheduleRequest request, @RequestHeader("Authorization") String str) throws ValidationException {
         try {
             User landlord = userPermissionService.loadUserByJWT(str);
@@ -68,7 +68,6 @@ public class ScheduleController{
             return false;
         }
     }
-
     }
 
 
