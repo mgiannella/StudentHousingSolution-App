@@ -1,5 +1,7 @@
 package com.softwareengineeringgroup8.studenthousingsolution.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -14,6 +16,7 @@ public class TenantGroupMembers {
 
     @ManyToOne
     @JoinColumn(name="groupid")
+    @JsonIgnore
     private TenantGroups group;
 
     @ManyToOne
