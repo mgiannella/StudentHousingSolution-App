@@ -38,7 +38,7 @@ public class NotificationService {
     // user (self explanatory)
     // desc = notification description (max 250 chars)
     // type = "SCHEDULE", "MAINTENANCE", "PAYMENT", "GROUP", "GENERAL" [one of those]
-    // alertDT = "YYYY-MM-DD HH:MM:SS" (Time in 24HR format, ie. 14:00 instead of 2:00 PM)
+    // alertDT = "YYYY-MM-DD HH:MM:SS" (Time in 24HR format, ie. 14:00 instead of 2:00 PM) or empty string("") if you want it to be the current time
     // Will return true if successful, or throw exception if not successful
     public boolean createNotification(User user, String desc, String type, String alertDT) throws ValidationException {
         if(desc.length() > 250){
@@ -46,11 +46,15 @@ public class NotificationService {
             throw new ValidationException("Description string was too long");
         }
         Timestamp alertDate;
-        try{
-            alertDate = Timestamp.valueOf(alertDT);
-        }catch(Exception e){
-            System.out.println("NOTIFICATION-ERROR: Couldn't parse date");
-            throw new ValidationException("Couldn't parse date");
+        if(alertDT.equals("")){
+            alertDate = new Timestamp(Calendar.getInstance().getTime().getTime());
+        }else {
+            try {
+                alertDate = Timestamp.valueOf(alertDT);
+            } catch (Exception e) {
+                System.out.println("NOTIFICATION-ERROR: Couldn't parse date");
+                throw new ValidationException("Couldn't parse date");
+            }
         }
         NotificationType notifType;
         try{
