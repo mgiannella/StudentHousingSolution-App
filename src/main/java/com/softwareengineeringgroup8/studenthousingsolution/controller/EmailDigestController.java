@@ -71,7 +71,7 @@ public class EmailDigestController {
         }
     }
 
-    @GetMapping("/subscribers/{id}/properties")
+    @GetMapping("/api/subscribers/{id}/properties")
     @ApiOperation(value="Get Properties by Subscriber", notes="Returns properties that fit subscribers query from previous week")
     public List<Properties> getProperties(@RequestParam("key") String apiKey, @PathVariable("id") int id) throws ValidationException {
         try{
