@@ -1,12 +1,9 @@
 package com.softwareengineeringgroup8.studenthousingsolution.repository;
 
-import com.softwareengineeringgroup8.studenthousingsolution.model.User;
-import com.softwareengineeringgroup8.studenthousingsolution.model.Properties;
-import com.softwareengineeringgroup8.studenthousingsolution.model.Amenities;
-import com.softwareengineeringgroup8.studenthousingsolution.model.PropertyLocations;
-import com.softwareengineeringgroup8.studenthousingsolution.model.TenantGroups;
+import com.softwareengineeringgroup8.studenthousingsolution.model.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -34,5 +31,9 @@ public interface PropertiesRepository extends JpaRepository<Properties, Integer>
     @Query("Select p FROM Properties p WHERE p.group = ?1")
     List<Properties> findByTenantGroup(TenantGroups tg);
 
-
+    @Query("Select p FROM Properties p WHERE (p.amenities.price>= :#{#edr.price.min} and p.amenities.price<= :#{#edr.price.max})"
+            + "and (p.amenities.sleeps>= :#{#edr.sleeps.min} and p.amenities.sleeps<= :#{#edr.sleeps.max}) "
+            + "and (p.amenities.numBedrooms>= :#{#edr.bedrooms.min} and p.amenities.numBedrooms<= :#{#edr.bedrooms.max}) "
+            + "and (p.amenities.numBathrooms>= :#{#edr.bathrooms.min} and p.amenities.numBathrooms <= :#{#edr.bathrooms.max}) ")
+    List<Properties> emailDigestSearch(@Param("edr") EmailDigestRequest edr);
 }

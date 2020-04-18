@@ -10,29 +10,13 @@ import java.util.Objects;
 
 public class EmailDigestRequest implements Serializable {
 
-    @ApiModelProperty(notes="Min Beds", example="2", required = true)
-    private int minBed;
+    private SearchFilterBedroom bedrooms;
 
-    @ApiModelProperty(notes="Max Beds", example="4", required = true)
-    private int maxBed;
+    private SearchFilterBathroom bathrooms;
 
-    @ApiModelProperty(notes="Min Bath", example="1.0", required = true)
-    private float minBath;
+    private SearchFilterPrice price;
 
-    @ApiModelProperty(notes="Max Bath", example="3.5", required = true)
-    private float maxBath;
-
-    @ApiModelProperty(notes="Min Price", example="0", required = true)
-    private BigDecimal minPrice;
-
-    @ApiModelProperty(notes="Max Price", example="3500.50", required = true)
-    private BigDecimal maxPrice;
-
-    @ApiModelProperty(notes="Min Sleeps", example="1", required = true)
-    private int minSleeps;
-
-    @ApiModelProperty(notes="Max Sleeps", example="10", required = true)
-    private int maxSleeps;
+    private SearchFilterSleeps sleeps;
 
     @Size(min=0, max=10)
     @ApiModelProperty(notes="Zip Code", example="08901", required = true)
@@ -42,80 +26,36 @@ public class EmailDigestRequest implements Serializable {
 
     }
 
-    public EmailDigestRequest(int minBed, int maxBed, float minBath, float maxBath, BigDecimal minPrice, BigDecimal maxPrice, int minSleeps, int maxSleeps, String zip) {
-        this.minBed = minBed;
-        this.maxBed = maxBed;
-        this.minBath = minBath;
-        this.maxBath = maxBath;
-        this.minPrice = minPrice;
-        this.maxPrice = maxPrice;
-        this.minSleeps = minSleeps;
-        this.maxSleeps = maxSleeps;
-        this.zip = zip;
+    public SearchFilterBedroom getBedrooms() {
+        return bedrooms;
     }
 
-    public int getMinBed() {
-        return minBed;
+    public void setBedrooms(SearchFilterBedroom bedrooms) {
+        this.bedrooms = bedrooms;
     }
 
-    public void setMinBed(int minBed) {
-        this.minBed = minBed;
+    public SearchFilterBathroom getBathrooms() {
+        return bathrooms;
     }
 
-    public int getMaxBed() {
-        return maxBed;
+    public void setBathrooms(SearchFilterBathroom bathrooms) {
+        this.bathrooms = bathrooms;
     }
 
-    public void setMaxBed(int maxBed) {
-        this.maxBed = maxBed;
+    public SearchFilterPrice getPrice() {
+        return price;
     }
 
-    public float getMinBath() {
-        return minBath;
+    public void setPrice(SearchFilterPrice price) {
+        this.price = price;
     }
 
-    public void setMinBath(float minBath) {
-        this.minBath = minBath;
+    public SearchFilterSleeps getSleeps() {
+        return sleeps;
     }
 
-    public float getMaxBath() {
-        return maxBath;
-    }
-
-    public void setMaxBath(float maxBath) {
-        this.maxBath = maxBath;
-    }
-
-    public BigDecimal getMinPrice() {
-        return minPrice;
-    }
-
-    public void setMinPrice(BigDecimal minPrice) {
-        this.minPrice = minPrice;
-    }
-
-    public BigDecimal getMaxPrice() {
-        return maxPrice;
-    }
-
-    public void setMaxPrice(BigDecimal maxPrice) {
-        this.maxPrice = maxPrice;
-    }
-
-    public int getMinSleeps() {
-        return minSleeps;
-    }
-
-    public void setMinSleeps(int minSleeps) {
-        this.minSleeps = minSleeps;
-    }
-
-    public int getMaxSleeps() {
-        return maxSleeps;
-    }
-
-    public void setMaxSleeps(int maxSleeps) {
-        this.maxSleeps = maxSleeps;
+    public void setSleeps(SearchFilterSleeps sleeps) {
+        this.sleeps = sleeps;
     }
 
     public String getZip() {

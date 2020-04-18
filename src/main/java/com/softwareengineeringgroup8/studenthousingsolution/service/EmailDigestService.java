@@ -35,7 +35,7 @@ public class EmailDigestService {
 
     public void subscribeDigest(User user, EmailDigestRequest edr) throws ValidationException{
         try{
-            EmailAmenities amen = new EmailAmenities(edr.getMinBed(), edr.getMaxBed(), edr.getMinBath(), edr.getMaxBath(), edr.getMinPrice(), edr.getMaxPrice(), edr.getMinSleeps(), edr.getMaxSleeps(), edr.getZip());
+            EmailAmenities amen = new EmailAmenities(edr.getBedrooms().getMin(), edr.getBedrooms().getMax(), edr.getBathrooms().getMin(), edr.getBathrooms().getMax(), edr.getPrice().getMin(), edr.getPrice().getMax(), edr.getSleeps().getMin(), edr.getSleeps().getMax(), edr.getZip());
             emailAmenitiesRepository.save(amen);
             EmailSubscribers sub = new EmailSubscribers(amen,user);
             emailSubscribersRepository.save(sub);

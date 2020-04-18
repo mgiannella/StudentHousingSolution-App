@@ -1,9 +1,11 @@
 package com.softwareengineeringgroup8.studenthousingsolution.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
 
@@ -60,6 +62,9 @@ public class Properties {
     @JsonView(PropertyView.Search.class)
     private List<PropertyPhotos> photos;
 
+    @Column(name="UPLOAD_TS", insertable=false)
+    @JsonView(PropertyView.Search.class)
+    private Timestamp uploadTS;
 
     public Properties(){
 
@@ -145,6 +150,14 @@ public class Properties {
 
     public void setPhotos(List<PropertyPhotos> photos) {
         this.photos = photos;
+    }
+
+    public Timestamp getUploadTS() {
+        return uploadTS;
+    }
+
+    public void setUploadTS(Timestamp uploadTS) {
+        this.uploadTS = uploadTS;
     }
 
     @Override
