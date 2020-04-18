@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Validation;
 import java.util.List;
 
 @RestController
@@ -24,7 +25,10 @@ public class EmailDigestController {
     @Autowired
     private PropertyService propertyService;
 
-    @GetMapping("/getSubscribers")
+    @Autowired
+    UserService userService;
+
+    @GetMapping("/api/subscribers")
     @ApiOperation(value = "Get all Newsletter Subscribers", notes = "Returns a list of all subscribers")
     public List<EmailSubscribers> getSubscribers(@RequestParam("key") String apiKey) throws ValidationException {
         try {
@@ -62,6 +66,25 @@ public class EmailDigestController {
             emailDigestService.subscribeDigest(user, edr);
             return true;
         } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new ValidationException(e.getMessage());
+        }
+    }
+
+    @GetMapping("/subscribers/{id}/properties")
+    @ApiOperation(value="Get Properties by Subscriber", notes="Returns properties that fit subscribers query from previous week")
+    public List<Properties> getProperties(@RequestParam("key") String apiKey, @PathVariable("id") int id) throws ValidationException {
+        try{
+            User user = userService.getUserById(id);
+            if(user == null){
+                throw new ValidationException("User does not exist");
+            }
+            EmailAmenities ea = emailDigestService.getSubscribersPrefs(user);
+            if(ea == null){
+                throw new ValidationException("User is not subscribed.");
+            }
+            return emailDigestService.getPropsForSubscriber(ea);
+        }catch(Exception e){
             System.out.println(e.getMessage());
             throw new ValidationException(e.getMessage());
         }

@@ -1,10 +1,12 @@
 package com.softwareengineeringgroup8.studenthousingsolution.repository;
 
 import com.softwareengineeringgroup8.studenthousingsolution.model.*;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 public interface PropertiesRepository extends JpaRepository<Properties, Integer> {
@@ -31,9 +33,11 @@ public interface PropertiesRepository extends JpaRepository<Properties, Integer>
     @Query("Select p FROM Properties p WHERE p.group = ?1")
     List<Properties> findByTenantGroup(TenantGroups tg);
 
-    @Query("Select p FROM Properties p WHERE (p.amenities.price>= :#{#edr.price.min} and p.amenities.price<= :#{#edr.price.max})"
-            + "and (p.amenities.sleeps>= :#{#edr.sleeps.min} and p.amenities.sleeps<= :#{#edr.sleeps.max}) "
-            + "and (p.amenities.numBedrooms>= :#{#edr.bedrooms.min} and p.amenities.numBedrooms<= :#{#edr.bedrooms.max}) "
-            + "and (p.amenities.numBathrooms>= :#{#edr.bathrooms.min} and p.amenities.numBathrooms <= :#{#edr.bathrooms.max}) ")
-    List<Properties> emailDigestSearch(@Param("edr") EmailDigestRequest edr);
+    @Query("Select p FROM Properties p WHERE (p.amenities.price>= :#{#ea.minPrice} and p.amenities.price<= :#{#ea.maxPrice})"
+            + "and (p.amenities.sleeps>= :#{#ea.minSleeps} and p.amenities.sleeps<= :#{#ea.maxSleeps}) "
+            + "and (p.amenities.numBedrooms>= :#{#ea.minBed} and p.amenities.numBedrooms<= :#{#ea.maxBed}) "
+            + "and (p.amenities.numBathrooms>= :#{#ea.minBath} and p.amenities.numBathrooms <= :#{#ea.maxBath}) "
+            + "and(p.uploadTS >= :startDT and p.uploadTS <= :endDT) "
+            + "and (p.location.zip = :#{#ea.zip})")
+    List<Properties> emailDigestSearch(@Param("ea") EmailAmenities ea, @Param("startDT")Timestamp startDT, @Param("endDT")Timestamp endDT);
 }
