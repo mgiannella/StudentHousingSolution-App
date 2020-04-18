@@ -98,7 +98,7 @@ public class ChargeRequest implements Serializable {
 
     //private Date paymentDate;
 
-   //private String description;
+    //private String description;
 
     /*public int getPaymentAmount() {
         return paymentAmount;
