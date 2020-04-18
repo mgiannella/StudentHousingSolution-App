@@ -54,7 +54,7 @@ public class EmailDigestService {
             emailAmenitiesRepository.delete(es.getEmailAmenities());
             emailSubscribersRepository.delete(es);
         }catch(Exception e){
-            throw new ValidationException("Couldn't unsubscribe from digest, try again.")
+            throw new ValidationException("Couldn't unsubscribe from digest, try again.");
         }
     }
 
