@@ -50,12 +50,12 @@ public class TenantGroupsController {
 
     @GetMapping("/view")
     @ApiOperation(value = "Display Groups", notes = "Get all of your subscribed group")
-    public List<TenantGroups> viewGroups(@RequestHeader("Authorization") String authString) throws ValidationException {
+    public List<TenantGroupResponse> viewGroups(@RequestHeader("Authorization") String authString) throws ValidationException {
         try {
             User user = userPermissionService.loadUserByJWT(authString);
             if (!userPermissionService.assertPermission(user, UserRoles.ROLE_TENANT))
                 throw new ValidationException("User is not a tenant");
-            return tenantGroupsService.getGroupByTenant(user);
+            return tenantGroupsService.getGroupAndMembersByTenant(user);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             throw new ValidationException(e.getMessage());

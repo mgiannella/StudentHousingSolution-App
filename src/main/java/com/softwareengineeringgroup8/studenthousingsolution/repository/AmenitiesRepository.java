@@ -1,6 +1,8 @@
 package com.softwareengineeringgroup8.studenthousingsolution.repository;
 
 import com.softwareengineeringgroup8.studenthousingsolution.model.Amenities;
+import com.softwareengineeringgroup8.studenthousingsolution.model.EmailDigestRequest;
+import com.softwareengineeringgroup8.studenthousingsolution.model.Properties;
 import com.softwareengineeringgroup8.studenthousingsolution.model.SearchFilterRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,7 +18,6 @@ public interface AmenitiesRepository extends JpaRepository<Amenities,Integer> {
 
     @Query("SELECT a FROM Amenities a WHERE (a.price>= :#{#filter.price.min} and a.price<= :#{#filter.price.max})"
             + "and (a.sleeps>= :#{#filter.sleeps.min} and a.sleeps<= :#{#filter.sleeps.max}) "
-            + "and (a.price>= :#{#filter.price.min} and a.price<= :#{#filter.price.max}) "
             + "and (a.numBedrooms>= :#{#filter.bedrooms.min} and a.numBedrooms<= :#{#filter.bedrooms.max}) "
             + "and (a.numBathrooms>= :#{#filter.bathrooms.min} and a.numBathrooms <= :#{#filter.bathrooms.max}) "
             + "and (a.hasAC >= :#{#filter.hasAC}) "
@@ -31,4 +32,6 @@ public interface AmenitiesRepository extends JpaRepository<Amenities,Integer> {
             + "and (a.isTrashPickedUpl >= :#{#filter.trashPickedUpl}) "
             + "and (a.hasHeat >= :#{#filter.hasHeat})")
     List<Amenities> filterSearch(@Param("filter")SearchFilterRequest values);
+
+
 }

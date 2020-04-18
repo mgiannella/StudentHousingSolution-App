@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
 import javax.validation.Validation;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -24,6 +25,9 @@ public class TenantGroupsService {
 
     @Autowired
     private PropertyService propertyService;
+
+    @Autowired
+    private NotificationService notificationService;
 
     // returns true if user is in the group
     public boolean inGroup(User user, TenantGroups group){
@@ -57,8 +61,9 @@ public class TenantGroupsService {
         if(!group.getLeadTenant().equals(inviter)){
             throw new ValidationException("Lead tenant needs to invite");
         }
-        if(tenantGroupMembersRepository.findInvitesByUserAndGroup(invitee, group) != null)
+        if(tenantGroupMembersRepository.findInvitesByUserAndGroup(invitee, group) != null){
             throw new ValidationException("Already sent an invite to this user");
+        }
         // Check to make sure invitee isn't in 2 groups already
         List<TenantGroups> groupsList = tenantGroupMembersRepository.findTenantGroupByMember(invitee);
         if(groupsList.size() > 1){
@@ -66,6 +71,7 @@ public class TenantGroupsService {
         }
         // Add tenant to group
         tenantGroupMembersRepository.save(new TenantGroupMembers(group, invitee, false, true, false));
+        notificationService.createNotification(invitee, "You've been invited to a tenant group: "+group.getName(), "GROUP", "");
     }
 
     public void leaveGroup(User user, TenantGroups group) throws ValidationException{
@@ -78,6 +84,7 @@ public class TenantGroupsService {
         if(member.isSignedLease())
             throw new ValidationException("User already signed lease");
         tenantGroupMembersRepository.delete(member);
+        notificationService.createNotification(group.getLeadTenant(), "Member: "+user.getUsername()+" left group: "+group.getName(), "GROUP", "");
     }
 
     public void deleteUser(User lead, TenantGroups group, User delete) throws ValidationException {
@@ -91,6 +98,7 @@ public class TenantGroupsService {
         }
         // Removes person from group
         tenantGroupMembersRepository.delete(tenantGroupMembersRepository.findTenantGroupMembersByUserAndGroup(delete, group));
+        notificationService.createNotification(delete, "You've been removed from group: "+group.getName(), "GROUP", "");
     }
 
     public void deleteGroup(User lead, TenantGroups group) throws ValidationException {
@@ -125,6 +133,7 @@ public class TenantGroupsService {
         // make newLead leader
         group.setLeadTenant(newLead);
         tenantGroupsRepository.save(group);
+        notificationService.createNotification(newLead, "You're now the leader of group: "+group.getName(), "GROUP", "");
     }
 
     public List<TenantGroups> getGroupByTenant(User user) throws ValidationException {
@@ -133,6 +142,25 @@ public class TenantGroupsService {
             return tenantGroupMembersRepository.findTenantGroupByMember(user);
         }catch(Error e) {
             throw new ValidationException("Couldn't get tenants for group");
+        }
+    }
+
+    public List<TenantGroupResponse> getGroupAndMembersByTenant(User user) throws ValidationException {
+        // search tenantgroups and find group
+        try{
+            List<TenantGroups> groupList = tenantGroupMembersRepository.findTenantGroupByMember(user);
+            List<TenantGroupResponse> retList = new ArrayList<TenantGroupResponse>();
+            for(int i =0; i<groupList.size(); i++){
+                TenantGroupResponse temp = new TenantGroupResponse(groupList.get(i));
+                List<TenantGroupMembers> members = findByGroup(groupList.get(i));
+                for(int j = 0; j< members.size(); j++){
+                    temp.addMember(members.get(j));
+                }
+                retList.add(temp);
+            }
+            return retList;
+        }catch(Error e) {
+            throw new ValidationException("Couldn't groups by tenant");
         }
     }
 
@@ -160,15 +188,18 @@ public class TenantGroupsService {
         member.setSubscribed(true);
         member.setInvited(false);
         tenantGroupMembersRepository.save(member);
+        notificationService.createNotification(group.getLeadTenant(), user.getUsername()+" joined group: "+group.getName(), "GROUP", "");
     }
 
-    public void signLease(User user, TenantGroups group) throws ValidationException {
+    public void signLease(User user, TenantGroups group, Properties prop) throws ValidationException {
         TenantGroupMembers member = tenantGroupMembersRepository.findTenantGroupMembersByUserAndGroup(user,group);
         if(member == null){
             throw new ValidationException("Member is not a part of that group");
         }
         member.setSignedLease(true);
         tenantGroupMembersRepository.save(member);
+        // sends landlord a notification
+        notificationService.createNotification(prop.getLandlord(), user.getUsername()+" signed lease for property: "+prop.getLocation().getAddress(), "GENERAL", "");
     }
 
     public List<TenantGroupMembers> viewInvitations(User user) {

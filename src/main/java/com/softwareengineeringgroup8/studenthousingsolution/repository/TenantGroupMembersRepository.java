@@ -27,4 +27,5 @@ public interface TenantGroupMembersRepository extends JpaRepository<TenantGroupM
     @Query("Select u from TenantGroupMembers u where (u.group = ?1)")
     List<TenantGroupMembers> findTenantGroupMembersByGroup(TenantGroups group);
 
+
 }

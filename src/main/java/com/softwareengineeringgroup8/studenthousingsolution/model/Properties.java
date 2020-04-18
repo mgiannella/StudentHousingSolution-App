@@ -1,9 +1,11 @@
 package com.softwareengineeringgroup8.studenthousingsolution.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
 
@@ -46,11 +48,6 @@ public class Properties {
     @JsonView(PropertyView.Search.class)
     private PropertyLocations location;
 
-    @Column(name="pageviews")
-    @JsonView(PropertyView.Search.class)
-    private int pageViews;
-
-
     @OneToMany(
             cascade = CascadeType.ALL,
             orphanRemoval = true,
@@ -60,20 +57,21 @@ public class Properties {
     @JsonView(PropertyView.Search.class)
     private List<PropertyPhotos> photos;
 
+    @Column(name="UPLOAD_TS", insertable=false)
+    @JsonView(PropertyView.Search.class)
+    private Timestamp uploadTS;
 
     public Properties(){
 
     }
 
-
-    public Properties(User landlord, String title, Amenities amenities, PropertyDescriptions description, PropertyLocations location, int pageViews, List<PropertyPhotos> photos) {
+    public Properties(User landlord, String title, Amenities amenities, PropertyDescriptions description, PropertyLocations location, List<PropertyPhotos> photos) {
 
         this.landlord = landlord;
         this.title = title;
         this.amenities = amenities;
         this.description = description;
         this.location = location;
-        this.pageViews = pageViews;
         this.photos = photos;
     }
 
@@ -131,20 +129,20 @@ public class Properties {
         this.location = location;
     }
 
-    public int getPageViews() {
-        return pageViews;
-    }
-
-    public void setPageViews(int pageViews) {
-        this.pageViews = pageViews;
-    }
-
     public List<PropertyPhotos> getPhotos() {
         return photos;
     }
 
     public void setPhotos(List<PropertyPhotos> photos) {
         this.photos = photos;
+    }
+
+    public Timestamp getUploadTS() {
+        return uploadTS;
+    }
+
+    public void setUploadTS(Timestamp uploadTS) {
+        this.uploadTS = uploadTS;
     }
 
     @Override

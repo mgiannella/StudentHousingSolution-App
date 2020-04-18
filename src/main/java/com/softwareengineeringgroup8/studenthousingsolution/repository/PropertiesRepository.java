@@ -1,13 +1,12 @@
 package com.softwareengineeringgroup8.studenthousingsolution.repository;
 
-import com.softwareengineeringgroup8.studenthousingsolution.model.User;
-import com.softwareengineeringgroup8.studenthousingsolution.model.Properties;
-import com.softwareengineeringgroup8.studenthousingsolution.model.Amenities;
-import com.softwareengineeringgroup8.studenthousingsolution.model.PropertyLocations;
-import com.softwareengineeringgroup8.studenthousingsolution.model.TenantGroups;
+import com.softwareengineeringgroup8.studenthousingsolution.model.*;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 public interface PropertiesRepository extends JpaRepository<Properties, Integer> {
@@ -34,5 +33,11 @@ public interface PropertiesRepository extends JpaRepository<Properties, Integer>
     @Query("Select p FROM Properties p WHERE p.group = ?1")
     List<Properties> findByTenantGroup(TenantGroups tg);
 
-
+    @Query("Select p FROM Properties p WHERE (p.amenities.price>= :#{#ea.minPrice} and p.amenities.price<= :#{#ea.maxPrice})"
+            + "and (p.amenities.sleeps>= :#{#ea.minSleeps} and p.amenities.sleeps<= :#{#ea.maxSleeps}) "
+            + "and (p.amenities.numBedrooms>= :#{#ea.minBed} and p.amenities.numBedrooms<= :#{#ea.maxBed}) "
+            + "and (p.amenities.numBathrooms>= :#{#ea.minBath} and p.amenities.numBathrooms <= :#{#ea.maxBath}) "
+            + "and(p.uploadTS >= :startDT and p.uploadTS <= :endDT) "
+            + "and (p.location.zip = :#{#ea.zip})")
+    List<Properties> emailDigestSearch(@Param("ea") EmailAmenities ea, @Param("startDT")Timestamp startDT, @Param("endDT")Timestamp endDT);
 }
