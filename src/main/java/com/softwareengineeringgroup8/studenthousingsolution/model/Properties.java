@@ -61,6 +61,10 @@ public class Properties {
     @JsonView(PropertyView.Search.class)
     private Timestamp uploadTS;
 
+    @Column(name="unitnum", insertable=false)
+    @JsonView(PropertyView.Search.class)
+    private String unitNum;
+
     public Properties(){
 
     }
@@ -143,6 +147,14 @@ public class Properties {
 
     public void setUploadTS(Timestamp uploadTS) {
         this.uploadTS = uploadTS;
+    }
+
+    public String getUnitNum() {
+        return unitNum;
+    }
+
+    public void setUnitNum(String unitNum) {
+        this.unitNum = unitNum;
     }
 
     @Override
