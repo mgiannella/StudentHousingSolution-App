@@ -102,20 +102,23 @@ public class ReviewsController {
 
     @GetMapping("display-reviews/{propId}")
     @ApiOperation(value= "Display reviews on selected property")
-    public List<Reviews> displayReviews(@PathVariable("propId") int propId, @RequestHeader("Authorization") String str) throws ValidationException {
+    public List<Reviews> displayReviews(@PathVariable("propId") int propId/*, @RequestHeader("Authorization") String str*/) throws ValidationException {
         try {
-            User tenant = userPermissionService.loadUserByJWT(str);
 
-            Properties prop= propertiesRepository.findByPropertyID(propId);
-            List<Reviews> reviews= reviewsRepository.findByProperty(prop);
+           /* User tenant = userPermissionService.loadUserByJWT(str);
+
+
 
             if (!userPermissionService.assertPermission(tenant, UserRoles.ROLE_TENANT)) {
                 return null;
 
             }
+*/
+            Properties prop= propertiesRepository.findById(propId);
+            List<Reviews> reviews= reviewsRepository.findByProperty(prop);
             return reviews;
 
-        } catch (Error | NotFoundException e) {
+        } catch (Error e) {
             System.out.println(e);
             return null;
 
@@ -136,7 +139,7 @@ public class ReviewsController {
 
             Boolean delete=reviewsService.deleteReview(reviewId);
 
-            return true;
+            return delete;
 
         } catch (Error | NotFoundException e) {
             System.out.println(e);
