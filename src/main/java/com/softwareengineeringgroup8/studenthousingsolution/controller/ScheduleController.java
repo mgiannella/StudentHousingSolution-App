@@ -6,15 +6,13 @@ import com.softwareengineeringgroup8.studenthousingsolution.exceptions.Validatio
 import com.softwareengineeringgroup8.studenthousingsolution.model.*;
 
 
+import com.softwareengineeringgroup8.studenthousingsolution.repository.ScheduleRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.service.ListingService;
 import com.softwareengineeringgroup8.studenthousingsolution.service.*;
 import com.softwareengineeringgroup8.studenthousingsolution.service.UserPermissionService;
 import com.softwareengineeringgroup8.studenthousingsolution.service.HousingAgreementService;
 import com.softwareengineeringgroup8.studenthousingsolution.controller.UserController;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.Authorization;
+import io.swagger.annotations.*;
 import javassist.NotFoundException;
 import java.sql.Date;
 
@@ -24,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.security.NoSuchAlgorithmException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +45,33 @@ public class ScheduleController{
     @Autowired
     private HousingAgreementService agreementService;
 
+    @Autowired
+    private ScheduleRepository scheduleRepository;
 
+    @GetMapping("/landlordview")
+    @ApiOperation(value="view schedule", notes="View Schedule")
+    public ScheduleView landlordViewSchedule(@RequestHeader("Authorization") String str) throws ValidationException {
+        try {
+            User landlord = userPermissionService.loadUserByJWT(str);
+            if (!userPermissionService.assertPermission(landlord, UserRoles.ROLE_LANDLORD)) {
+                return null;
+            }
+
+            if (scheduleService.existsByLandlord(landlord)==true) {
+                return scheduleService.findByLandlord(landlord);
+            }
+            else {
+                    throw new ValidationException("No schedule exists.") ;
+                }
+
+
+        }
+
+        catch (Error | NotFoundException e) {
+            System.out.println(e);
+            return null;
+        }
+    }
 
 
 

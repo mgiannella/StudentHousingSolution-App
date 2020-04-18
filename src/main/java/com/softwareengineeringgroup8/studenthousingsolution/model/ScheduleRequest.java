@@ -28,7 +28,7 @@ public class ScheduleRequest
     public ScheduleRequest(){
 
     }
-    
+
     /*
      @ApiModelProperty(notes="days available",example="",required=true)
     private List<Integer> days;

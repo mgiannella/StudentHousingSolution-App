@@ -12,6 +12,8 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -106,6 +108,67 @@ public class ScheduleService {
 
     }
 
+
+    public Boolean existsByLandlord(User landlord) {
+        try{
+            return scheduleRepository.existsByLandlord(landlord);
+        }catch(Exception e){
+            throw new ValidationException("Couldn't find Schedule By ID");
+        }
+
+    }
+
+
+    public ScheduleView findByLandlord(User landlord) {
+            try{
+                List<Schedule> scheds = scheduleRepository.findByLandlord(landlord);
+                List<LocalDate> date = new ArrayList<LocalDate>();
+                List<LocalTime> time = new ArrayList<LocalTime>();
+                //List<Timestamp> fakeNews = new ArrayList<Timestamp>();
+                for (int i =0;i<scheds.size();i++) {
+                    Timestamp add = scheds.get(i).getMeetingTimes();
+                    LocalDateTime ldt = add.toLocalDateTime();
+                    LocalDate ld = ldt.toLocalDate();
+                    date.add(ld);
+                    LocalTime lt = ldt.toLocalTime();
+                    time.add(lt);
+                }
+
+                ScheduleView view = new ScheduleView();
+                view.setStartDate(date.get(0));
+                view.setEndDate(date.get(date.size()-1));
+                int weekStart = date.get(0).getDayOfMonth();
+                int weekEnd = weekStart+7;
+                List<LocalTime> weekTimes = new ArrayList<LocalTime>();
+                List<DayOfWeek> weekDays = new ArrayList<DayOfWeek>();
+
+                for (int i=0; i<date.size();i++) {
+                    int whatDate = date.get(i).getDayOfMonth();
+                    if (whatDate>=weekEnd) {
+                        break;
+                    }
+                    DayOfWeek whatDay = date.get(i).getDayOfWeek();
+                    weekDays.add(whatDay);
+                    weekTimes.add(time.get(i));
+                }
+
+                List<Integer> daysAsInts = new ArrayList<Integer>();
+                for (int i=0;i<weekDays.size();i++) {
+                    daysAsInts.add(weekDays.get(i).getValue());
+                }
+
+
+                view.setDays(daysAsInts);
+                view.setTimes(weekTimes);
+
+
+
+                return view;
+            }catch(Exception e){
+                throw new ValidationException("Couldn't find Times By Id");
+            }
+
+    }
 
 
 }
