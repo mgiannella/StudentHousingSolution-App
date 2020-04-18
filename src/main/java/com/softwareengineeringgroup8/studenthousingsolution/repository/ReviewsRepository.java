@@ -17,4 +17,6 @@ public interface ReviewsRepository extends JpaRepository<Reviews,Integer>{
 
     @Query("SELECT u FROM Reviews u WHERE u.id = ?1")
     Reviews findById(int id);
+
+
 }
