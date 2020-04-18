@@ -48,11 +48,6 @@ public class Properties {
     @JsonView(PropertyView.Search.class)
     private PropertyLocations location;
 
-    @Column(name="pageviews")
-    @JsonView(PropertyView.Search.class)
-    private int pageViews;
-
-
     @OneToMany(
             cascade = CascadeType.ALL,
             orphanRemoval = true,
@@ -70,15 +65,13 @@ public class Properties {
 
     }
 
-
-    public Properties(User landlord, String title, Amenities amenities, PropertyDescriptions description, PropertyLocations location, int pageViews, List<PropertyPhotos> photos) {
+    public Properties(User landlord, String title, Amenities amenities, PropertyDescriptions description, PropertyLocations location, List<PropertyPhotos> photos) {
 
         this.landlord = landlord;
         this.title = title;
         this.amenities = amenities;
         this.description = description;
         this.location = location;
-        this.pageViews = pageViews;
         this.photos = photos;
     }
 
@@ -134,14 +127,6 @@ public class Properties {
 
     public void setLocation(PropertyLocations location) {
         this.location = location;
-    }
-
-    public int getPageViews() {
-        return pageViews;
-    }
-
-    public void setPageViews(int pageViews) {
-        this.pageViews = pageViews;
     }
 
     public List<PropertyPhotos> getPhotos() {

@@ -92,7 +92,7 @@ public class ListingService {
             String title=request.getTitle();
             List<PropertyPhotos> photos = new ArrayList<PropertyPhotos>();
 
-            Properties createProp = new Properties(landlord,title, createAmen, createDesc, createLocation, 0,photos);
+            Properties createProp = new Properties(landlord,title, createAmen, createDesc, createLocation, photos);
 
             //photosRepository.save(photos);
             for (int i=0; i<request.getPhotos().size(); i++) {
