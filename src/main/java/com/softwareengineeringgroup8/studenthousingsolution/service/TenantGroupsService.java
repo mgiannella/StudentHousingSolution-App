@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
 import javax.validation.Validation;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -134,6 +135,25 @@ public class TenantGroupsService {
             return tenantGroupMembersRepository.findTenantGroupByMember(user);
         }catch(Error e) {
             throw new ValidationException("Couldn't get tenants for group");
+        }
+    }
+
+    public List<TenantGroupResponse> getGroupAndMembersByTenant(User user) throws ValidationException {
+        // search tenantgroups and find group
+        try{
+            List<TenantGroups> groupList = tenantGroupMembersRepository.findTenantGroupByMember(user);
+            List<TenantGroupResponse> retList = new ArrayList<TenantGroupResponse>();
+            for(int i =0; i<groupList.size(); i++){
+                TenantGroupResponse temp = new TenantGroupResponse(groupList.get(i));
+                List<TenantGroupMembers> members = findByGroup(groupList.get(i));
+                for(int j = 0; j< members.size(); j++){
+                    temp.addMember(members.get(j));
+                }
+                retList.add(temp);
+            }
+            return retList;
+        }catch(Error e) {
+            throw new ValidationException("Couldn't groups by tenant");
         }
     }
 
