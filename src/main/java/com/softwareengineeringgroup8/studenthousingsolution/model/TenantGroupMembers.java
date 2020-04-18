@@ -16,7 +16,6 @@ public class TenantGroupMembers {
 
     @ManyToOne
     @JoinColumn(name="groupid")
-    @JsonIgnore
     private TenantGroups group;
 
     @ManyToOne
