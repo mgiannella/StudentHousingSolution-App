@@ -2,6 +2,7 @@ package com.softwareengineeringgroup8.studenthousingsolution.service;
 
 import com.softwareengineeringgroup8.studenthousingsolution.exceptions.ValidationException;
 import com.softwareengineeringgroup8.studenthousingsolution.model.*;
+import com.softwareengineeringgroup8.studenthousingsolution.model.Properties;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.*;
 import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +17,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class ScheduleService {
@@ -43,6 +41,7 @@ public class ScheduleService {
              Timestamp addEvent = Timestamp.valueOf(eventDates.get(i));
              meetingTimes.add(addEvent);
          }
+         Collections.sort(meetingTimes);
 
          List<Schedule> LLSched = new ArrayList<Schedule>();
          for (int i=0;i<meetingTimes.size();i++) {
@@ -52,54 +51,8 @@ public class ScheduleService {
 
 
 
-        /*
-         List<String> dates= request.getDates();
-         List<Integer> days = request.getDays();
-         List<String> times = request.getTimes();
-
-
-         List<LocalDate> localDates = new ArrayList<LocalDate>();
-
-         for (int i=0;i<dates.size();i++) {
-             LocalDate addLocalDate = LocalDate.parse(dates.get(i));
-             localDates.add(addLocalDate);
-            // System.out.println(localDates.get(i));
-         }
-
-
-         List<Integer> dayConvert= new ArrayList<Integer>();
-
-
-         for (int i=0;i<dates.size();i++) {
-             DayOfWeek d1 = DayOfWeek.from(localDates.get(i));
-             int whatDay = d1.getValue();
-             dayConvert.add(whatDay);
-             //System.out.println(whatDay);
-         }
-
-         List<Integer> fulldays = new ArrayList<Integer>();
-         List <Timestamp> meetingTimes = new ArrayList<Timestamp>();
-         //for start day
-         for (int i =0; i<dates.size(); i++) {
-             for (int j = 0; j<days.size(); j++) { //
-                 int currDay = days.get(i);  //1=mon,2=tues,3=wed,4=thurs,5=fri,6=sat, 7 = sunday
-                 if (currDay==dayConvert.get(i)) {
-                     Timestamp datetime = Timestamp.valueOf(dates.get(i)+" "+times.get(j));
-                     System.out.println(datetime);
-                 }
-                 if ((j+1)!=days.size()) {
-                     if (days.get(j)!=days.get(j+1)) {
-                         break;
-                     }
-                 }
-             }
-         }
-*/
 
         }
-
-
-
 
 
 
@@ -111,14 +64,6 @@ public class ScheduleService {
     }
 
 
-    public Boolean existsByLandlord(User landlord) {
-        try{
-            return scheduleRepository.existsByLandlord(landlord);
-        }catch(Exception e){
-            throw new ValidationException("Couldn't find Schedule By ID");
-        }
-
-    }
 
 
     public ScheduleTenantTimes ListTimes(User landlord) {
@@ -152,8 +97,9 @@ public class ScheduleService {
                 return bookingTimes;
             }
         }
+    public void scheduleUpdate(Properties property, User tenant) {
 
-
+    }
 
 
     public ScheduleView findByLandlord(User landlord) {
@@ -203,6 +149,17 @@ public class ScheduleService {
             }catch(Exception e){
                 throw new ValidationException("Couldn't find Times By Id");
             }
+
+    }
+
+
+
+    public Boolean existsByLandlord(User landlord) {
+        try{
+            return scheduleRepository.existsByLandlord(landlord);
+        }catch(Exception e){
+            throw new ValidationException("Couldn't find Schedule By ID");
+        }
 
     }
 

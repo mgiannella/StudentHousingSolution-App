@@ -124,6 +124,26 @@ public class ScheduleController{
     }
 
 
+/*
+    @PostMapping("/{propertyid}")
+    @ApiOperation(value="Booking Times",notes="Create new reservation.")
+    public Boolean makeBooking(@RequestHeader("Authorization") String str, @PathVariable("propertyid") int propertyid) throws ValidationException {
+        try {
+            User tenant = userPermissionService.loadUserByJWT(str);
+            if (!userPermissionService.assertPermission(tenant, UserRoles.ROLE_TENANT)) {
+                return null;
+            }
+            Properties property = propertyService.getById(propertyid);
+
+
+        }
+
+        catch (Error | NotFoundException e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+*/
 }
 
 
