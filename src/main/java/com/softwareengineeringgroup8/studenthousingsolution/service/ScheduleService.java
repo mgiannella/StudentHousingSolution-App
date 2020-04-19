@@ -97,7 +97,44 @@ public class ScheduleService {
                 return bookingTimes;
             }
         }
-    public void scheduleUpdate(Properties property, User tenant) {
+
+    public void makeBooking(ScheduleBooking booking, User tenant) {
+        Timestamp meeting = Timestamp.valueOf(booking.getMeetingTime());
+
+
+        int id = booking.getLandlordid();
+        User landlord = userRepository.findById(id);
+
+        int propid = booking.getPropertyid();
+        Properties property = propertiesRepository.findById(id);
+
+        User l2 = property.getLandlord();
+
+
+        List<Schedule> scheds = scheduleRepository.findByLandlord(landlord);
+
+        boolean foundEqual = false;
+
+        for (int i=0; i<scheds.size();i++) {
+            if (meeting.equals(scheds.get(i).getMeetingTimes())) {
+                if (scheds.get(i).getTenant() != null) {
+                    throw new ValidationException("booking already taken");
+                }
+                Schedule schedule = scheds.get(i);
+                schedule.setProps(property);
+                schedule.setTenant(tenant);
+                scheduleRepository.save(schedule);
+                foundEqual=true;
+                break;
+            }
+        }
+
+        if (!foundEqual) {
+            throw new ValidationException("Could not find available time that matched with selected time");
+        }
+
+
+
 
     }
 

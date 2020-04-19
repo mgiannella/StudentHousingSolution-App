@@ -97,7 +97,7 @@ public class ScheduleController{
 
 
     @GetMapping("/{landlordid}")
-    @ApiOperation(value="Booking Times",notes="Create new reservation.")
+    @ApiOperation(value="List Times",notes="Create new reservation.")
     public ScheduleTenantTimes listTimes(@RequestHeader("Authorization") String str, @PathVariable("landlordid") int landlordid) throws ValidationException {
         try {
             User tenant = userPermissionService.loadUserByJWT(str);
@@ -124,16 +124,17 @@ public class ScheduleController{
     }
 
 
-/*
-    @PostMapping("/{propertyid}")
-    @ApiOperation(value="Booking Times",notes="Create new reservation.")
-    public Boolean makeBooking(@RequestHeader("Authorization") String str, @PathVariable("propertyid") int propertyid) throws ValidationException {
+
+    @PostMapping("/makebooking")
+    @ApiOperation(value="Make a booking",notes="Create new reservation.")
+    public Boolean makeBooking(@RequestBody ScheduleBooking booking, @RequestHeader("Authorization") String str) throws ValidationException {
         try {
             User tenant = userPermissionService.loadUserByJWT(str);
             if (!userPermissionService.assertPermission(tenant, UserRoles.ROLE_TENANT)) {
-                return null;
+                return false;
             }
-            Properties property = propertyService.getById(propertyid);
+            scheduleService.makeBooking(booking,tenant);
+            return true;
 
 
         }
@@ -143,7 +144,6 @@ public class ScheduleController{
             return null;
         }
     }
-*/
 }
 
 

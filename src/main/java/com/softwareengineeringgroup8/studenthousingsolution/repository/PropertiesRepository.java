@@ -33,6 +33,7 @@ public interface PropertiesRepository extends JpaRepository<Properties, Integer>
     @Query("Select p FROM Properties p WHERE p.group = ?1")
     List<Properties> findByTenantGroup(TenantGroups tg);
 
+
     @Query("Select p FROM Properties p WHERE (p.amenities.price>= :#{#ea.minPrice} and p.amenities.price<= :#{#ea.maxPrice})"
             + "and (p.amenities.sleeps>= :#{#ea.minSleeps} and p.amenities.sleeps<= :#{#ea.maxSleeps}) "
             + "and (p.amenities.numBedrooms>= :#{#ea.minBed} and p.amenities.numBedrooms<= :#{#ea.maxBed}) "
