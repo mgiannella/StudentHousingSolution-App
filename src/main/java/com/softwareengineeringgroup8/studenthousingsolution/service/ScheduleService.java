@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 
+import javax.validation.Validation;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -106,10 +107,13 @@ public class ScheduleService {
         User landlord = userRepository.findById(id);
 
         int propid = booking.getPropertyid();
-        Properties property = propertiesRepository.findById(id);
+        Properties property = propertiesRepository.findById(propid);
 
         User l2 = property.getLandlord();
 
+        if (!(l2.equals(landlord))) {
+            throw new ValidationException("Property is not this landlord's house.");
+        }
 
         List<Schedule> scheds = scheduleRepository.findByLandlord(landlord);
 
