@@ -49,6 +49,9 @@ public class ScheduleController{
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private ScheduleRepository scheduleRepository;
+
     @GetMapping("/landlordview")
     @ApiOperation(value="Landlord view of schedule", notes="View Schedule")
     public ScheduleView landlordViewSchedule(@RequestHeader("Authorization") String str) throws ValidationException {
@@ -64,8 +67,6 @@ public class ScheduleController{
             else {
                     throw new ValidationException("No schedule exists.") ;
                 }
-
-
         }
 
         catch (Error | NotFoundException e) {
@@ -163,6 +164,28 @@ public class ScheduleController{
         }
     }
 
+
+    @PostMapping("/{id}")  //SEND NOTIFICATION HERE; also this isnt really a delete its just making prop and tenant fields null
+    @ApiOperation(value="Delete Event",notes="Delete event for tenant and landlord")
+    public Boolean deleteEvent(@RequestHeader("Authorization") String str, @PathVariable("id") int id) throws ValidationException {
+        try {
+            User user = userPermissionService.loadUserByJWT(str);
+            Schedule schedule = scheduleRepository.findById(id);
+            if (schedule.getTenant() == null || schedule.getProps()==null) {
+                throw new ValidationException("This event cannot be deleted as it is not a reserved booking.");
+            }
+
+            schedule.setTenant(null);
+            schedule.setProps(null);
+            scheduleRepository.save(schedule);
+            return true;
+
+        }
+        catch (Error | NotFoundException e) {
+            System.out.println(e);
+            return false;
+        }
+    }
 }
 
 

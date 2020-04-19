@@ -47,6 +47,9 @@ public class Schedule {
         this.tenant = tenant;
     }
 
+    public int getScheduleid(){ return scheduleid;}
+
+
     public User getLandlord() {
         return landlord;
     }

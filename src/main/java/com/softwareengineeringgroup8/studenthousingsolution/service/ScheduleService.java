@@ -163,6 +163,7 @@ public class ScheduleService {
 
             List<String> update = new ArrayList<>();
             List<String> eventLocations = new ArrayList<>();
+            List<Integer> id = new ArrayList<>();
             for (int i=0; i<listEverything.size();i++) {
                 if (listEverything.get(i).isAfter(now)) {
                     LocalDateTime change = listEverything.get(i);
@@ -178,6 +179,10 @@ public class ScheduleService {
                     String state = location.getState();
                     String zip = location.getZip();
                     eventLocations.add(address+", "+city+", "+state+" "+zip);
+
+
+                    int addID = scheds.get(i).getScheduleid();
+                    id.add(addID);
                 }
             }
             if (update.isEmpty()==true) {
@@ -185,7 +190,7 @@ public class ScheduleService {
             }
 
 
-            ScheduleDashboard dashboard = new ScheduleDashboard(user,update,eventLocations);
+            ScheduleDashboard dashboard = new ScheduleDashboard(id,user,update,eventLocations);
             return dashboard;
 
         }
@@ -204,6 +209,7 @@ public class ScheduleService {
 
             List<String> update = new ArrayList<>();
             List<String> eventLocations = new ArrayList<>();
+            List<Integer> id = new ArrayList<>();
             for (int i=0; i<listEverything.size();i++) {
                 if (listEverything.get(i).isAfter(now) && scheds.get(i).getTenant()!=null) {
                     LocalDateTime change = listEverything.get(i);
@@ -219,6 +225,10 @@ public class ScheduleService {
                     String state = location.getState();
                     String zip = location.getZip();
                     eventLocations.add(address+", "+city+", "+state+" "+zip);
+
+
+                    int addID = scheds.get(i).getScheduleid();
+                    id.add(addID);
                 }
             }
             if (update.isEmpty()==true) {
@@ -226,7 +236,7 @@ public class ScheduleService {
             }
 
 
-            ScheduleDashboard dashboard = new ScheduleDashboard(user,update,eventLocations);
+            ScheduleDashboard dashboard = new ScheduleDashboard(id,user,update,eventLocations);
             return dashboard;
         }
 

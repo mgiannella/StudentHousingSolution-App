@@ -13,6 +13,9 @@ import java.util.List;
 
 public class ScheduleDashboard
 {
+    @ApiModelProperty(notes="schedule id",example="",required=true)
+    private List<Integer> id;
+
     @ApiModelProperty(notes="scheduled events",example="",required=true)
     private User user;
 
@@ -22,6 +25,14 @@ public class ScheduleDashboard
     @ApiModelProperty(notes="scheduled events",example="",required=true)
     private List<String> locations;
 
+
+    public List<Integer> getId() {
+        return id;
+    }
+
+    public void setId(List<Integer> id) {
+        this.id = id;
+    }
 
     public User getUser() {
         return user;
@@ -47,7 +58,8 @@ public class ScheduleDashboard
         this.locations = locations;
     }
 
-    public ScheduleDashboard(User user, List<String> events, List<String> locations) {
+    public ScheduleDashboard(List<Integer> id, User user, List<String> events, List<String> locations) {
+        this.id=id;
         this.user = user;
         this.events = events;
         this.locations= locations;
