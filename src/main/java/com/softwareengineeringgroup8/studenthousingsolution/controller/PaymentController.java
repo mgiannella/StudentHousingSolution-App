@@ -79,6 +79,8 @@ public class PaymentController {
     private UserRepository userRepository;
     @Autowired
     private LandlordAccountsRepository landlordAccountsRepository;
+    @Autowired
+    private NotificationService notificationService;
 
 
 /*
@@ -308,6 +310,15 @@ public class PaymentController {
             PaymentRecord paymentRecord = pendingPaymentService.getPaymentRecordById(paymentRecordId);
             Date paymentDate = paymentRecord.getPaymentDate();
 
+            Properties prop=paymentRecord.getProp();
+           // String propLocation=prop.get
+            User landLord=prop.getLandlord();
+
+            PaymentType paymentType =paymentRecord.getPaymentTypeId();
+            String paymentTypeDecription= paymentType.getpTypeDesc();
+
+
+
             if (paymentDate != null) {
                 return false;
             } else {
@@ -317,11 +328,21 @@ public class PaymentController {
                 if (chargeId == null || transferId == null) {
                     //return "An error occurred while trying to create a charge.";
                     return false;
+                }else{
+                    String description="Your tenant" + " " + tenant.getFullname() + " " + "has fulfilled"+ " " +"their"+ " "+ paymentTypeDecription+ " " + "payment";
+                    Boolean notification= notificationService.createNotification(landLord, description, "PAYMENT", "");
+                    return notification;
                 }
 
+                /*
+                else {
+                    Boolean notification= notificationService.createNotification()
+                }
+*/
                 //return "Success! Your charge id is " + chargeId + " Your transaction id: " + transferId;
             }
-            return true;
+
+            //return true;
         } catch (Error | NotFoundException e) {
             System.out.println(e);
             return false;
@@ -408,6 +429,7 @@ public class PaymentController {
     public Boolean createPaymentRequest(@PathVariable("tenantId") int tenantId, @RequestBody PendingPaymentRequest req, @RequestHeader("Authorization") String str) throws StripeException {
         try {
             User landlord = userPermissionService.loadUserByJWT(str);
+            User tenant=userRepository.findById(tenantId);
             if (!userPermissionService.assertPermission(landlord, UserRoles.ROLE_LANDLORD)) {
                 return false;
                 //;
@@ -415,8 +437,12 @@ public class PaymentController {
             Boolean payRequest = pendingPaymentService.createPaymentRequest(req.getPropID(), tenantId, req.getAmount(), req.getPtype(), req.getDueDate());
             if (payRequest == false) {
                 return false;
+            }else{
+                String description="Your landlord" + " " + landlord.getFullname() + " " + "has requested a payment";
+                Boolean notification= notificationService.createNotification(tenant, description, "PAYMENT", "");
+                return notification;
             }
-            return true;
+            //return true;
         } catch (Error | NotFoundException e) {
             System.out.println(e);
             return false;
