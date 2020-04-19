@@ -7,6 +7,7 @@ import com.softwareengineeringgroup8.studenthousingsolution.model.*;
 
 
 import com.softwareengineeringgroup8.studenthousingsolution.repository.ScheduleRepository;
+import com.softwareengineeringgroup8.studenthousingsolution.repository.UserRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.service.ListingService;
 import com.softwareengineeringgroup8.studenthousingsolution.service.*;
 import com.softwareengineeringgroup8.studenthousingsolution.service.UserPermissionService;
@@ -46,7 +47,7 @@ public class ScheduleController{
     private HousingAgreementService agreementService;
 
     @Autowired
-    private ScheduleRepository scheduleRepository;
+    private UserRepository userRepository;
 
     @GetMapping("/landlordview")
     @ApiOperation(value="view schedule", notes="View Schedule")
@@ -93,6 +94,39 @@ public class ScheduleController{
             return false;
         }
     }
+
+
+    @GetMapping("/{landlordid}")
+    @ApiOperation(value="Booking Times",notes="Create new reservation.")
+    public ScheduleTenantTimes listTimes(@RequestHeader("Authorization") String str, @PathVariable("landlordid") int landlordid) throws ValidationException {
+        try {
+            User tenant = userPermissionService.loadUserByJWT(str);
+            if (!userPermissionService.assertPermission(tenant, UserRoles.ROLE_TENANT)) {
+                return null;
+            }
+            User landlord = userRepository.findById(landlordid);
+
+            if (scheduleService.existsByLandlord(landlord)==true) {
+                return scheduleService.ListTimes(landlord);
+            }
+
+            else {
+                throw new ValidationException("No schedule exists for this landlord.") ;
+            }
+
+
+        }
+
+        catch (Error | NotFoundException e) {
+            System.out.println(e);
+            return null;
+        }
     }
+
+
+}
+
+
+
 
 

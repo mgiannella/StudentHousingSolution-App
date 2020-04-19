@@ -14,9 +14,13 @@ package com.softwareengineeringgroup8.studenthousingsolution.repository;
 @Repository
 public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
 
-        public Boolean existsByLandlord(User landlord);
+        Boolean existsByLandlord(User landlord);
+
 
         @Query("Select s FROM Schedule s WHERE s.landlord = ?1")
         List<Schedule> findByLandlord(User landlord);
+
+
+
 
 }

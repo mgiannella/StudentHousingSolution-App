@@ -19,10 +19,33 @@ public class Schedule {
     @JoinColumn(name="landlordid" , referencedColumnName = "userid")
     private User landlord;
 
+    @OneToOne
+    @JoinColumn(name="propertyid")
+    private Properties props;
+
+    @OneToOne
+    @JoinColumn(name="tenantid" , referencedColumnName = "userid")
+    private User tenant;
 
     @Column(name="MeetingTime")
     private Timestamp meetingTimes;
 
+
+    public Properties getProps() {
+        return props;
+    }
+
+    public void setProps(Properties props) {
+        this.props = props;
+    }
+
+    public User getTenant() {
+        return tenant;
+    }
+
+    public void setTenant(User tenant) {
+        this.tenant = tenant;
+    }
 
     public User getLandlord() {
         return landlord;
@@ -50,9 +73,12 @@ public class Schedule {
 
 
 
-    public Schedule(User landlord, Timestamp meetingTimes) {
+    public Schedule(User landlord, Properties props, Timestamp meetingTimes, User tenant) {
         this.landlord = landlord;
         this.meetingTimes = meetingTimes;
+        this.props=props;
+        this.tenant=tenant;
+
 
     }
 }

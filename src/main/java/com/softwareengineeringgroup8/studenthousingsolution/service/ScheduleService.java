@@ -5,6 +5,7 @@ import com.softwareengineeringgroup8.studenthousingsolution.model.*;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.*;
 import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 
 import java.sql.Date;
@@ -14,6 +15,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -44,7 +46,7 @@ public class ScheduleService {
 
          List<Schedule> LLSched = new ArrayList<Schedule>();
          for (int i=0;i<meetingTimes.size();i++) {
-             LLSched.add(new Schedule(landlord,meetingTimes.get(i)));
+             LLSched.add(new Schedule(landlord,null,meetingTimes.get(i),null));
              scheduleRepository.save(LLSched.get(i));
          }
 
@@ -119,6 +121,41 @@ public class ScheduleService {
     }
 
 
+    public ScheduleTenantTimes ListTimes(User landlord) {
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime now = LocalDateTime.now();
+
+            List<Schedule> scheds = scheduleRepository.findByLandlord(landlord);
+            List<LocalDateTime> listEverything = new ArrayList<>();
+            for (int i=0; i<scheds.size();i++) {
+                Timestamp add = scheds.get(i).getMeetingTimes();
+                LocalDateTime ldt = add.toLocalDateTime();
+                listEverything.add(ldt);
+            }
+
+            List<String> update = new ArrayList<>();
+            for (int i=0; i<listEverything.size();i++) {
+                if (listEverything.get(i).isAfter(now) && scheds.get(i).getTenant()==null) {
+                    LocalDateTime change = listEverything.get(i);
+                    DateTimeFormatter newFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                    String formattedDate = change.format(newFormat);
+                    update.add(formattedDate);
+                }
+            }
+
+            if (update.isEmpty()==true) {
+                throw new ValidationException("No available times");
+            }
+
+            else {
+                ScheduleTenantTimes bookingTimes = new ScheduleTenantTimes(landlord,update);
+                return bookingTimes;
+            }
+        }
+
+
+
+
     public ScheduleView findByLandlord(User landlord) {
             try{
                 List<Schedule> scheds = scheduleRepository.findByLandlord(landlord);
@@ -133,7 +170,6 @@ public class ScheduleService {
                     LocalTime lt = ldt.toLocalTime();
                     time.add(lt);
                 }
-
                 ScheduleView view = new ScheduleView();
                 view.setStartDate(date.get(0));
                 view.setEndDate(date.get(date.size()-1));
