@@ -15,6 +15,8 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
 
         Boolean existsByLandlord(User landlord);
 
+        @Query("Select s FROM Schedule s WHERE s.tenant = ?1")
+        List<Schedule> findByTenant(User tenant);
 
         @Query("Select s FROM Schedule s WHERE s.landlord = ?1")
         List<Schedule> findByLandlord(User landlord);

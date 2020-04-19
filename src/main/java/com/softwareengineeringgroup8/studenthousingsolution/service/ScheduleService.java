@@ -32,6 +32,9 @@ public class ScheduleService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UserPermissionService userPermissionService;
+
 
     public void createSchedule(ScheduleRequest request, User landlord) {
 
@@ -99,6 +102,8 @@ public class ScheduleService {
             }
         }
 
+
+
     public void makeBooking(ScheduleBooking booking, User tenant) {
         Timestamp meeting = Timestamp.valueOf(booking.getMeetingTime());
 
@@ -138,6 +143,92 @@ public class ScheduleService {
         }
 
 
+
+
+    }
+
+
+    public ScheduleDashboard displayAllBookedEvents(User user) {
+        if (userPermissionService.assertPermission(user, UserRoles.ROLE_TENANT)) { //if tenant
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime now = LocalDateTime.now();
+
+            List<Schedule> scheds = scheduleRepository.findByTenant(user);
+            List<LocalDateTime> listEverything = new ArrayList<>();
+            for (int i=0; i<scheds.size();i++) {
+                Timestamp add = scheds.get(i).getMeetingTimes();
+                LocalDateTime ldt = add.toLocalDateTime();
+                listEverything.add(ldt);
+            }
+
+            List<String> update = new ArrayList<>();
+            List<String> eventLocations = new ArrayList<>();
+            for (int i=0; i<listEverything.size();i++) {
+                if (listEverything.get(i).isAfter(now)) {
+                    LocalDateTime change = listEverything.get(i);
+                    DateTimeFormatter newFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                    String formattedDate = change.format(newFormat);
+                    update.add(formattedDate);
+
+
+                    Properties properties = scheds.get(i).getProps();
+                    PropertyLocations location = properties.getLocation();
+                    String address = location.getAddress();
+                    String city = location.getCity();
+                    String state = location.getState();
+                    String zip = location.getZip();
+                    eventLocations.add(address+", "+city+", "+state+" "+zip);
+                }
+            }
+            if (update.isEmpty()==true) {
+                throw new ValidationException("Tenant has no meetings coming up");
+            }
+
+
+            ScheduleDashboard dashboard = new ScheduleDashboard(user,update,eventLocations);
+            return dashboard;
+
+        }
+
+        else { //if landlord
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime now = LocalDateTime.now();
+
+            List<Schedule> scheds = scheduleRepository.findByLandlord(user);
+            List<LocalDateTime> listEverything = new ArrayList<>();
+            for (int i=0; i<scheds.size();i++) {
+                Timestamp add = scheds.get(i).getMeetingTimes();
+                LocalDateTime ldt = add.toLocalDateTime();
+                listEverything.add(ldt);
+            }
+
+            List<String> update = new ArrayList<>();
+            List<String> eventLocations = new ArrayList<>();
+            for (int i=0; i<listEverything.size();i++) {
+                if (listEverything.get(i).isAfter(now) && scheds.get(i).getTenant()!=null) {
+                    LocalDateTime change = listEverything.get(i);
+                    DateTimeFormatter newFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                    String formattedDate = change.format(newFormat);
+                    update.add(formattedDate);
+
+
+                    Properties properties = scheds.get(i).getProps();
+                    PropertyLocations location = properties.getLocation();
+                    String address = location.getAddress();
+                    String city = location.getCity();
+                    String state = location.getState();
+                    String zip = location.getZip();
+                    eventLocations.add(address+", "+city+", "+state+" "+zip);
+                }
+            }
+            if (update.isEmpty()==true) {
+                throw new ValidationException("Landlord has no meetings coming up");
+            }
+
+
+            ScheduleDashboard dashboard = new ScheduleDashboard(user,update,eventLocations);
+            return dashboard;
+        }
 
 
     }

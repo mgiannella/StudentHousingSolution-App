@@ -50,7 +50,7 @@ public class ScheduleController{
     private UserRepository userRepository;
 
     @GetMapping("/landlordview")
-    @ApiOperation(value="view schedule", notes="View Schedule")
+    @ApiOperation(value="Landlord view of schedule", notes="View Schedule")
     public ScheduleView landlordViewSchedule(@RequestHeader("Authorization") String str) throws ValidationException {
         try {
             User landlord = userPermissionService.loadUserByJWT(str);
@@ -144,6 +144,25 @@ public class ScheduleController{
             return null;
         }
     }
+
+
+    @GetMapping("/dashboards")
+    @ApiOperation(value="View User Dashboard",notes="Dashboard display.")
+    public ScheduleDashboard viewDashboard(@RequestHeader("Authorization") String str) throws ValidationException {
+        try {
+            User user = userPermissionService.loadUserByJWT(str);
+
+
+            return scheduleService.displayAllBookedEvents(user);
+
+        }
+
+        catch (Error | NotFoundException e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+
 }
 
 
