@@ -1,5 +1,7 @@
 package com.softwareengineeringgroup8.studenthousingsolution.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Objects;
 
