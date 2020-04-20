@@ -54,7 +54,7 @@ public class ScheduleController{
 
     @GetMapping("/landlordview")
     @ApiOperation(value="Landlord view of schedule", notes="View Schedule")
-    public ScheduleView landlordViewSchedule(@RequestHeader("Authorization") String str) throws ValidationException {
+    public ScheduleView landlordViewSchedule(@RequestParam String viewStart,@RequestParam String viewEnd, @RequestHeader("Authorization") String str) throws ValidationException {
         try {
             User landlord = userPermissionService.loadUserByJWT(str);
             if (!userPermissionService.assertPermission(landlord, UserRoles.ROLE_LANDLORD)) {
@@ -62,7 +62,7 @@ public class ScheduleController{
             }
 
             if (scheduleService.existsByLandlord(landlord)==true) {
-                return scheduleService.findByLandlord(landlord);
+                return scheduleService.findByLandlord(viewStart, viewEnd,landlord);
             }
             else {
                     throw new ValidationException("No schedule exists.") ;
@@ -97,6 +97,15 @@ public class ScheduleController{
     }
 
 
+
+
+
+
+
+
+
+
+
     @GetMapping("/{landlordid}")
     @ApiOperation(value="List Times",notes="Create new reservation.")
     public ScheduleTenantTimes listTimes(@RequestHeader("Authorization") String str, @PathVariable("landlordid") int landlordid) throws ValidationException {
@@ -123,6 +132,7 @@ public class ScheduleController{
             return null;
         }
     }
+
 
 
 

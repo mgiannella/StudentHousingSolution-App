@@ -6,6 +6,7 @@ import com.softwareengineeringgroup8.studenthousingsolution.model.Properties;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.*;
 import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 
@@ -36,6 +37,71 @@ public class ScheduleService {
     private UserPermissionService userPermissionService;
 
 
+    public ScheduleView findByLandlord(String viewStart, String viewEnd,User landlord) {
+        try{
+            LocalDate start = LocalDate.parse(viewStart);
+            LocalDate end =  LocalDate.parse(viewEnd);
+
+
+
+            List<Schedule> scheds = scheduleRepository.findTimesByLandlord(landlord);
+
+            List<LocalDate> date = new ArrayList<LocalDate>();
+            List<LocalTime> time = new ArrayList<LocalTime>();
+            //List<Timestamp> fakeNews = new ArrayList<Timestamp>();
+            for (int i =0;i<scheds.size();i++) {
+                Timestamp add = scheds.get(i).getMeetingTimes();
+                LocalDateTime ldt = add.toLocalDateTime();
+                LocalDate ld = ldt.toLocalDate();
+                date.add(ld);
+                LocalTime lt = ldt.toLocalTime();
+                time.add(lt);
+            }
+
+            ScheduleView view = new ScheduleView();
+            view.setStartDate(start);
+            view.setEndDate(end);
+            int weekStart = start.getDayOfYear();
+            int weekEnd = end.getDayOfYear();
+            if (weekEnd-weekStart!=6) {
+                throw new ValidationException("Date range invalid for viewing. Please only select a week.");
+            }
+            List<LocalTime> weekTimes = new ArrayList<LocalTime>();
+            List<DayOfWeek> weekDays = new ArrayList<DayOfWeek>();
+
+            for (int i=0; i<date.size();i++) {
+                int whatDate = date.get(i).getDayOfYear();
+                if (whatDate<=weekEnd&&whatDate>=weekStart) {
+                    DayOfWeek whatDay = date.get(i).getDayOfWeek();
+                    weekDays.add(whatDay);
+                    weekTimes.add(time.get(i));
+                }
+            }
+
+
+            List<Integer> daysAsInts = new ArrayList<Integer>();
+            for (int i=0;i<weekDays.size();i++) {
+                daysAsInts.add(weekDays.get(i).getValue());
+            }
+
+
+            view.setDays(daysAsInts);
+            view.setTimes(weekTimes);
+
+
+
+            return view;
+        }catch(Exception e){
+            throw new ValidationException("Error: Invalid input or could not find data");
+        }
+
+    }
+
+
+
+
+
+
     public void createSchedule(ScheduleRequest request, User landlord) {
 
          List<String> eventDates = request.getEventDates();
@@ -45,7 +111,7 @@ public class ScheduleService {
              Timestamp addEvent = Timestamp.valueOf(eventDates.get(i));
              meetingTimes.add(addEvent);
          }
-         Collections.sort(meetingTimes);
+         //Collections.sort(meetingTimes);
 
          List<Schedule> LLSched = new ArrayList<Schedule>();
          for (int i=0;i<meetingTimes.size();i++) {
@@ -57,6 +123,10 @@ public class ScheduleService {
 
 
         }
+
+
+
+
 
 
 
@@ -240,57 +310,6 @@ public class ScheduleService {
             return dashboard;
         }
 
-
-    }
-
-
-    public ScheduleView findByLandlord(User landlord) {
-            try{
-                List<Schedule> scheds = scheduleRepository.findByLandlord(landlord);
-                List<LocalDate> date = new ArrayList<LocalDate>();
-                List<LocalTime> time = new ArrayList<LocalTime>();
-                //List<Timestamp> fakeNews = new ArrayList<Timestamp>();
-                for (int i =0;i<scheds.size();i++) {
-                    Timestamp add = scheds.get(i).getMeetingTimes();
-                    LocalDateTime ldt = add.toLocalDateTime();
-                    LocalDate ld = ldt.toLocalDate();
-                    date.add(ld);
-                    LocalTime lt = ldt.toLocalTime();
-                    time.add(lt);
-                }
-                ScheduleView view = new ScheduleView();
-                view.setStartDate(date.get(0));
-                view.setEndDate(date.get(date.size()-1));
-                int weekStart = date.get(0).getDayOfMonth();
-                int weekEnd = weekStart+7;
-                List<LocalTime> weekTimes = new ArrayList<LocalTime>();
-                List<DayOfWeek> weekDays = new ArrayList<DayOfWeek>();
-
-                for (int i=0; i<date.size();i++) {
-                    int whatDate = date.get(i).getDayOfMonth();
-                    if (whatDate>=weekEnd) {
-                        break;
-                    }
-                    DayOfWeek whatDay = date.get(i).getDayOfWeek();
-                    weekDays.add(whatDay);
-                    weekTimes.add(time.get(i));
-                }
-
-                List<Integer> daysAsInts = new ArrayList<Integer>();
-                for (int i=0;i<weekDays.size();i++) {
-                    daysAsInts.add(weekDays.get(i).getValue());
-                }
-
-
-                view.setDays(daysAsInts);
-                view.setTimes(weekTimes);
-
-
-
-                return view;
-            }catch(Exception e){
-                throw new ValidationException("Couldn't find Times By Id");
-            }
 
     }
 
