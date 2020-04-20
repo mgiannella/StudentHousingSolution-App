@@ -66,12 +66,13 @@ public class ScheduleService {
             if (weekEnd-weekStart!=6) {
                 throw new ValidationException("Date range invalid for viewing. Please only select a week.");
             }
+
             List<LocalTime> weekTimes = new ArrayList<LocalTime>();
             List<DayOfWeek> weekDays = new ArrayList<DayOfWeek>();
 
             for (int i=0; i<date.size();i++) {
-                int whatDate = date.get(i).getDayOfYear();
-                if (whatDate<=weekEnd&&whatDate>=weekStart) {
+                LocalDate whatDate = date.get(i);
+                if ((whatDate.isBefore(end)||whatDate.isEqual(end))&&(whatDate.isAfter(start)||whatDate.isEqual(start))) {
                     DayOfWeek whatDay = date.get(i).getDayOfWeek();
                     weekDays.add(whatDay);
                     weekTimes.add(time.get(i));
@@ -144,7 +145,7 @@ public class ScheduleService {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime now = LocalDateTime.now();
 
-            List<Schedule> scheds = scheduleRepository.findByLandlord(landlord);
+            List<Schedule> scheds = scheduleRepository.findTimesByLandlord(landlord);
             List<LocalDateTime> listEverything = new ArrayList<>();
             for (int i=0; i<scheds.size();i++) {
                 Timestamp add = scheds.get(i).getMeetingTimes();
@@ -190,7 +191,7 @@ public class ScheduleService {
             throw new ValidationException("Property is not this landlord's house.");
         }
 
-        List<Schedule> scheds = scheduleRepository.findByLandlord(landlord);
+        List<Schedule> scheds = scheduleRepository.findTimesByLandlord(landlord);
 
         boolean foundEqual = false;
 
@@ -223,7 +224,7 @@ public class ScheduleService {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime now = LocalDateTime.now();
 
-            List<Schedule> scheds = scheduleRepository.findByTenant(user);
+            List<Schedule> scheds = scheduleRepository.findTimesByTenant(user);
             List<LocalDateTime> listEverything = new ArrayList<>();
             for (int i=0; i<scheds.size();i++) {
                 Timestamp add = scheds.get(i).getMeetingTimes();
@@ -269,7 +270,7 @@ public class ScheduleService {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime now = LocalDateTime.now();
 
-            List<Schedule> scheds = scheduleRepository.findByLandlord(user);
+            List<Schedule> scheds = scheduleRepository.findTimesByLandlord(user);
             List<LocalDateTime> listEverything = new ArrayList<>();
             for (int i=0; i<scheds.size();i++) {
                 Timestamp add = scheds.get(i).getMeetingTimes();

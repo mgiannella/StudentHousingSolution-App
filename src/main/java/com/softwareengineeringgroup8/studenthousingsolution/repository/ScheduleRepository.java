@@ -22,11 +22,9 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
         @Query("Select s FROM Schedule s WHERE s.id = ?1")
         Schedule findById(int id);
 
-        @Query("Select s FROM Schedule s WHERE s.tenant = ?1")
-        List<Schedule> findByTenant(User tenant);
+        @Query("SELECT s FROM Schedule s WHERE s.tenant = ?1 ORDER BY MeetingTime")
+        List<Schedule> findTimesByTenant(User tenant);
 
-        @Query("Select s FROM Schedule s WHERE s.landlord = ?1")
-        List<Schedule> findByLandlord(User landlord);
 
 
 
