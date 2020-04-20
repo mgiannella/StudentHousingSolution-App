@@ -22,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
+import javax.validation.Valid;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -78,7 +79,7 @@ public class ScheduleController{
 
 
     @PostMapping("/newschedule")
-    @ApiOperation(value="Create Schedule",notes="Create/edit schedule.")
+    @ApiOperation(value="Create/Edit Schedule",notes="Create/edit schedule.")
     public Boolean newListing(@RequestBody ScheduleRequest request, @RequestHeader("Authorization") String str) throws ValidationException {
         try {
             User landlord = userPermissionService.loadUserByJWT(str);
@@ -107,12 +108,12 @@ public class ScheduleController{
 
 
     @GetMapping("/{landlordid}")
-    @ApiOperation(value="List Times",notes="Create new reservation.")
+    @ApiOperation(value="List Times for Making Reservation",notes="Create new reservation.")
     public ScheduleTenantTimes listTimes(@RequestHeader("Authorization") String str, @PathVariable("landlordid") int landlordid) throws ValidationException {
         try {
             User tenant = userPermissionService.loadUserByJWT(str);
             if (!userPermissionService.assertPermission(tenant, UserRoles.ROLE_TENANT)) {
-                return null;
+                throw new ValidationException("You are not a tenant.");
             }
             User landlord = userRepository.findById(landlordid);
 
