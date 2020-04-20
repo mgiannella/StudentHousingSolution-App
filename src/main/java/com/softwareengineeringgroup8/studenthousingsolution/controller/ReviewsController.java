@@ -45,6 +45,8 @@ public class ReviewsController {
     private PropertyService propertyService;
     @Autowired
     private ReviewsRepository reviewsRepository;
+    @Autowired
+    private NotificationService notificationService;
 
     @Autowired
     ReviewsController(ReviewsService reviewsService) {
@@ -131,6 +133,11 @@ public class ReviewsController {
         try {
             User tenant = userPermissionService.loadUserByJWT(str);
 
+            Reviews reviews = reviewsRepository.findById(reviewId);
+
+            Properties prop=reviews.getProp();
+
+            User landLord=prop.getLandlord();
 
             if (!userPermissionService.assertPermission(tenant, UserRoles.ROLE_TENANT)) {
                 return false;
@@ -139,7 +146,24 @@ public class ReviewsController {
 
             Boolean delete=reviewsService.deleteReview(reviewId);
 
-            return delete;
+            PropertyLocations propLocation=prop.getLocation();
+
+            String streetAddress= propLocation.getAddress();
+            String city= propLocation.getCity();
+            String state=propLocation.getState();
+            String zipCode=propLocation.getZip();
+
+            if (delete==false){
+                return false;
+            }
+            else{
+                String description="A review has been DELETED on property:"+ " " + streetAddress+ " " + city+ " " +state+ " " +zipCode;
+                Boolean notification= notificationService.createNotification(landLord, description, "GENERAL", "");
+                return notification;
+            }
+
+
+           // return delete;
 
         } catch (Error | NotFoundException e) {
             System.out.println(e);
@@ -154,6 +178,11 @@ public class ReviewsController {
         try {
             User tenant = userPermissionService.loadUserByJWT(str);
 
+            Reviews reviews = reviewsRepository.findById(reviewId);
+
+            Properties prop=reviews.getProp();
+
+            User landLord=prop.getLandlord();
 
             if (!userPermissionService.assertPermission(tenant, UserRoles.ROLE_TENANT)) {
                 return false;
@@ -167,7 +196,22 @@ public class ReviewsController {
 
             Boolean update=reviewsService.updateReview(reviewId,reviewDescription,req.getCleanlinessRating(),req.getSecurityRating(), req.getCommunicationRating(), req.getLocationRating(), req.getTotalRating());
 
-            return true;
+            PropertyLocations propLocation=prop.getLocation();
+
+            String streetAddress= propLocation.getAddress();
+            String city= propLocation.getCity();
+            String state=propLocation.getState();
+            String zipCode=propLocation.getZip();
+
+            if (update==false){
+                return false;
+            }
+            else{
+                String description="A review has been UPDATED on property:"+ " " + streetAddress+ " " + city+ " " +state+ " " +zipCode;
+                Boolean notification= notificationService.createNotification(landLord, description, "GENERAL", "");
+                return notification;
+            }
+            //return update;
 
         } catch (Error | NotFoundException e) {
             System.out.println(e);
@@ -182,6 +226,13 @@ public class ReviewsController {
     public Boolean createReview(@PathVariable("propId") int propId,@RequestBody ReviewRequest req, @RequestHeader("Authorization") String str) throws Exception {
         try {
             User tenant = userPermissionService.loadUserByJWT(str);
+
+            Properties prop= propertiesRepository.findByPropertyID(propId);
+
+
+
+            User landLord= prop.getLandlord();
+
             if (!userPermissionService.assertPermission(tenant, UserRoles.ROLE_TENANT)) {
                 return false;
 
@@ -195,10 +246,22 @@ public class ReviewsController {
             // connect with review service
             Boolean acceptReview=reviewsService.createReview(reviewDescription,req.getCleanlinessRating(),req.getSecurityRating(), req.getCommunicationRating(), req.getLocationRating(), req.getTotalRating(), tenant, propId);
 
+            PropertyLocations propLocation=prop.getLocation();
+
+            String streetAddress= propLocation.getAddress();
+            String city= propLocation.getCity();
+            String state=propLocation.getState();
+            String zipCode=propLocation.getZip();
+
             if (acceptReview==false){
                 return false;
             }
-            return true;
+            else{
+                String description="A review has been CREATED on property:"+ " " + streetAddress+ " " + city+ " " +state+ " " +zipCode;
+                Boolean notification= notificationService.createNotification(landLord, description, "GENERAL", "");
+                return notification;
+            }
+            //return true;
 
         } catch (Error | NotFoundException e) {
             System.out.println(e);
