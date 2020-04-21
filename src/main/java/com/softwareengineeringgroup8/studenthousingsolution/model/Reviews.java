@@ -17,7 +17,7 @@ public class Reviews {
     @Column(name= "ReviewID")
     private int id;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name= "PropertyID")
     private Properties prop;
 
@@ -43,6 +43,8 @@ public class Reviews {
     @Column(name="TotalRating")
     private float totalRating;
 
+    public Reviews(){
+    }
 
     public int getId() {
         return id;
