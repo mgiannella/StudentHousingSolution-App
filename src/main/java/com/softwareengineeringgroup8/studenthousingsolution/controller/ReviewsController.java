@@ -157,7 +157,7 @@ public class ReviewsController {
                 return false;
             }
             else{
-                String description="A review has been DELETED on property:"+ " " + streetAddress+ " " + city+ " " +state+ " " +zipCode;
+                String description="A review has been DELETED on Property:"+ " " + streetAddress+ " " + city+ " " +state+ " " +zipCode;
                 Boolean notification= notificationService.createNotification(landLord, description, "GENERAL", "");
                 return notification;
             }
@@ -253,7 +253,7 @@ public class ReviewsController {
                 return false;
             }
             else{
-                String description="A review has been UPDATED on property:"+ " " + streetAddress+ " " + city+ " " +state+ " " +zipCode;
+                String description="A review has been UPDATED on Property:"+ " " + streetAddress+ " " + city+ " " +state+ " " +zipCode;
                 Boolean notification= notificationService.createNotification(landLord, description, "GENERAL", "");
                 return notification;
             }
@@ -303,7 +303,7 @@ public class ReviewsController {
                 return false;
             }
             else{
-                String description="A review has been CREATED on property:"+ " " + streetAddress+ " " + city+ " " +state+ " " +zipCode;
+                String description="A review has been CREATED on Property:"+ " " + streetAddress+ " " + city+ " " +state+ " " +zipCode;
                 Boolean notification= notificationService.createNotification(landLord, description, "GENERAL", "");
                 return notification;
             }
