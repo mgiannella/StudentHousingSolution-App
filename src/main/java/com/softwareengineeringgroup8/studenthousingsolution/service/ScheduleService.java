@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Component
@@ -107,19 +108,53 @@ public class ScheduleService {
 
          List<String> eventDates = request.getEventDates();
          List<Timestamp> meetingTimes = new ArrayList<Timestamp>();
-         Collections.sort(meetingTimes);
+
 
          for (int i=0; i<eventDates.size();i++) {
              Timestamp addEvent = Timestamp.valueOf(eventDates.get(i));
-             meetingTimes.add(addEvent);
+             meetingTimes.add(addEvent); //converting input to Timestamps
          }
-         //Collections.sort(meetingTimes);
 
-         List<Schedule> LLSched = new ArrayList<Schedule>();
-         for (int i=0;i<meetingTimes.size();i++) {
+
+         Collections.sort(meetingTimes);
+         LocalDateTime  startConvert  = meetingTimes.get(0).toLocalDateTime().truncatedTo(ChronoUnit.DAYS);
+         Timestamp start = Timestamp.valueOf(startConvert);
+         System.out.println(start);
+
+         LocalDateTime endConvert = meetingTimes.get(meetingTimes.size()-1).toLocalDateTime().truncatedTo(ChronoUnit.DAYS);
+         LocalDateTime addOne = endConvert.plusDays(1);
+         Timestamp end = Timestamp.valueOf(addOne);
+
+
+
+         List<Schedule> deleteThese = scheduleRepository.deleteThese(start,end,landlord);
+
+         for (int i=0;i<deleteThese.size();i++) {
+             scheduleRepository.delete(deleteThese.get(i));
+         }
+
+         List<Schedule> LLSched = new ArrayList<>();
+         for (int i = 0; i<meetingTimes.size();i++) {
+              User tenant = scheduleRepository.findTenantByThese(meetingTimes.get(i),landlord);
+              if (tenant!=null) { //this means its booked so don't delete and don't add this time
+                  continue;
+              }
              LLSched.add(new Schedule(landlord,null,meetingTimes.get(i),null));
              scheduleRepository.save(LLSched.get(i));
          }
+
+
+         /*
+        List<Schedule> LLSched = new ArrayList<Schedule>();
+        for (int i=0;i<meetingTimes.size();i++) {
+            if (scheduleRepository.existsByTimeLandlordTenant(meetingTimes.get(i)) don't add this time bc its a booking) {
+                continue;
+                }
+        }
+        */
+
+
+
 
 
 

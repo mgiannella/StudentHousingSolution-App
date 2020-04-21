@@ -3,6 +3,7 @@ package com.softwareengineeringgroup8.studenthousingsolution.repository;
 
         import com.softwareengineeringgroup8.studenthousingsolution.model.*;
         import org.springframework.data.jpa.repository.JpaRepository;
+        import org.springframework.data.repository.query.Param;
         import org.springframework.stereotype.Repository;
         import org.springframework.data.jpa.repository.Query;
         import org.springframework.stereotype.Repository;
@@ -17,12 +18,15 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
 
         Boolean existsByLandlord(User landlord);
 
-        //DELETE FROM Schedule WHERE MeetingTime BETWEEN '2020-04-27' AND '2020-05-20'
-        ///@Query("DELETE s FROM Schedule s WHERE MeetingTime BETWEEN (s.start = ?1 and s.end = ?2)")
-        //void deleteByTime(LocalDate start, LocalDate end);
 
 
-        //SELECT * FROM Schedule WHERE MeetingTime BETWEEN '2020-04-20 08:00:00' AND '2020-04-25 14:00:00' ORDER BY MeetingTime
+        @Query("SELECT s FROM Schedule s WHERE ((s.meetingTimes >= ?1 and s.meetingTimes <= ?2) and (s.landlord = ?3) and (s.tenant = null)) ORDER BY MeetingTime")
+        List<Schedule> deleteThese(Timestamp start, Timestamp end, User landlord);
+
+
+        @Query("SELECT s.tenant FROM Schedule s WHERE ((s.meetingTimes = ?1) and (s.landlord = ?2))")
+        User findTenantByThese(Timestamp time, User landlord);
+
 
         @Query("SELECT s FROM Schedule s WHERE s.landlord = ?1 ORDER BY MeetingTime")
         List<Schedule> findTimesByLandlord(User landlord);

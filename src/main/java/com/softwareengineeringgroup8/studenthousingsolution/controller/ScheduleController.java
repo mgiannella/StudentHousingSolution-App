@@ -80,7 +80,7 @@ public class ScheduleController{
 
     @PostMapping("/newschedule")
     @ApiOperation(value="Create/Edit Schedule",notes="Create/edit schedule.")
-    public Boolean newListing(@RequestBody ScheduleRequest request, @RequestHeader("Authorization") String str) throws ValidationException {
+    public Boolean newSchedule(@RequestBody ScheduleRequest request, @RequestHeader("Authorization") String str) throws ValidationException {
         try {
             User landlord = userPermissionService.loadUserByJWT(str);
             if (!userPermissionService.assertPermission(landlord, UserRoles.ROLE_LANDLORD)) {
