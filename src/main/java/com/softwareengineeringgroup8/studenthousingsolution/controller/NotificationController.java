@@ -12,6 +12,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Validation;
 import java.util.List;
 
 @RestController
@@ -50,6 +51,21 @@ public class NotificationController {
                 throw new ValidationException("User doesn't exist");
             }
             return notificationService.deleteNotification(user, id);
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            throw new ValidationException(e.getMessage());
+        }
+    }
+
+    @GetMapping("/view/num")
+    @ApiOperation(value="Get Count of Notifications", notes="Returns integer of how many notifications user has waiting for them")
+    public int viewNumNotifications(@RequestHeader("Authorization") String authString) throws ValidationException {
+        try {
+            User user = userPermissionService.loadUserByJWT(authString);
+            if(user == null){
+                throw new ValidationException("User doesn't exist");
+            }
+            return notificationService.getAmtNotifs(user);
         }catch(Exception e){
             System.out.println(e.getMessage());
             throw new ValidationException(e.getMessage());

@@ -33,6 +33,15 @@ public class NotificationService {
         }
     }
 
+    public int getAmtNotifs(User user) throws ValidationException {
+        try {
+            Timestamp currentDT = new Timestamp(Calendar.getInstance().getTime().getTime());
+            return notificationsRepository.getNotificationAmountByUserAndDate(user, currentDT);
+        }catch(Exception e){
+            throw new ValidationException("Could not get notification amount for user.");
+        }
+    }
+
 
     // How to use
     // user (self explanatory)
