@@ -299,7 +299,7 @@ public class ScheduleService {
             }
 
 
-            ScheduleDashboard dashboard = new ScheduleDashboard(id,user,update,eventLocations);
+            ScheduleDashboard dashboard = new ScheduleDashboard(id,user,update,eventLocations,meetingWith);
             return dashboard;
 
         }
@@ -347,7 +347,7 @@ public class ScheduleService {
             }
 
 
-            ScheduleDashboard dashboard = new ScheduleDashboard(id,user,update,eventLocations);
+            ScheduleDashboard dashboard = new ScheduleDashboard(id,user,update,eventLocations,meetingWith);
             return dashboard;
         }
 
