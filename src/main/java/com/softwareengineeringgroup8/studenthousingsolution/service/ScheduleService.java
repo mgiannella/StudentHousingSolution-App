@@ -116,7 +116,15 @@ public class ScheduleService {
          }
 
 
-         Collections.sort(meetingTimes);
+         //Collections.sort(meetingTimes);
+
+         String s = request.getStartDate();
+         String e = request.getEndDate();
+
+         Timestamp start = Timestamp.valueOf(s);
+         Timestamp end = Timestamp.valueOf(e);
+
+         /*
          LocalDateTime  startConvert  = meetingTimes.get(0).toLocalDateTime().truncatedTo(ChronoUnit.DAYS);
          Timestamp start = Timestamp.valueOf(startConvert);
          System.out.println(start);
@@ -124,7 +132,7 @@ public class ScheduleService {
          LocalDateTime endConvert = meetingTimes.get(meetingTimes.size()-1).toLocalDateTime().truncatedTo(ChronoUnit.DAYS);
          LocalDateTime addOne = endConvert.plusDays(1);
          Timestamp end = Timestamp.valueOf(addOne);
-
+*/
 
 
          List<Schedule> deleteThese = scheduleRepository.deleteThese(start,end,landlord);

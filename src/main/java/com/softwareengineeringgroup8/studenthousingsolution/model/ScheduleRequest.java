@@ -13,6 +13,29 @@ public class ScheduleRequest
     private List<String> eventDates;
 
 
+    @ApiModelProperty(notes="start",example="",required=true)
+    private String startDate;
+
+    @ApiModelProperty(notes="end",example="",required=true)
+    private String endDate;
+
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
     public List<String> getEventDates() {
         return eventDates;
     }
@@ -21,8 +44,12 @@ public class ScheduleRequest
         this.eventDates = eventDates;
     }
 
-    public ScheduleRequest(List<String> eventDates) {
+
+    public ScheduleRequest(List<String> eventDates, String startDate, String endDate
+    ) {
         this.eventDates = eventDates;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public ScheduleRequest(){
