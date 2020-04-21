@@ -20,11 +20,22 @@ public class ScheduleDashboard
     private User user;
 
     @ApiModelProperty(notes="scheduled events",example="",required=true)
+    private List<String> meetingWith;
+
+    @ApiModelProperty(notes="scheduled events",example="",required=true)
     private List<String> events;
 
     @ApiModelProperty(notes="scheduled events",example="",required=true)
     private List<String> locations;
 
+
+    public List<String> getMeetingWith() {
+        return meetingWith;
+    }
+
+    public void setMeetingWith(List<String> meetingWith) {
+        this.meetingWith = meetingWith;
+    }
 
     public List<Integer> getId() {
         return id;
@@ -54,15 +65,16 @@ public class ScheduleDashboard
         return locations;
     }
 
-    public void setLocation(List<String> locations) {
+    public void setLocations(List<String> locations) {
         this.locations = locations;
     }
 
-    public ScheduleDashboard(List<Integer> id, User user, List<String> events, List<String> locations) {
+    public ScheduleDashboard(List<Integer> id, User user, List<String> events, List<String> locations, List<String> meetingWith) {
         this.id=id;
         this.user = user;
         this.events = events;
         this.locations= locations;
+        this.meetingWith=meetingWith;
     }
 
     public ScheduleDashboard() {

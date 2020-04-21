@@ -270,6 +270,8 @@ public class ScheduleService {
             List<String> update = new ArrayList<>();
             List<String> eventLocations = new ArrayList<>();
             List<Integer> id = new ArrayList<>();
+            List<String> meetingWith = new ArrayList<>();
+
             for (int i=0; i<listEverything.size();i++) {
                 if (listEverything.get(i).isAfter(now)) {
                     LocalDateTime change = listEverything.get(i);
@@ -286,6 +288,7 @@ public class ScheduleService {
                     String zip = location.getZip();
                     eventLocations.add(address+", "+city+", "+state+" "+zip);
 
+                    meetingWith.add(scheds.get(i).getLandlord().getFullname());
 
                     int addID = scheds.get(i).getScheduleid();
                     id.add(addID);
@@ -316,6 +319,7 @@ public class ScheduleService {
             List<String> update = new ArrayList<>();
             List<String> eventLocations = new ArrayList<>();
             List<Integer> id = new ArrayList<>();
+            List<String> meetingWith = new ArrayList<>();
             for (int i=0; i<listEverything.size();i++) {
                 if (listEverything.get(i).isAfter(now) && scheds.get(i).getTenant()!=null) {
                     LocalDateTime change = listEverything.get(i);
@@ -332,6 +336,7 @@ public class ScheduleService {
                     String zip = location.getZip();
                     eventLocations.add(address+", "+city+", "+state+" "+zip);
 
+                    meetingWith.add(scheds.get(i).getTenant().getFullname());
 
                     int addID = scheds.get(i).getScheduleid();
                     id.add(addID);
