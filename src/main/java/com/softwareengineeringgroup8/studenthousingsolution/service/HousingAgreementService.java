@@ -25,7 +25,12 @@ public class HousingAgreementService {
     @Autowired
     private NotificationService notifService;
 
-    public HousingAgreement getHousingAgreement(Properties property){ return agreementRepository.findByProperty(property);}
+    public HousingAgreement getHousingAgreement(Properties property){
+        if(!agreementRepository.existsByProperty(property)){
+            throw new ValidationException("Lease does not exist");
+        }
+        return agreementRepository.findByProperty(property);
+    }
 
     public void uploadLease(LeaseUpdate data){
         Properties prop = propRepository.findById(data.getId());
@@ -57,8 +62,13 @@ public class HousingAgreementService {
     public void signLease(User tenant, SignLease data){
         int propID = data.getPropertyID();
         Properties prop = propRepository.findById(propID);
+        HousingAgreement lease = agreementRepository.findByProperty(prop);
+        if(!agreementRepository.existsByProperty(prop)){
+            throw new ValidationException("Lease does not exist");
+        }
         TenantGroups group = prop.getGroup();
         TenantGroupMembers member = tgmRepository.findTenantGroupMembersByUserAndGroup(tenant, group);
+
         //for notification
         User landlord = prop.getLandlord();
         String msg = tenant.getFullname() + " has signed the lease for " + prop.getLocation().getAddress() +".";
@@ -75,6 +85,9 @@ public class HousingAgreementService {
     public void deleteLease(int propID){
         Properties prop = propRepository.findById(propID);
         HousingAgreement lease = agreementRepository.findByProperty(prop);
+        if(!agreementRepository.existsByProperty(prop)){
+            throw new ValidationException("Lease does not exist");
+        }
         agreementRepository.delete(lease);
         //changing tenants to unsigned lease
         TenantGroups group = prop.getGroup();
