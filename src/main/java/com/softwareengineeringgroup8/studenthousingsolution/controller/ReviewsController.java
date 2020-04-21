@@ -172,9 +172,55 @@ public class ReviewsController {
         }
     }
 
+
+    @GetMapping("reviews-display-on-dashboard/{propId}")
+    @ApiOperation(value= "Display reviews on tenant dashboard")
+    public List<Reviews> tenantReviews(@PathVariable("propId") int propId, @RequestHeader("Authorization") String str) throws ValidationException {
+        try {
+
+            User tenant = userPermissionService.loadUserByJWT(str);
+
+
+
+            if (!userPermissionService.assertPermission(tenant, UserRoles.ROLE_TENANT)) {
+                return null;
+
+            }
+
+            Properties prop= propertiesRepository.findById(propId);
+            List<Reviews> reviewsList= reviewsRepository.findByProperty(prop);
+            return reviewsList;
+
+        } catch (Error | NotFoundException e) {
+            System.out.println(e);
+            return null;
+
+        }
+    }
+
+
+
+
+    @GetMapping("display selected review/{reviewId}")
+    @ApiOperation("Select a review")
+    public Reviews selectReview(@PathVariable("reviewId") int reviewId, @RequestHeader("Authorization")String str)throws Exception {
+        try {
+            User tenant = userPermissionService.loadUserByJWT(str);
+
+            Reviews review = reviewsRepository.findById(reviewId);
+
+            return review;
+        } catch (Error | NotFoundException e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+
+
+
     @PostMapping("update review/{reviewId}")
     @ApiOperation(value= "Update review on selected property")
-    public Boolean updateReview(@PathVariable("reviewId") int reviewId, @RequestBody ReviewRequest req, @RequestHeader("Authorization") String str) throws Exception {
+    public Boolean updateReview(@PathVariable("reviewId") int reviewId, @RequestBody ReviewRequest req, @RequestHeader("Authorization")String str ) throws Exception {
         try {
             User tenant = userPermissionService.loadUserByJWT(str);
 
