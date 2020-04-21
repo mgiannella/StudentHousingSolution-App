@@ -110,7 +110,6 @@ public class ScheduleController{
     @GetMapping("/{landlordid}")
     @ApiOperation(value="List Times for Making Reservation",notes="Create new reservation.")
     public ScheduleTenantTimes listTimes(@RequestHeader("Authorization") String str, @PathVariable("landlordid") int landlordid) throws ValidationException {
-        try {
             User tenant = userPermissionService.loadUserByJWT(str);
             if (!userPermissionService.assertPermission(tenant, UserRoles.ROLE_TENANT)) {
                 throw new ValidationException("You are not a tenant.");
@@ -124,16 +123,9 @@ public class ScheduleController{
             else {
                 throw new ValidationException("No schedule exists for this landlord.") ;
             }
+            
 
-
-        }
-
-        catch (Error | NotFoundException e) {
-            System.out.println(e);
-            return null;
-        }
     }
-
 
 
 

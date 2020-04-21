@@ -18,7 +18,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
         Boolean existsByLandlord(User landlord);
 
         //DELETE FROM Schedule WHERE MeetingTime BETWEEN '2020-04-27' AND '2020-05-20'
-        //@Query("DELETE s FROM Schedule s WHERE s.meetingTime BETWEEN s.meetingtime = ?1 and s.meetingtime = ?2")
+        ///@Query("DELETE s FROM Schedule s WHERE MeetingTime BETWEEN (s.start = ?1 and s.end = ?2)")
         //void deleteByTime(LocalDate start, LocalDate end);
 
 
