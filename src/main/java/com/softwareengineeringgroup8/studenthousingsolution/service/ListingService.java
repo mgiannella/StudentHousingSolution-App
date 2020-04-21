@@ -47,8 +47,13 @@ public class ListingService {
             //add TenantGroup stuff, fix date stuff, add back landlord to properties
              String latitude = request.getLatitude();
              String longitude = request.getLongitude();
-             if (locRepository.existsByLatitude(latitude) && locRepository.existsByLongitude(longitude)) {
-                 throw new ValidationException("Address already exists.");
+
+             String unitNum = request.getUnitNum();
+
+             if (unitNum == null) { //not an apartment
+                 if (locRepository.existsByLatitude(latitude) && locRepository.existsByLongitude(longitude)) {
+                     throw new ValidationException("Address already exists.");
+                 }
              }
 
             String address = request.getAddress();
@@ -122,6 +127,7 @@ public class ListingService {
 
 
 
+
      property.getDescription().setDescContent(update.getDesc());
 
 
@@ -144,6 +150,8 @@ public class ListingService {
       property.getAmenities().setTrashPickedUpl(update.isHasTrashPickup());
       property.getAmenities().setHasHeat(update.isHasHeat());
       property.getAmenities().setSleeps(update.getSleeps());
+
+      //property.setunitnum(update.getunitnum());
 
 
       property.setTitle(update.getTitle());

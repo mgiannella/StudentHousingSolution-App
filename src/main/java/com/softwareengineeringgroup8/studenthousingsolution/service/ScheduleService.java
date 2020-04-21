@@ -37,6 +37,9 @@ public class ScheduleService {
     @Autowired
     private UserPermissionService userPermissionService;
 
+    @Autowired
+    private NotificationService notificationService;
+
 
     public ScheduleView findByLandlord(String viewStart, String viewEnd,User landlord) {
         try{
@@ -226,6 +229,16 @@ public class ScheduleService {
                 schedule.setProps(property);
                 schedule.setTenant(tenant);
                 scheduleRepository.save(schedule);
+
+
+                //when created
+                notificationService.createNotification(landlord, "Housing Tour Meeting at: " + property.getLocation().getAddress() + " with " + tenant.getFullname(), "SCHEDULE", "");
+                notificationService.createNotification(tenant, "Housing Tour Meeting at: " + property.getLocation().getAddress() + " with " + landlord.getFullname(), "SCHEDULE", "");
+
+
+                //Reminder
+                notificationService.createNotification(landlord, "Housing Tour Meeting at: " + property.getLocation().getAddress() + " with " + tenant.getFullname(), "SCHEDULE", scheds.get(i).getMeetingTimes().toString());
+                notificationService.createNotification(tenant, "Housing Tour Meeting at: " + property.getLocation().getAddress() + " with " + landlord.getFullname(), "SCHEDULE", scheds.get(i).getMeetingTimes().toString());
                 foundEqual=true;
                 break;
             }

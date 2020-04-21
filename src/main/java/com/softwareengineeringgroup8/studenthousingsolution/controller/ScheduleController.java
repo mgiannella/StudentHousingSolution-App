@@ -6,6 +6,7 @@ import com.softwareengineeringgroup8.studenthousingsolution.exceptions.Validatio
 import com.softwareengineeringgroup8.studenthousingsolution.model.*;
 
 
+import com.softwareengineeringgroup8.studenthousingsolution.repository.NotificationsRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.ScheduleRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.UserRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.service.ListingService;
@@ -52,6 +53,13 @@ public class ScheduleController{
 
     @Autowired
     private ScheduleRepository scheduleRepository;
+
+
+    @Autowired
+    private NotificationService notificationService;
+
+    @Autowired
+    private NotificationsRepository notificationsRepository;
 
     @GetMapping("/landlordview")
     @ApiOperation(value="Landlord view of schedule", notes="View Schedule")
@@ -186,9 +194,19 @@ public class ScheduleController{
                 throw new ValidationException("This event cannot be deleted as it is not a reserved booking.");
             }
 
+
+            User tenant = schedule.getTenant();
+            User landlord = schedule.getLandlord();
+            Properties property = schedule.getProps();
             schedule.setTenant(null);
             schedule.setProps(null);
             scheduleRepository.save(schedule);
+            notificationService.createNotification(landlord, "Housing Tour Meeting at: " + property.getLocation().getAddress() + " with " + tenant.getFullname() + " has been cancelled.", "SCHEDULE", "");
+            notificationService.createNotification(tenant, "Housing Tour Meeting at: " + property.getLocation().getAddress() + " with " + landlord.getFullname() + " has been cancelled.", "SCHEDULE", "");
+
+
+
+
             return true;
 
         }

@@ -95,8 +95,17 @@ public class ListingRequest implements Serializable {
     @ApiModelProperty(notes="Longitude",example="5.0",required=true)
     private String longitude;
 
+    @ApiModelProperty(notes="",example="5",required=true)
+    private String unitNum;
 
 
+    public String getUnitNum() {
+        return unitNum;
+    }
+
+    public void setUnitNum(String unitNum) {
+        this.unitNum = unitNum;
+    }
 
     public String getLatitude() {
         return latitude;
@@ -276,7 +285,7 @@ public class ListingRequest implements Serializable {
                           BigDecimal price, int numBedrooms, float numBathrooms, String renovationDate, boolean hasAC,
                           int parkingspots, boolean hasLaundry, boolean allowPets, boolean allowSmoking, boolean hasWater,
                           boolean hasGasElec, boolean isFurnished, boolean hasAppliances, boolean hasTrashPickup, boolean hasHeat,
-                          int sleeps, List<String> photos, String latitude, String longitude) {
+                          int sleeps, List<String> photos, String latitude, String longitude, String unitNum) {
 
         this.title = title;
         this.address = address;
@@ -303,6 +312,7 @@ public class ListingRequest implements Serializable {
         this.photos = photos;
         this.latitude=latitude;
         this.longitude=longitude;
+        this.unitNum = unitNum;
     }
 
 
