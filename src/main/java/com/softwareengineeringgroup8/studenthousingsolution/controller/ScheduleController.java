@@ -59,7 +59,7 @@ public class ScheduleController{
         try {
             User landlord = userPermissionService.loadUserByJWT(str);
             if (!userPermissionService.assertPermission(landlord, UserRoles.ROLE_LANDLORD)) {
-                return null;
+                throw new ValidationException("You are not a landlord.");
             }
 
             if (scheduleService.existsByLandlord(landlord)==true) {
