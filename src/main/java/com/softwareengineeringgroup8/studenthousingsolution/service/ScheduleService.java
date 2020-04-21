@@ -133,7 +133,6 @@ public class ScheduleService {
 
 
     public ScheduleTenantTimes ListTimes(User landlord) {
-        try {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime now = LocalDateTime.now();
 
@@ -161,10 +160,7 @@ public class ScheduleService {
                 ScheduleTenantTimes bookingTimes = new ScheduleTenantTimes(landlord, update);
                 return bookingTimes;
             }
-        }
-        catch(Exception e){
-            throw new ValidationException("Cannot find schedule");
-        }
+
 
     }
 
