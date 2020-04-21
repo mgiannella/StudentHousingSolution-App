@@ -20,7 +20,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
 
 
 
-        @Query("SELECT s FROM Schedule s WHERE ((s.meetingTimes >= ?1 and s.meetingTimes <= ?2) and (s.landlord = ?3) and (s.tenant = null)) ORDER BY MeetingTime")
+        @Query("SELECT s FROM Schedule s WHERE ((s.meetingTimes >= ?1 and s.meetingTimes <= ?2) and (s.landlord = ?3)) ORDER BY MeetingTime")
         List<Schedule> deleteThese(Timestamp start, Timestamp end, User landlord);
 
 

@@ -102,12 +102,10 @@ public class ScheduleService {
 
 
 
-
-
     public void createSchedule(ScheduleRequest request, User landlord) {
 
          List<String> eventDates = request.getEventDates();
-         List<Timestamp> meetingTimes = new ArrayList<Timestamp>();
+         List<Timestamp> meetingTimes = new ArrayList<>();
 
 
          for (int i=0; i<eventDates.size();i++) {
@@ -116,39 +114,29 @@ public class ScheduleService {
          }
 
 
-         //Collections.sort(meetingTimes);
-
          String s = request.getStartDate();
          String e = request.getEndDate();
 
          Timestamp start = Timestamp.valueOf(s);
          Timestamp end = Timestamp.valueOf(e);
 
-         /*
-         LocalDateTime  startConvert  = meetingTimes.get(0).toLocalDateTime().truncatedTo(ChronoUnit.DAYS);
-         Timestamp start = Timestamp.valueOf(startConvert);
-         System.out.println(start);
-
-         LocalDateTime endConvert = meetingTimes.get(meetingTimes.size()-1).toLocalDateTime().truncatedTo(ChronoUnit.DAYS);
-         LocalDateTime addOne = endConvert.plusDays(1);
-         Timestamp end = Timestamp.valueOf(addOne);
-*/
-
-
          List<Schedule> deleteThese = scheduleRepository.deleteThese(start,end,landlord);
 
          for (int i=0;i<deleteThese.size();i++) {
+             if (deleteThese.get(i).getTenant() != null) {
+                 continue;
+             }
              scheduleRepository.delete(deleteThese.get(i));
          }
 
-         List<Schedule> LLSched = new ArrayList<>();
+        // List<Schedule> LLSched = new ArrayList<>();
+         //int j=0;
          for (int i = 0; i<meetingTimes.size();i++) {
               User tenant = scheduleRepository.findTenantByThese(meetingTimes.get(i),landlord);
               if (tenant!=null) { //this means its booked so don't delete and don't add this time
                   continue;
               }
-             LLSched.add(new Schedule(landlord,null,meetingTimes.get(i),null));
-             scheduleRepository.save(LLSched.get(i));
+             scheduleRepository.save(new Schedule(landlord,null,meetingTimes.get(i),null));
          }
 
 
