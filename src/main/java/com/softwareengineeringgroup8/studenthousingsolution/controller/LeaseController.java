@@ -68,6 +68,21 @@ public class LeaseController {
             System.out.println(e);
             return null;
         }
+    }
 
+    @PostMapping("/signLease")
+    @ApiOperation(value = "Tenants Signing Lease")
+    public Boolean leaseSign(@RequestHeader("Authorization") String authString, @RequestBody SignLease lease){
+        try {
+            User tenant = userPermissionService.loadUserByJWT(authString);
+            if (!userPermissionService.assertPermission(tenant, UserRoles.ROLE_TENANT)) {
+                return false;
+            }
+            agreementService.signLease(tenant, lease);
+            return true;
+        } catch (Error | NotFoundException e) {
+            System.out.println(e);
+            return null;
+        }
     }
 }
