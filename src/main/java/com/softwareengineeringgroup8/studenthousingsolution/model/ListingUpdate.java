@@ -51,12 +51,6 @@ public class ListingUpdate {
 
         private int id;
 
-        private String lease;
-
-        private Date startDate;
-
-        private Date endDate;
-
 
         public String address;
         public String city;
@@ -108,14 +102,6 @@ public class ListingUpdate {
         this.photos = photos;
     }
 
-    public String getLease() { return lease; }
-    public void setLease(String lease) { this.lease = lease; }
-
-    public void setStartDate(Date startDate) { this.startDate = startDate; }
-    public Date getStartDate() { return startDate; }
-
-    public void setEndDate(Date endDate) { this.endDate = endDate; }
-    public Date getEndDate() { return endDate; }
 
     public int getSleeps() { return sleeps; }
         public void setSleeps(int sleeps) { this.sleeps =sleeps; }
@@ -245,7 +231,7 @@ public class ListingUpdate {
         public ListingUpdate(int id, String address, String city, String state, String zipCode, String title, String description, BigDecimal price, int numBedrooms, float numBathrooms, String renovationDate, boolean hasAC,
                               int parkingspots, boolean hasLaundry, boolean allowPets, boolean allowSmoking, boolean hasWater,
                               boolean hasGasElec, boolean isFurnished, boolean hasAppliances, boolean hasTrashPickup, boolean hasHeat,
-                              int sleeps, List<String> photos, String lease, Date startDate, Date endDate) {
+                              int sleeps, List<String> photos) {
             this.id=id;
             this.address=address;
             this.city=city;
@@ -270,9 +256,7 @@ public class ListingUpdate {
             this.desc=description;
             this.sleeps=sleeps;
             this.photos = photos;
-            this.lease = lease;
-            this.startDate = startDate;
-            this.endDate = endDate;
+
         }
 
 

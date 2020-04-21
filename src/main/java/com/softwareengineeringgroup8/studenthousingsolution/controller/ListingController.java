@@ -43,27 +43,6 @@ public class ListingController{
     @Autowired
     private PropertyService propertyService;
 
-    @Autowired
-    private HousingAgreementService agreementService;
-
-
-    @GetMapping("/viewLease/{propertyID}")
-    @ApiOperation(value="View Lease")
-    public HousingAgreement tenantLease(@RequestHeader("Authorization") String authString, @PathVariable("propertyID") int propertyID){
-        try{
-            User user = userPermissionService.loadUserByJWT(authString);
-            Properties prop = propertyService.getPropertyById(propertyID);
-            return agreementService.getHousingAgreement(prop);
-
-        } catch (Error | NotFoundException e) {
-            System.out.println(e);
-            return null;
-        }
-
-    }
-
-
-
     @GetMapping("/viewLandlordProperties")
     @ApiOperation(value="View Landlord Properties",notes="View list of properties that landlord owns")
     public List<Properties> listProperties(@RequestHeader("Authorization") String authString) {
