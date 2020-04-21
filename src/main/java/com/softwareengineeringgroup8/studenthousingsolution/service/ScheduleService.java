@@ -107,6 +107,7 @@ public class ScheduleService {
 
          List<String> eventDates = request.getEventDates();
          List<Timestamp> meetingTimes = new ArrayList<Timestamp>();
+         Collections.sort(meetingTimes);
 
          for (int i=0; i<eventDates.size();i++) {
              Timestamp addEvent = Timestamp.valueOf(eventDates.get(i));
@@ -131,31 +132,22 @@ public class ScheduleService {
 
 
 
-
-
-//edit schedule (landlord)
-    public void editSchedule() {
-
-    }
-
-
-
-
     public ScheduleTenantTimes ListTimes(User landlord) {
+        try {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime now = LocalDateTime.now();
 
             List<Schedule> scheds = scheduleRepository.findTimesByLandlord(landlord);
             List<LocalDateTime> listEverything = new ArrayList<>();
-            for (int i=0; i<scheds.size();i++) {
+            for (int i = 0; i < scheds.size(); i++) {
                 Timestamp add = scheds.get(i).getMeetingTimes();
                 LocalDateTime ldt = add.toLocalDateTime();
                 listEverything.add(ldt);
             }
 
             List<String> update = new ArrayList<>();
-            for (int i=0; i<listEverything.size();i++) {
-                if (listEverything.get(i).isAfter(now) && scheds.get(i).getTenant()==null) {
+            for (int i = 0; i < listEverything.size(); i++) {
+                if (listEverything.get(i).isAfter(now) && scheds.get(i).getTenant() == null) {
                     LocalDateTime change = listEverything.get(i);
                     DateTimeFormatter newFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                     String formattedDate = change.format(newFormat);
@@ -163,15 +155,18 @@ public class ScheduleService {
                 }
             }
 
-            if (update.isEmpty()==true) {
+            if (update.isEmpty() == true) {
                 throw new ValidationException("No available times");
-            }
-
-            else {
-                ScheduleTenantTimes bookingTimes = new ScheduleTenantTimes(landlord,update);
+            } else {
+                ScheduleTenantTimes bookingTimes = new ScheduleTenantTimes(landlord, update);
                 return bookingTimes;
             }
         }
+        catch(Exception e){
+            throw new ValidationException("Cannot find schedule");
+        }
+
+    }
 
 
 
