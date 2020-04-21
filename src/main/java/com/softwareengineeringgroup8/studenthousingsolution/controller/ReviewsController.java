@@ -188,7 +188,7 @@ public class ReviewsController {
             }
 
             Properties prop= propertiesRepository.findById(propId);
-            List<Reviews> reviewsList= reviewsRepository.findByProperty(prop);
+            List<Reviews> reviewsList= reviewsRepository.findByIdAndTenant(prop, tenant);
             return reviewsList;
 
         } catch (Error | NotFoundException e) {
