@@ -25,6 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
+import javax.validation.Valid;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +57,7 @@ public class ListingController{
 
     @Autowired
     private NotificationService notificationService;
+
 
 
     @GetMapping("/viewLease/{propertyID}")
@@ -237,15 +239,17 @@ public class ListingController{
             if (!userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
                 return false;
             }
-                Properties property = propertyService.getById(propertyid);
+                Properties property = propertyService.getPropertyById(propertyid);
                 TenantGroups group = tenantGroupsService.findById(groupid);
                 property.setGroup(group);
                 propertiesRepository.save(property);
 
 
                 notificationService.createNotification(user, "You have rented your property " + property.getLocation().getAddress() + " to " + group.getName() + ".", "GENERAL", "");
-                notificationService.createNotification(group.getLeadTenant(), "Your group has now rented " + property.getLocation().getAddress() + ".", "GENERAL", "");
-
+                List<User> groupMembers = tenantGroupsService.getTenantsByGroup(group);
+                for (int i = 0; i<groupMembers.size();i++) {
+                    notificationService.createNotification(groupMembers.get(i), "Your group has now rented " + property.getLocation().getAddress() + ".", "GENERAL", "");
+                }
 
             return true;
 
@@ -255,6 +259,64 @@ public class ListingController{
         }
     }
 
+
+    @GetMapping("/rent/{propertyid}")
+    @ApiOperation(value = "View Tenant Group on property", notes="View tenant group on property")
+    public TenantGroups viewRentTenant(@PathVariable("propertyid") int propertyid, @RequestHeader("Authorization") String authString) throws ValidationException {
+        try {
+            User user = userPermissionService.loadUserByJWT(authString);
+            if (user == null) {
+                throw new ValidationException("User could be found.");
+            }
+            if (!userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
+                throw new ValidationException("User is not a landlord.");
+            }
+
+            TenantGroups tenantGroup = propertyService.getPropertyById(propertyid).getGroup();
+            if (tenantGroup==null) {
+                throw new ValidationException("No tenant group residing at property.");
+            }
+
+            return tenantGroup;
+
+        } catch (Error | NotFoundException e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+
+
+    @PostMapping("/rent/{pid}")
+    @ApiOperation(value = "Take out a tenant group", notes="Delete tenant group from property")
+    public Boolean unrentProperty(@PathVariable("pid") int pid, @RequestBody int groupid, @RequestHeader("Authorization") String authString) throws ValidationException {
+        try {
+            User user = userPermissionService.loadUserByJWT(authString);
+            if (user == null) {
+                throw new ValidationException("User could be found.");
+            }
+            if (!userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
+                throw new ValidationException("User is not a landlord.");
+            }
+            TenantGroups tenantGroup = propertyService.getPropertyById(pid).getGroup();
+            if (tenantGroup==null) {
+                throw new ValidationException("No tenant group residing at property.");
+            }
+
+            Properties prop = propertyService.getPropertyById(pid);
+            if (!prop.getGroup().equals(tenantGroup)) {
+                throw new ValidationException("Group you are trying to delete does not reside at this property");
+            }
+
+            prop.setGroup(null);
+            propertiesRepository.save(prop);
+
+
+            return true;
+        } catch (Error | NotFoundException e) {
+            System.out.println(e);
+            return false;
+        }
+    }
 
 
 
