@@ -112,8 +112,8 @@ public class ListingService {
                     }
 
                     propRepository.save(createProp);
-                    return;
                 }
+                return;
             }
 
         Properties createProp = new Properties(landlord, title, createAmen, createDesc, createLocation, photos, null);
