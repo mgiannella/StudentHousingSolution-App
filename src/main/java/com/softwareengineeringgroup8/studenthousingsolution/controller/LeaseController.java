@@ -1,5 +1,6 @@
 package com.softwareengineeringgroup8.studenthousingsolution.controller;
 
+import com.softwareengineeringgroup8.studenthousingsolution.exceptions.ValidationException;
 import com.softwareengineeringgroup8.studenthousingsolution.model.*;
 import com.softwareengineeringgroup8.studenthousingsolution.service.HousingAgreementService;
 import com.softwareengineeringgroup8.studenthousingsolution.service.PropertyService;
@@ -9,6 +10,7 @@ import io.swagger.annotations.ApiOperation;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 
 @RestController
@@ -80,6 +82,21 @@ public class LeaseController {
             }
             agreementService.signLease(tenant, lease);
             return true;
+        } catch (Error | NotFoundException e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+    @GetMapping("/viewTenants/{propertyID}")
+    @ApiOperation(value="View Tenants")
+    public List<TenantGroupMembers> viewTenants(@RequestHeader("Authorization") String authString, @PathVariable("propertyID") int propertyID){
+        try{
+            User user = userPermissionService.loadUserByJWT(authString);
+            if (!userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
+                throw new ValidationException("User is not a landlord");
+            }
+            Properties prop = propertyService.getPropertyById(propertyID);
+            return agreementService.getTenants(prop);
         } catch (Error | NotFoundException e) {
             System.out.println(e);
             return null;

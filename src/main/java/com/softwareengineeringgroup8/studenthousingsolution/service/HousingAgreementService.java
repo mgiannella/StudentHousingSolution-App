@@ -32,6 +32,12 @@ public class HousingAgreementService {
         return agreementRepository.findByProperty(property);
     }
 
+    public List<TenantGroupMembers> getTenants(Properties property){
+        TenantGroups group = property.getGroup();
+        List<TenantGroupMembers> tenants = tgmRepository.findTenantGroupMembersByGroup(group);
+        return tenants;
+    }
+
     public void uploadLease(LeaseUpdate data){
         Properties prop = propRepository.findById(data.getId());
         if(agreementRepository.existsByProperty(prop)){
