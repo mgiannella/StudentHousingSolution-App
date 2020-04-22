@@ -82,7 +82,7 @@ public class ListingController{
         try {
             User landlord = userPermissionService.loadUserByJWT(authString);
             if (landlord == null) {
-                throw new ValidationException("User could be found.");
+                throw new ValidationException("User could not be found.");
 
             }
             if (!userPermissionService.assertPermission(landlord, UserRoles.ROLE_LANDLORD)) {
@@ -105,7 +105,7 @@ public class ListingController{
         try {
             User landlord = userPermissionService.loadUserByJWT(str);
             if (landlord == null) {
-                throw new ValidationException("User could be found.");
+                throw new ValidationException("User could not be found.");
 
             }
 
@@ -128,7 +128,7 @@ public class ListingController{
         try {
             User user = userPermissionService.loadUserByJWT(authString);
             if (user == null) {
-                throw new ValidationException("User could be found.");
+                throw new ValidationException("User could not be found.");
 
             }
 
@@ -159,7 +159,7 @@ public class ListingController{
         try {
             User user = userPermissionService.loadUserByJWT(authString);
             if (user == null) {
-                throw new ValidationException("User could be found.");
+                throw new ValidationException("User could not be found.");
 
             }
             if (!userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
@@ -180,7 +180,7 @@ public class ListingController{
         try {
             User user = userPermissionService.loadUserByJWT(authString);
             if (user == null) {
-                throw new ValidationException("User could be found.");
+                throw new ValidationException("User could not be found.");
 
             }
             Properties property=propertyService.getById(deleteID);
@@ -212,7 +212,7 @@ public class ListingController{
         try {
             User user = userPermissionService.loadUserByJWT(authString);
             if (user == null) {
-                throw new ValidationException("User could be found.");
+                throw new ValidationException("User could not be found.");
 
             }
             if (!userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
@@ -233,7 +233,7 @@ public class ListingController{
         try {
             User user = userPermissionService.loadUserByJWT(authString);
             if (user == null) {
-                throw new ValidationException("User could be found.");
+                throw new ValidationException("User could not be found.");
 
             }
             if (!userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
@@ -267,7 +267,7 @@ public class ListingController{
         try {
             User user = userPermissionService.loadUserByJWT(authString);
             if (user == null) {
-                throw new ValidationException("User could be found.");
+                throw new ValidationException("User could not be found.");
             }
             if (!userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
                 throw new ValidationException("User is not a landlord.");
@@ -294,7 +294,7 @@ public class ListingController{
         try {
             User user = userPermissionService.loadUserByJWT(authString);
             if (user == null) {
-                throw new ValidationException("User could be found.");
+                throw new ValidationException("User could not be found.");
             }
 
             if (!userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
@@ -319,6 +319,11 @@ public class ListingController{
             prop.setGroup(null);
             propertiesRepository.save(prop);
 
+            notificationService.createNotification(user, "You have removed " + tenantGroup.getName() + " from your property " + prop.getLocation().getAddress() + ".", "GENERAL", "");
+            List<User> groupMembers = tenantGroupsService.getTenantsByGroup(tenantGroup);
+            for (int i = 0; i<groupMembers.size();i++) {
+                notificationService.createNotification(groupMembers.get(i), "Your group has been removed from the property " + prop.getLocation().getAddress() + ".", "GENERAL", "");
+            }
 
             return true;
         } catch (Error | NotFoundException e) {

@@ -68,7 +68,7 @@ public class ScheduleController{
         try {
             User landlord = userPermissionService.loadUserByJWT(str);
             if (landlord == null) {
-                throw new ValidationException("User could be found.");
+                throw new ValidationException("User could not be found.");
 
             }
 
@@ -98,7 +98,7 @@ public class ScheduleController{
         try {
             User landlord = userPermissionService.loadUserByJWT(str);
             if (landlord == null) {
-                throw new ValidationException("User could be found.");
+                throw new ValidationException("User could not be found.");
 
             }
             if (!userPermissionService.assertPermission(landlord, UserRoles.ROLE_LANDLORD)) {
@@ -132,7 +132,7 @@ public class ScheduleController{
         try {
             User tenant = userPermissionService.loadUserByJWT(str);
             if (tenant == null) {
-                throw new ValidationException("User could be found.");
+                throw new ValidationException("User could not be found.");
 
             }
             if (!userPermissionService.assertPermission(tenant, UserRoles.ROLE_TENANT)) {
@@ -166,7 +166,7 @@ public class ScheduleController{
         try {
             User tenant = userPermissionService.loadUserByJWT(str);
             if (tenant == null) {
-                throw new ValidationException("User could be found.");
+                throw new ValidationException("User could not be found.");
 
             }
 
