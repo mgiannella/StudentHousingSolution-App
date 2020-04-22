@@ -94,7 +94,6 @@ public class ListingService {
             boolean hasHeat = request.isHasHeat();
             int sleeps=request.getSleeps();
 
-            System.out.println(numBathrooms);
             Amenities createAmen = new Amenities(price, sleeps, numBedrooms, numBathrooms, renovationDate, hasAC, parkingSpots, hasLaundry, allowPets, allowSmoking,
                     hasWater,hasGasElec,isFurnished,hasAppliances,hasTrashPickup,hasHeat);
             amenRepository.save(createAmen);
@@ -172,11 +171,27 @@ public class ListingService {
       property.setTitle(update.getTitle());
 
       String unitNum = property.getUnitNum();
-      /* if (unitNum != null) {
 
+      if (unitNum != null) { //if apartments
+          List<Properties> props = propRepository.findByAmenityId(property.getAmenities().getAmenityId());
+          for (int i = 0; i<props.size();i++) {
+              List<PropertyPhotos> photos = props.get(i).getPhotos();
+              int size = photos.size();
+              for (int k = size; k < (update.getPhotos().size() + size); k++) {
+                  int j = 0;
+                  props.get(i).getPhotos().add(new PropertyPhotos(k + 1, update.getPhotos().get(j), props.get(i)));
+                  j++;
+              }
+
+              HousingAgreement lease = new HousingAgreement(props.get(i), update.getLease(), update.getStartDate(), update.getEndDate());
+              agreementRepository.save(lease);
+              propRepository.save(props.get(i));
+          }
+          return;
       }
-*/
-      //property.getPhotos().add(new PropertyPhotos(2,update.getPhotos(),property));
+
+
+      //if not apartments
         List<PropertyPhotos> photos = property.getPhotos();
         int size = photos.size();
         for (int i=size; i<(update.getPhotos().size() + size);i++) {

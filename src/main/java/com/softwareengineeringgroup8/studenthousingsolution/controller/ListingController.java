@@ -77,8 +77,11 @@ public class ListingController{
     @ApiOperation(value="View Landlord Properties",notes="View list of properties that landlord owns")
     public List<Properties> listProperties(@RequestHeader("Authorization") String authString) {
         try {
-            User user = userPermissionService.loadUserByJWT(authString);
-           List<Properties> props = propertyService.getPropertiesByLandlord(user);
+            User landlord = userPermissionService.loadUserByJWT(authString);
+            if (!userPermissionService.assertPermission(landlord, UserRoles.ROLE_LANDLORD)) {
+                throw new ValidationException("User is not a landlord");
+            }
+           List<Properties> props = propertyService.getPropertiesByLandlord(landlord);
            return props;
 
         } catch (Error | NotFoundException e) {
@@ -95,7 +98,7 @@ public class ListingController{
         try {
             User landlord = userPermissionService.loadUserByJWT(str);
             if (!userPermissionService.assertPermission(landlord, UserRoles.ROLE_LANDLORD)) {
-                return false;
+                throw new ValidationException("User is not a landlord");
             }
             listingService.createListingRequest(request,landlord);
             //test();
@@ -113,6 +116,10 @@ public class ListingController{
     public Properties viewListingData(@PathVariable("propertyID") int propertyID, @RequestHeader("Authorization") String authString) {
         try {
             User user = userPermissionService.loadUserByJWT(authString);
+            if (!userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
+                throw new ValidationException("User is not a landlord");
+            }
+
             Properties property=propertyService.getById(propertyID);
 
             if (userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
