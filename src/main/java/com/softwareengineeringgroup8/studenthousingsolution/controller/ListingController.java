@@ -6,6 +6,8 @@ import com.softwareengineeringgroup8.studenthousingsolution.exceptions.Validatio
 import com.softwareengineeringgroup8.studenthousingsolution.model.*;
 
 
+import com.softwareengineeringgroup8.studenthousingsolution.repository.PropertiesRepository;
+import com.softwareengineeringgroup8.studenthousingsolution.repository.TenantGroupsRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.service.ListingService;
 import com.softwareengineeringgroup8.studenthousingsolution.service.*;
 import com.softwareengineeringgroup8.studenthousingsolution.service.UserPermissionService;
@@ -46,6 +48,13 @@ public class ListingController{
     @Autowired
     private HousingAgreementService agreementService;
 
+    @Autowired
+    private TenantGroupsService tenantGroupsService;
+
+    @Autowired
+    private PropertiesRepository propertiesRepository;
+
+
 
     @GetMapping("/viewLease/{propertyID}")
     @ApiOperation(value="View Lease")
@@ -68,9 +77,11 @@ public class ListingController{
     @ApiOperation(value="View Landlord Properties",notes="View list of properties that landlord owns")
     public List<Properties> listProperties(@RequestHeader("Authorization") String authString) {
         try {
-            User user = userPermissionService.loadUserByJWT(authString);
-           List<Properties> props = propertyService.getPropertiesByLandlord(user);
-           int size = props.size();
+            User landlord = userPermissionService.loadUserByJWT(authString);
+            if (!userPermissionService.assertPermission(landlord, UserRoles.ROLE_LANDLORD)) {
+                throw new ValidationException("User is not a landlord");
+            }
+           List<Properties> props = propertyService.getPropertiesByLandlord(landlord);
            return props;
 
         } catch (Error | NotFoundException e) {
@@ -87,7 +98,7 @@ public class ListingController{
         try {
             User landlord = userPermissionService.loadUserByJWT(str);
             if (!userPermissionService.assertPermission(landlord, UserRoles.ROLE_LANDLORD)) {
-                return false;
+                throw new ValidationException("User is not a landlord");
             }
             listingService.createListingRequest(request,landlord);
             //test();
@@ -99,17 +110,15 @@ public class ListingController{
         }
     }
 
-    @GetMapping("/{propertyID}")
+    @GetMapping("/view/{propertyid}")
     @ApiOperation(value="View Listing Data")
-    @JsonView(PropertyView.ViewProperty.class)
-    public Properties viewListingData(@PathVariable("propertyID") int propertyID, @RequestHeader("Authorization") String authString) {
+    public Properties viewListingData(@PathVariable("propertyid") int propertyid, @RequestHeader("Authorization") String authString) {
         try {
             User user = userPermissionService.loadUserByJWT(authString);
-            Properties property=propertyService.getById(propertyID);
+            Properties property=propertyService.getPropertyById(propertyid);
 
             if (userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
-
-                if (property.getLandlord().equals(user)) {
+                if (property.getLandlord().getId()==user.getId()) {
                     return property;
                 } else {
                     throw new ValidationException("User isn't a landlord for this property.");
@@ -120,12 +129,9 @@ public class ListingController{
             }
 
         } catch (Error | NotFoundException e) {
-
             System.out.println(e);
             return null;
         }
-
-
     }
 
 
@@ -172,6 +178,46 @@ public class ListingController{
             return false;
         }
     }
+
+
+    //rent
+    @GetMapping("/listtenantgroups")
+    @ApiOperation(value = "List Tenant Groups for Lead Tenant", notes="List tenant Groups for lead tenant")
+    public List<TenantGroups> ListTenantGroups(@RequestParam String username, @RequestHeader("Authorization") String authString) throws ValidationException {
+        try {
+            User user = userPermissionService.loadUserByJWT(authString);
+            if (!userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
+                return null;
+            }
+            return listingService.showTenantGroups(username);
+
+        } catch (Error | NotFoundException e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+
+    //rent
+    @PostMapping("/{propertyid}")
+    @ApiOperation(value = "Rent Listing", notes="Rent Listing")
+    public Boolean rentOutListing(@PathVariable("propertyid") int propertyid, @RequestBody int groupid, @RequestHeader("Authorization") String authString) throws ValidationException {
+        try {
+            User user = userPermissionService.loadUserByJWT(authString);
+            if (!userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
+                return false;
+            }
+                Properties property = propertyService.getById(propertyid);
+                TenantGroups group = tenantGroupsService.findById(groupid);
+                property.setGroup(group);
+                propertiesRepository.save(property);
+                return true;
+
+        } catch (Error | NotFoundException e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+
 
 
 

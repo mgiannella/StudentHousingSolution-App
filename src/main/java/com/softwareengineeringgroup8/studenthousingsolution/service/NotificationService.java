@@ -81,6 +81,7 @@ public class NotificationService {
             throw new ValidationException("Couldn't push notification to DB");
         }
     }
+
     // How to use:
     // Pass in user and id of notification to be deleted
     // will return true if successful or throw exception if it doesn't work
