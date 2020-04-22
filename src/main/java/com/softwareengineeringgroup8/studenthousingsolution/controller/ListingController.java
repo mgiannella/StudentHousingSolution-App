@@ -112,14 +112,9 @@ public class ListingController{
 
     @GetMapping("/{propertyID}")
     @ApiOperation(value="View Listing Data")
-    @JsonView(PropertyView.ViewProperty.class)
     public Properties viewListingData(@PathVariable("propertyID") int propertyID, @RequestHeader("Authorization") String authString) {
         try {
             User user = userPermissionService.loadUserByJWT(authString);
-            if (!userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
-                throw new ValidationException("User is not a landlord");
-            }
-
             Properties property=propertyService.getById(propertyID);
 
             if (userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
@@ -135,12 +130,9 @@ public class ListingController{
             }
 
         } catch (Error | NotFoundException e) {
-
             System.out.println(e);
             return null;
         }
-
-
     }
 
 
