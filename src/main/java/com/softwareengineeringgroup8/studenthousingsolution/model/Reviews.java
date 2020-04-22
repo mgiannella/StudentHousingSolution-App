@@ -118,8 +118,6 @@ public class Reviews {
         this.totalRating = totalRating;
     }
 
-    public Reviews(){}
-
     public Reviews(Properties prop,User tenant,String reviewDescription, float cleanlinessRating, float securityRating, float communicationRating, float locationRating, float totalRating ){
         this.prop= prop;
         this.tenant = tenant;
