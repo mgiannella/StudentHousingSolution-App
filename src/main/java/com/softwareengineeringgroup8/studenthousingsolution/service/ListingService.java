@@ -45,9 +45,6 @@ public class ListingService {
     @Autowired
     private TenantGroupMembersRepository tenantGroupMembersRepository;
 
-
-
-
     public void createListingRequest(ListingRequest request, User landlord){
             //add TenantGroup stuff, fix date stuff, add back landlord to properties
              String latitude = request.getLatitude();
@@ -201,9 +198,6 @@ public class ListingService {
             property.getPhotos().add(new PropertyPhotos(i+1,update.getPhotos().get(j),property));
             j++;
         }
-
-        //HousingAgreement lease = new HousingAgreement(property, update.getLease(), update.getStartDate(), update.getEndDate());
-        //property.setLease(lease);
 
         /* for (int i=0; i<request.getPhotos().size(); i++) {
             createProp.getPhotos().add(new PropertyPhotos(i+1,request.getPhotos().get(i),createProp));

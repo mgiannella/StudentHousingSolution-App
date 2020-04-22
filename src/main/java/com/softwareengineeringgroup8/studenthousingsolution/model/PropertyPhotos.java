@@ -50,7 +50,6 @@ public class PropertyPhotos {
     /*public Properties getProperty() {
         return property;
     }
-
     public void setProperty(Properties property) {
         this.property = property;
     }*/

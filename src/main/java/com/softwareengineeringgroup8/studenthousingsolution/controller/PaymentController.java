@@ -77,6 +77,10 @@ public class PaymentController {
     private TenantGroupMembersRepository tenantGroupMembersRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private LandlordAccountsRepository landlordAccountsRepository;
+    @Autowired
+    private NotificationService notificationService;
 
 
 /*
@@ -117,10 +121,10 @@ public class PaymentController {
         }
     }
 
-/*
+
     @GetMapping("/viewLandlordProperties")
     @ApiOperation(value = "View Landlord's Properties")
-    public Properties landlordProperties(@RequestHeader("Authorization") String authString) throws ValidationException {
+    public List<Properties> landlordProperties(@RequestHeader("Authorization") String authString) throws ValidationException {
         try {
             User user = userPermissionService.loadUserByJWT(authString);
 
@@ -129,7 +133,7 @@ public class PaymentController {
                 //;
             }
 
-            Properties properties= propertiesRepository.findByLandlord(user);
+            List<Properties> properties = propertiesRepository.findByLandlord(user);
 
             return properties;
         } catch (Error | NotFoundException e) {
@@ -139,10 +143,10 @@ public class PaymentController {
         }
     }
 
-*/
+
     @GetMapping("/viewTenants/{propId}")
     @ApiOperation(value = "View Tenants on Property")
-    public List<User> viewTenants(@PathVariable("propId") int propId, @RequestHeader("Authorization") String authString)throws ValidationException {
+    public List<User> viewTenants(@PathVariable("propId") int propId, @RequestHeader("Authorization") String authString) throws ValidationException {
         try {
             User user = userPermissionService.loadUserByJWT(authString);
 
@@ -153,8 +157,8 @@ public class PaymentController {
 
             //Properties properties = propertyService.getPropertyByLandlord(user);
             Properties properties = propertiesRepository.findByPropertyID(propId);
-            TenantGroups tenantGroup=properties.getGroup();
-           //User leadTenant=tenantGroup.getLeadTenant();
+            TenantGroups tenantGroup = properties.getGroup();
+            //User leadTenant=tenantGroup.getLeadTenant();
             List<User> tenantGroupMembers = tenantGroupMembersRepository.findByGroup(tenantGroup);
 
             //TenantGroups tenantGroup=properties.getGroup();
@@ -172,7 +176,7 @@ public class PaymentController {
 
     @GetMapping("/getTenantsInfo/{tenantId}")
     @ApiOperation(value = "View selected Tenant info")
-    public User getTenant(@PathVariable("tenantId") int tenantId, @RequestHeader("Authorization") String authString)throws ValidationException {
+    public User getTenant(@PathVariable("tenantId") int tenantId, @RequestHeader("Authorization") String authString) throws ValidationException {
         try {
             User user = userPermissionService.loadUserByJWT(authString);
 
@@ -200,70 +204,73 @@ public class PaymentController {
     }
 
     @GetMapping("/viewPaymentsOnTenants")
-    @ApiOperation(value= "View Payments on Tenant side")
-    public List<PaymentRecord> viewPaymentsOnTenants(@RequestHeader("Authorization") String authString)throws ValidationException{
+    @ApiOperation(value = "View Payments on Tenant side")
+    public List<PaymentRecord> viewPaymentsOnTenants(@RequestHeader("Authorization") String authString) throws ValidationException {
         try {
             User user = userPermissionService.loadUserByJWT(authString);
             if (!userPermissionService.assertPermission(user, UserRoles.ROLE_TENANT)) {
                 return null;
             }
             return pendingPaymentService.getPaymentRecordByUser(user);
-        } catch (Error| NotFoundException e) {
+        } catch (Error | NotFoundException e) {
             System.out.println(e);
             return null;
         }
     }
 
-    @GetMapping("/viewPaymentsOnLandlord")
-    @ApiOperation(value= "View Payments on Landlord side")
-    public List<List<PaymentRecord>> viewPaymentsOnLandlord(@RequestHeader("Authorization") String authString)throws ValidationException{
+    @GetMapping("/viewPaymentsOnLandlord/{propId}")
+    @ApiOperation(value = "View Payments on Landlord side")
+    public List<PaymentRecord> viewPaymentsOnLandlord(@PathVariable("propId") int propId,@RequestHeader("Authorization") String authString) throws ValidationException {
         try {
             User user = userPermissionService.loadUserByJWT(authString);
             if (!userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
                 return null;
             }
+            /*
             List<List<PaymentRecord>> paymentRecord = new ArrayList<List<PaymentRecord>>();
             List<Properties> properties = propertyService.getPropertiesByLandlord(user);
             int numOfProperties = properties.size();
-            for(int i = 0; i < numOfProperties; i++){
+            for (int i = 0; i < numOfProperties; i++) {
                 Properties prop = properties.get(i);
                 paymentRecord.add(paymentRecordRepository.findByProperties(prop));
             }
-            return paymentRecord;
-        } catch (Error| NotFoundException e) {
+             */
+
+            Properties prop= propertiesRepository.findByPropertyID(propId);
+
+            return paymentRecordRepository.findByProperties(prop);
+
+        } catch (Error | NotFoundException e) {
             System.out.println(e);
             return null;
         }
     }
 
     @GetMapping("/{id}")
-    @ApiOperation(value= "Display Pending Payment Request")
+    @ApiOperation(value = "Display Pending Payment Request")
     public ArrayList<String> displayCharge(@PathVariable("id") int paymentRecordId, @RequestHeader("Authorization") String str) throws ValidationException {
         try {
             User tenant = userPermissionService.loadUserByJWT(str);
 
 
-            PaymentRecord paymentRecord= pendingPaymentService.getPaymentRecordById(paymentRecordId);
+            PaymentRecord paymentRecord = pendingPaymentService.getPaymentRecordById(paymentRecordId);
 
-            ArrayList<String>pendingPayment=new ArrayList<String>();
-            int payId= paymentRecord.getId();
-            PaymentType payTypeId=paymentRecord.getPaymentTypeId();
-            BigDecimal amount=paymentRecord.getPaymentAmount();
+            ArrayList<String> pendingPayment = new ArrayList<String>();
+            int payId = paymentRecord.getId();
+            PaymentType payTypeId = paymentRecord.getPaymentTypeId();
+            BigDecimal amount = paymentRecord.getPaymentAmount();
 
-            Date dueDate= paymentRecord.getPaymentDueDate();
-            DateFormat df = new SimpleDateFormat("MM dd, yyyy");
-
-
+            Date dueDate = paymentRecord.getPaymentDueDate();
+            DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 
 
-
-            String pay_id=String.valueOf(payId);
-            String paymentDescription= payTypeId.getpTypeDesc();
-            String a=amount.toString();
-            String dDate=df.format(dueDate);
+            String pay_id = String.valueOf(payId);
+            String paymentDescription = payTypeId.getpTypeDesc();
+            String a = amount.toString();
+            String dDate = df.format(dueDate);
 
             //Did unnecessary substring, do a.length-2
-            String a1=a.substring(0,a.length()-2);
+            String a1 = a.substring(0, a.length() - 2);
             //String a2=a.substring(0, a1.length()-1);
 
             pendingPayment.add(pay_id);
@@ -287,9 +294,8 @@ public class PaymentController {
     }
 
 
-
     @PostMapping("/create-charge/{id}")
-    @ApiOperation(value= "Complete Pending Payment Request")
+    @ApiOperation(value = "Complete Pending Payment Request")
     public Boolean createCharge(@PathVariable("id") int paymentRecordId, @RequestHeader("Authorization") String str, @RequestBody ChargeRequest req) throws StripeException {
         try {
             User tenant = userPermissionService.loadUserByJWT(str);
@@ -301,31 +307,51 @@ public class PaymentController {
 
             //took out tenant id for now  tenant,
             //int pId= Integer.parseInt(paymentRecordId);
-            PaymentRecord paymentRecord= pendingPaymentService.getPaymentRecordById(paymentRecordId);
-            Date paymentDate=paymentRecord.getPaymentDate();
+            PaymentRecord paymentRecord = pendingPaymentService.getPaymentRecordById(paymentRecordId);
+            Date paymentDate = paymentRecord.getPaymentDate();
 
-            if (paymentDate!=null){
+            Properties prop=paymentRecord.getProp();
+           // String propLocation=prop.get
+            User landLord=prop.getLandlord();
+
+            PaymentType paymentType =paymentRecord.getPaymentTypeId();
+            String paymentTypeDecription= paymentType.getpTypeDesc();
+
+
+
+            if (paymentDate != null) {
                 return false;
-            }
-            else {
+            } else {
                 String chargeId = stripeClient.createCharge(req.getName_card(), req.getEmail(), req.getCard_num(), req.getMonthNum(), req.getYearNum(), req.getCcv(), req.getFirstName(), req.getLastName(), req.getAddress(), req.getCity(), req.getState(), req.getZip(), req.getCountry(), req.getPhone(), paymentRecord);
 
                 String transferId = stripeClient.transferCharge(paymentRecord);
                 if (chargeId == null || transferId == null) {
                     //return "An error occurred while trying to create a charge.";
                     return false;
+                }else{
+                    String description="Your tenant" + " " + tenant.getFullname() + " " + "has fulfilled"+ " " +"their"+ " "+ paymentTypeDecription+ " " + "payment";
+                    Boolean notification= notificationService.createNotification(landLord, description, "PAYMENT", "");
+                    return notification;
                 }
 
+                /*
+                else {
+                    Boolean notification= notificationService.createNotification()
+                }
+*/
                 //return "Success! Your charge id is " + chargeId + " Your transaction id: " + transferId;
             }
-            return true;
+
+            //return true;
         } catch (Error | NotFoundException e) {
             System.out.println(e);
             return false;
             //return "error";
         }
     }
+
     @PostMapping("/create-landlord acct")
+    @ApiOperation(value = "Create Landlord's Stripe Account")
     public Boolean createLandAcct(@RequestBody StripeLandlordRequest req, @RequestHeader("Authorization") String str) throws StripeException {
         try {
             User landlord = userPermissionService.loadUserByJWT(str);
@@ -334,7 +360,7 @@ public class PaymentController {
                 //;
             }
             //listingService.createListingRequest(request,landlord);
-            String accountId = stripeClient.createLandlordAcct(req.getEmail(),landlord);
+            String accountId = stripeClient.createLandlordAcct(req.getEmail(), landlord);
 
             //return "Success! Your account has been created;
 
@@ -346,60 +372,83 @@ public class PaymentController {
         }
     }
 
-    @PostMapping("/create-payment request/{tenantId}")
-    @ApiOperation(value= "Create Pending Payment Request")
-    public Boolean createPaymentRequest(@PathVariable("tenantId") int tenantId,@RequestBody PendingPaymentRequest req, @RequestHeader("Authorization") String str) throws StripeException {
+    /*
+    @GetMapping("/check-stripe-acct")
+    @ApiOperation(value = "Checks Stripe Account")
+    public String checkStripeAcct(@RequestHeader("Authorization") String str) throws StripeException {
         try {
             User landlord = userPermissionService.loadUserByJWT(str);
+            if (!userPermissionService.assertPermission(landlord, UserRoles.ROLE_LANDLORD)) {
+                return "false";
+                //;
+            }
+            //listingService.createListingRequest(request,landlord);
+            LandlordAccounts landlordAccounts = landlordAccountsRepository.findByUser(landlord);
+            String stripeAcct = landlordAccounts.getStripeID();
+
+            if (stripeAcct != null) {
+                return "View Payments";
+            } else {
+                return "No Stripe Account found, please follow link to create a Stripe Account";
+            }
+
+            //return "Success! Your account has been created;
+
+            return stripeAcct;
+        } catch (Error | NotFoundException e) {
+            System.out.println(e);
+            return "false";
+            //return "error";
+        }
+    }
+    */
+
+    @GetMapping("/check-restriction")
+    @ApiOperation(value = "Checks Restriction on Stripe Account")
+    public String checkRestriction(@RequestHeader("Authorization") String str) throws StripeException {
+        try {
+            User landlord = userPermissionService.loadUserByJWT(str);
+            if (!userPermissionService.assertPermission(landlord, UserRoles.ROLE_LANDLORD)) {
+                return "false";
+                //;
+            }
+            LandlordAccounts landlordAccounts = landlordAccountsRepository.findByUser(landlord);
+            String stripeAcct = landlordAccounts.getStripeID();
+            String checkVerify = stripeClient.checkRestrictionAccount(stripeAcct);
+
+            return checkVerify;
+        } catch (Error | NotFoundException e) {
+            System.out.println(e);
+            return "false";
+        }
+    }
+
+
+    @PostMapping("/create-payment request/{tenantId}")
+    @ApiOperation(value = "Create Pending Payment Request")
+    public Boolean createPaymentRequest(@PathVariable("tenantId") int tenantId, @RequestBody PendingPaymentRequest req, @RequestHeader("Authorization") String str) throws StripeException {
+        try {
+            User landlord = userPermissionService.loadUserByJWT(str);
+            User tenant=userRepository.findById(tenantId);
             if (!userPermissionService.assertPermission(landlord, UserRoles.ROLE_LANDLORD)) {
                 return false;
                 //;
             }
             Boolean payRequest = pendingPaymentService.createPaymentRequest(req.getPropID(), tenantId, req.getAmount(), req.getPtype(), req.getDueDate());
-            if (payRequest==false){
+            if (payRequest == false) {
                 return false;
+            }else{
+                String description="Your landlord" + " " + landlord.getFullname() + " " + "has requested a payment";
+                Boolean notification= notificationService.createNotification(tenant, description, "PAYMENT", "");
+                return notification;
             }
-            return true;
+            //return true;
         } catch (Error | NotFoundException e) {
             System.out.println(e);
             return false;
         }
     }
-
-    /*
-    @PostMapping("/viewPendingPayments")
-    @ApiOperation(value = "View Pending Payments")
-    public List<PaymentRecord> viewPendingPayments(@RequestHeader("Authorization") String authString){
-        try {
-            User user = userPermissionService.loadUserByJWT(authString);
-            if (!userPermissionService.assertPermission(user, UserRoles.ROLE_TENANT) {
-                return null;
-            }
-
-        } catch (Error| NotFoundException e) {
-            System.out.println(e);
-            return null;
-        }
-    }
-
-     */
 }
-        /*
-        //Creates customer with card
-        String customerId = stripeClient.createCustomer(email, card_num, monthNum, yearNum, cvc);
-
-        if (customerId == null) {
-            return new PaymentResponse(false, "An error occurred while trying to create a customer.");
-        }
-*/
-        //checks charge
-
- /*  if (chargeId == null) {
-                return new PaymentResponse(false, "An error occurred while trying to create a charge.");
-            }
-
-            return new PaymentResponse(true, "Success! Your charge id is " + chargeId + " Your transaction id: " + transferId);
-        }*/
 
 
 
