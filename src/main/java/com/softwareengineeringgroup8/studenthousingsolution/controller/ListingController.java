@@ -110,16 +110,15 @@ public class ListingController{
         }
     }
 
-    @GetMapping("/{propertyID}")
+    @GetMapping("/view/{propertyid}")
     @ApiOperation(value="View Listing Data")
-    public Properties viewListingData(@PathVariable("propertyID") int propertyID, @RequestHeader("Authorization") String authString) {
+    public Properties viewListingData(@PathVariable("propertyid") int propertyid, @RequestHeader("Authorization") String authString) {
         try {
             User user = userPermissionService.loadUserByJWT(authString);
-            Properties property=propertyService.getById(propertyID);
+            Properties property=propertyService.getPropertyById(propertyid);
 
             if (userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
-
-                if (property.getLandlord().equals(user)) {
+                if (property.getLandlord().getId()==user.getId()) {
                     return property;
                 } else {
                     throw new ValidationException("User isn't a landlord for this property.");
