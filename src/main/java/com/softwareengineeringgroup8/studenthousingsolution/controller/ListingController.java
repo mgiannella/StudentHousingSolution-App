@@ -70,7 +70,18 @@ public class ListingController{
         try {
             User user = userPermissionService.loadUserByJWT(authString);
            List<Properties> props = propertyService.getPropertiesByLandlord(user);
-           int size = props.size();
+
+         /*  List<Properties> props = new ArrayList<>();
+
+           for (int i = 0; i<a.size();i++) {
+               if (a.get(i).getUnitNum()!=null) {
+                   int amenityid = a.get(i).getAmenities().getAmenityId();
+                   if (props.get(i).getAmenities())
+               }
+
+               props.add(a.get(i));
+           }
+*/
            return props;
 
         } catch (Error | NotFoundException e) {
@@ -175,20 +186,19 @@ public class ListingController{
 
 
     //rent
-    @PostMapping("/{propertyid}")
-    @ApiOperation(value = "Rent Out Property", notes="rent out property")
-    public Boolean rentToTenant(@PathVariable("propertyid") int propertyid, @RequestBody String username, @RequestHeader("Authorization") String authString) throws ValidationException {
+    @GetMapping("/listtenantgroups")
+    @ApiOperation(value = "List Tenant Groups for Lead Tenant", notes="List tenant Groups for lead tenant")
+    public List<TenantGroups> ListTenantGroups(@RequestParam String username, @RequestHeader("Authorization") String authString) throws ValidationException {
         try {
             User user = userPermissionService.loadUserByJWT(authString);
             if (!userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
-                return false;
+                return null;
             }
-            Properties property = propertyService.getById(propertyid);
-            listingService.rentOutListing(property,username);
-            return true;
+            return listingService.showTenantGroups(username);
+
         } catch (Error | NotFoundException e) {
             System.out.println(e);
-            return false;
+            return null;
         }
     }
 

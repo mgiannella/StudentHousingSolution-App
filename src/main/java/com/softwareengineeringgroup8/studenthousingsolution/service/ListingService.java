@@ -201,8 +201,6 @@ public class ListingService {
     }
 
 
-
-
     public void deleteProp(Properties property) {
         propRepository.delete(property);
         PropertyLocations location = property.getLocation();
@@ -213,22 +211,24 @@ public class ListingService {
         descRepository.delete(description);
     }
 
-    public void rentOutListing(Properties property, String username) {
+
+
+    public List<TenantGroups> showTenantGroups(String username) {
         User tenant = userRepository.findByUsername(username);
         if (tenant.getType().getUserTypeDesc().equals("Landlord")) {
             throw new ValidationException("User being rented to is a landlord. You can only rent out listings to tenants.");
         }
         List<TenantGroups> tenantGroups = tenantGroupMembersRepository.findTenantGroupByMember(tenant);
-
+        List<TenantGroups> leadOfTheseGroups = new ArrayList<>();
         if (!tenantGroups.isEmpty()) {
             for (int i = 0; i < tenantGroups.size(); i++) {
                 if (tenantGroups.get(i).getLeadTenant().equals(tenant)) {
-                    property.setGroup(tenantGroups.get(i));
-                    propRepository.save(property);
-                    return;
+                    leadOfTheseGroups.add(tenantGroups.get(i));
                 }
             }
+            return leadOfTheseGroups;
         }
+
         else {
             throw new ValidationException("No tenant groups found.");
         }
