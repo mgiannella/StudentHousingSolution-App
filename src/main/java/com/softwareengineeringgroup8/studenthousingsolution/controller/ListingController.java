@@ -294,18 +294,25 @@ public class ListingController{
             if (user == null) {
                 throw new ValidationException("User could be found.");
             }
+
             if (!userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
                 throw new ValidationException("User is not a landlord.");
             }
+            Properties prop = propertyService.getPropertyById(pid);
+            if (!prop.getLandlord().equals(user)) {
+                throw new ValidationException("User is not a landlord for this property.");
+            }
+
             TenantGroups tenantGroup = propertyService.getPropertyById(pid).getGroup();
             if (tenantGroup==null) {
                 throw new ValidationException("No tenant group residing at property.");
             }
 
-            Properties prop = propertyService.getPropertyById(pid);
-            if (!prop.getGroup().equals(tenantGroup)) {
+            if (groupid!=prop.getGroup().getId()) {
                 throw new ValidationException("Group you are trying to delete does not reside at this property");
             }
+
+
 
             prop.setGroup(null);
             propertiesRepository.save(prop);
