@@ -174,6 +174,26 @@ public class ListingController{
     }
 
 
+    //rent
+    @PostMapping("/{propertyid}")
+    @ApiOperation(value = "Rent Out Property", notes="rent out property")
+    public Boolean rentToTenant(@PathVariable("propertyid") int propertyid, @RequestBody String username, @RequestHeader("Authorization") String authString) throws ValidationException {
+        try {
+            User user = userPermissionService.loadUserByJWT(authString);
+            if (!userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
+                return false;
+            }
+            Properties property = propertyService.getById(propertyid);
+            listingService.rentOutListing(property,username);
+            return true;
+        } catch (Error | NotFoundException e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+
+
+
 
 
     @GetMapping("/test")

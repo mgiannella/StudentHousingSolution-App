@@ -40,6 +40,11 @@ public class ListingService {
     private UserRepository userRepository;
     @Autowired
     private HousingAgreementRepository agreementRepository;
+    @Autowired
+    private TenantGroupsRepository tenantGroupsRepository;
+    @Autowired
+    private TenantGroupMembersRepository tenantGroupMembersRepository;
+
 
 
 
@@ -48,9 +53,10 @@ public class ListingService {
              String latitude = request.getLatitude();
              String longitude = request.getLongitude();
 
-             String unitNum = request.getUnitNum();
+             List<String> unitNum = request.getUnitNum();
 
-             if (unitNum == null) { //not an apartment
+
+             if (unitNum.isEmpty()) { //not an apartment
                  if (locRepository.existsByLatitude(latitude) && locRepository.existsByLongitude(longitude)) {
                      throw new ValidationException("Address already exists.");
                  }
@@ -97,14 +103,27 @@ public class ListingService {
             String title=request.getTitle();
             List<PropertyPhotos> photos = new ArrayList<PropertyPhotos>();
 
-            Properties createProp = new Properties(landlord,title, createAmen, createDesc, createLocation, photos);
+            if (!unitNum.isEmpty()) {
+                for (int i = 0; i < unitNum.size(); i++) {
+                    Properties createProp = new Properties(landlord, title, createAmen, createDesc, createLocation, photos, unitNum.get(i));
+                    //photosRepository.save(photos);
+                    for (int j = 0; j < request.getPhotos().size(); j++) {
+                        createProp.getPhotos().add(new PropertyPhotos(j + 1, request.getPhotos().get(j), createProp));
+                    }
 
-            //photosRepository.save(photos);
-            for (int i=0; i<request.getPhotos().size(); i++) {
-                createProp.getPhotos().add(new PropertyPhotos(i+1,request.getPhotos().get(i),createProp));
+                    propRepository.save(createProp);
+                    return;
+                }
             }
 
-            propRepository.save(createProp);
+        Properties createProp = new Properties(landlord, title, createAmen, createDesc, createLocation, photos, null);
+        //photosRepository.save(photos);
+        for (int i = 0; i < request.getPhotos().size(); i++) {
+            createProp.getPhotos().add(new PropertyPhotos(i + 1, request.getPhotos().get(i), createProp));
+        }
+
+        propRepository.save(createProp);
+
     }
 
 
@@ -114,7 +133,6 @@ public class ListingService {
 
     int id = update.getId();
     Properties property=getPropertyById(id);
-
 
 
 
@@ -195,6 +213,37 @@ public class ListingService {
         descRepository.delete(description);
     }
 
+    public void rentOutListing(Properties property, String username) {
+        User tenant = userRepository.findByUsername(username);
+        if (tenant.getType().getUserTypeDesc().equals("Landlord")) {
+            throw new ValidationException("User being rented to is a landlord. You can only rent out listings to tenants.");
+        }
+        List<TenantGroups> tenantGroups = tenantGroupMembersRepository.findTenantGroupByMember(tenant);
+
+        if (!tenantGroups.isEmpty()) {
+            for (int i = 0; i < tenantGroups.size(); i++) {
+                if (tenantGroups.get(i).getLeadTenant().equals(tenant)) {
+                    property.setGroup(tenantGroups.get(i));
+                    propRepository.save(property);
+                    return;
+                }
+            }
+        }
+        else {
+            throw new ValidationException("No tenant groups found.");
+        }
+
+
+
+
+
+
+
+
+
+    }
+
+
 
     public Properties getPropertyById(int id) throws ValidationException {
         try{
@@ -207,15 +256,6 @@ public class ListingService {
 
 
 
-
-    public void updateLease() {
-        //if landlord wants to update his listing bc he got tenants, upload lease, etc..
-    }
-
-    public void uploadPhoto(ListingRequest request, MultipartFile[] photos ) {
-        //photos
-
-    }
 
     /*
     public Properties gePropertyById(int id) throws ValidationException {
