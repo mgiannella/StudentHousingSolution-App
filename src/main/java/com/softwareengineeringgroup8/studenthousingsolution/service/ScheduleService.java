@@ -67,6 +67,7 @@ public class ScheduleService {
             view.setEndDate(end);
             int weekStart = start.getDayOfYear();
             int weekEnd = end.getDayOfYear();
+
             if (weekEnd-weekStart!=6) {
                 throw new ValidationException("Date range invalid for viewing. Please only select a week.");
             }
