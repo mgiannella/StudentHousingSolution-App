@@ -33,6 +33,15 @@ public class NotificationService {
         }
     }
 
+    public int getAmtNotifs(User user) throws ValidationException {
+        try {
+            Timestamp currentDT = new Timestamp(Calendar.getInstance().getTime().getTime());
+            return notificationsRepository.getNotificationAmountByUserAndDate(user, currentDT);
+        }catch(Exception e){
+            throw new ValidationException("Could not get notification amount for user.");
+        }
+    }
+
 
     // How to use
     // user (self explanatory)
@@ -72,6 +81,7 @@ public class NotificationService {
             throw new ValidationException("Couldn't push notification to DB");
         }
     }
+
     // How to use:
     // Pass in user and id of notification to be deleted
     // will return true if successful or throw exception if it doesn't work

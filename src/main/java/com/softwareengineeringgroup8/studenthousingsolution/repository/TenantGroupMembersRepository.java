@@ -28,4 +28,5 @@ public interface TenantGroupMembersRepository extends JpaRepository<TenantGroupM
     List<TenantGroupMembers> findTenantGroupMembersByGroup(TenantGroups group);
 
 
+
 }

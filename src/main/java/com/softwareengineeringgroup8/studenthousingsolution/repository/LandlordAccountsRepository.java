@@ -14,4 +14,5 @@ public interface LandlordAccountsRepository extends JpaRepository<LandlordAccoun
     @Query("SELECT u FROM LandlordAccounts u WHERE u.landlord = ?1")
     LandlordAccounts findByUser(User landlord);
 
+
 }

@@ -145,6 +145,24 @@ public class TenantGroupsService {
         }
     }
 
+    public List<TenantGroupResponse> getGroupsByLeadTenant(User user) throws ValidationException {
+        try{
+            List<TenantGroups> groupList = tenantGroupsRepository.findGroupByLeadMember(user);
+            List<TenantGroupResponse> retList = new ArrayList<TenantGroupResponse>();
+            for(int i =0; i<groupList.size(); i++){
+                TenantGroupResponse temp = new TenantGroupResponse(groupList.get(i));
+                List<TenantGroupMembers> members = findByGroup(groupList.get(i));
+                for(int j = 0; j< members.size(); j++){
+                    temp.addMember(members.get(j));
+                }
+                retList.add(temp);
+            }
+            return retList;
+        }catch(Exception e){
+            throw new ValidationException("Couldn't get group by lead tenant");
+        }
+    }
+
     public List<TenantGroupResponse> getGroupAndMembersByTenant(User user) throws ValidationException {
         // search tenantgroups and find group
         try{
