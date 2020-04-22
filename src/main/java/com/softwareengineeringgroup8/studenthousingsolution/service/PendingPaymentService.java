@@ -51,7 +51,8 @@ public class PendingPaymentService {
 
         Date dDate=Date.valueOf(dueDate);
 
-        Double a = Double.valueOf(amount);
+        Float a = Float.valueOf(amount);
+        //Double am=Double.valueOf(a);
         Properties property = propertiesRepository.findByPropertyID(propID);
         User tenant = userRepository.findById(tenantID);
 

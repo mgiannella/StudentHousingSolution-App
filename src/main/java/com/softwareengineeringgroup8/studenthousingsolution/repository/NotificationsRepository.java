@@ -19,5 +19,8 @@ public interface NotificationsRepository extends JpaRepository<Notifications,Int
     @Query("SELECT n FROM Notifications n WHERE (n.user = ?1) and (n.alertDT < ?2)")
     List<Notifications> getNotificationsByUserAndDate(User u, Timestamp dt);
 
+    @Query("Select COUNT(n) FROM Notifications n WHERE (n.user=?1) and (n.alertDT < ?2)")
+    int getNotificationAmountByUserAndDate(User u, Timestamp dt);
+
     Notifications findById(int id);
 }

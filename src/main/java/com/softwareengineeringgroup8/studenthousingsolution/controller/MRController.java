@@ -45,8 +45,10 @@ public class MRController {
             int size = tenantGroupsList.size();
             for (int i = 0; i < size; i++) {
                 TenantGroups tg = tenantGroupsList.get(i);
-                Properties prop = propertyService.getPropertyByGroup(tg);
-                propertiesList.add(prop);
+                List<Properties> props = propertyService.getPropertiesByGroup(tg);
+                for(int j = 0; j < props.size(); j++) {
+                    propertiesList.add(props.get(j));
+                }
             }
             return propertiesList;
         } catch (Error | NotFoundException e) {
