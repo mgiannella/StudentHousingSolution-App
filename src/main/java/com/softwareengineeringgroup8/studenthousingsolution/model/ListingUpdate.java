@@ -62,13 +62,13 @@ public class ListingUpdate {
         public String city;
         public String state;
 
-        public List<String> unitNum;
+        public String unitNum;
 
-    public List<String> getUnitNum() {
+    public String getUnitNum() {
         return unitNum;
     }
 
-    public void setUnitNum(List<String> unitNum) {
+    public void setUnitNum(String unitNum) {
         this.unitNum = unitNum;
     }
 
@@ -254,7 +254,7 @@ public class ListingUpdate {
         public ListingUpdate(int id, String address, String city, String state, String zipCode, String title, String description, BigDecimal price, int numBedrooms, float numBathrooms, String renovationDate, boolean hasAC,
                               int parkingspots, boolean hasLaundry, boolean allowPets, boolean allowSmoking, boolean hasWater,
                               boolean hasGasElec, boolean isFurnished, boolean hasAppliances, boolean hasTrashPickup, boolean hasHeat,
-                              int sleeps, List<String> photos, List<String> unitNum, String lease, Date startDate, Date endDate) {
+                              int sleeps, List<String> photos, String unitNum) {
             this.id=id;
             this.address=address;
             this.city=city;
@@ -280,10 +280,10 @@ public class ListingUpdate {
             this.sleeps=sleeps;
             this.photos = photos;
             this.unitNum = unitNum;
-            this.lease = lease;
+            /*this.lease = lease;
             this.startDate = startDate;
             this.endDate = endDate;
-
+            */
         }
 
 

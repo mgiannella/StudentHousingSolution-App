@@ -174,7 +174,9 @@ public class ListingService {
 
       if (unitNum != null) { //if apartments
           List<Properties> props = propRepository.findByAmenityId(property.getAmenities().getAmenityId());
+          System.out.println(props.size());
           for (int i = 0; i<props.size();i++) {
+              props.get(i).setTitle(property.getTitle());
               List<PropertyPhotos> photos = props.get(i).getPhotos();
               int size = photos.size();
               for (int k = size; k < (update.getPhotos().size() + size); k++) {
@@ -183,8 +185,8 @@ public class ListingService {
                   j++;
               }
 
-              HousingAgreement lease = new HousingAgreement(props.get(i), update.getLease(), update.getStartDate(), update.getEndDate());
-              agreementRepository.save(lease);
+             // HousingAgreement lease = new HousingAgreement(props.get(i), update.getLease(), update.getStartDate(), update.getEndDate());
+              //agreementRepository.save(lease);
               propRepository.save(props.get(i));
           }
           return;
@@ -207,8 +209,8 @@ public class ListingService {
             createProp.getPhotos().add(new PropertyPhotos(i+1,request.getPhotos().get(i),createProp));
         }
     */
-       HousingAgreement lease = new HousingAgreement(property, update.getLease(), update.getStartDate(), update.getEndDate());
-       agreementRepository.save(lease);
+       //HousingAgreement lease = new HousingAgreement(property, update.getLease(), update.getStartDate(), update.getEndDate());
+       //agreementRepository.save(lease);
 
       propRepository.save(property);
 
