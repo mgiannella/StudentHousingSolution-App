@@ -61,7 +61,7 @@ public class Properties {
     @JsonView(PropertyView.Search.class)
     private Timestamp uploadTS;
 
-    @Column(name="unitnum", insertable=false)
+    @Column(name="unitnum")
     @JsonView(PropertyView.Search.class)
     private String unitNum;
 
@@ -69,14 +69,14 @@ public class Properties {
 
     }
 
-    public Properties(User landlord, String title, Amenities amenities, PropertyDescriptions description, PropertyLocations location, List<PropertyPhotos> photos) {
-
+    public Properties(User landlord, String title, Amenities amenities, PropertyDescriptions description, PropertyLocations location, List<PropertyPhotos> photos, String unitNum) {
         this.landlord = landlord;
         this.title = title;
         this.amenities = amenities;
         this.description = description;
         this.location = location;
         this.photos = photos;
+        this.unitNum = unitNum;
     }
 
     public int getId() {return id;}
