@@ -260,6 +260,7 @@ public class ListingController{
     }
 
 
+
     @GetMapping("/rent/{propertyid}")
     @ApiOperation(value = "View Tenant Group on property", notes="View tenant group on property")
     public TenantGroups viewRentTenant(@PathVariable("propertyid") int propertyid, @RequestHeader("Authorization") String authString) throws ValidationException {
@@ -284,6 +285,7 @@ public class ListingController{
             return null;
         }
     }
+
 
 
     @PostMapping("/rent/{pid}")
