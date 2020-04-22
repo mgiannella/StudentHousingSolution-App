@@ -72,7 +72,6 @@ public class ListingController{
     }
 
 
-
     @GetMapping("/viewLandlordProperties")
     @ApiOperation(value="View Landlord Properties",notes="View list of properties that landlord owns")
     public List<Properties> listProperties(@RequestHeader("Authorization") String authString) {
