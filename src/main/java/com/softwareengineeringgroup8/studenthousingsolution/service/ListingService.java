@@ -135,8 +135,6 @@ public class ListingService {
     Properties property=getPropertyById(id);
 
 
-
-
     property.getLocation().setAddress(update.getAddress());
     property.getLocation().setCity(update.getCity());
     property.getLocation().setState(update.getState());
@@ -171,10 +169,13 @@ public class ListingService {
 
       //property.setunitnum(update.getunitnum());
 
-
       property.setTitle(update.getTitle());
 
+      String unitNum = property.getUnitNum();
+      /* if (unitNum != null) {
 
+      }
+*/
       //property.getPhotos().add(new PropertyPhotos(2,update.getPhotos(),property));
         List<PropertyPhotos> photos = property.getPhotos();
         int size = photos.size();
@@ -232,15 +233,6 @@ public class ListingService {
         else {
             throw new ValidationException("No tenant groups found.");
         }
-
-
-
-
-
-
-
-
-
     }
 
 

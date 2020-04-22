@@ -6,6 +6,8 @@ import com.softwareengineeringgroup8.studenthousingsolution.exceptions.Validatio
 import com.softwareengineeringgroup8.studenthousingsolution.model.*;
 
 
+import com.softwareengineeringgroup8.studenthousingsolution.repository.PropertiesRepository;
+import com.softwareengineeringgroup8.studenthousingsolution.repository.TenantGroupsRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.service.ListingService;
 import com.softwareengineeringgroup8.studenthousingsolution.service.*;
 import com.softwareengineeringgroup8.studenthousingsolution.service.UserPermissionService;
@@ -46,6 +48,13 @@ public class ListingController{
     @Autowired
     private HousingAgreementService agreementService;
 
+    @Autowired
+    private TenantGroupsService tenantGroupsService;
+
+    @Autowired
+    private PropertiesRepository propertiesRepository;
+
+
 
     @GetMapping("/viewLease/{propertyID}")
     @ApiOperation(value="View Lease")
@@ -70,18 +79,6 @@ public class ListingController{
         try {
             User user = userPermissionService.loadUserByJWT(authString);
            List<Properties> props = propertyService.getPropertiesByLandlord(user);
-
-         /*  List<Properties> props = new ArrayList<>();
-
-           for (int i = 0; i<a.size();i++) {
-               if (a.get(i).getUnitNum()!=null) {
-                   int amenityid = a.get(i).getAmenities().getAmenityId();
-                   if (props.get(i).getAmenities())
-               }
-
-               props.add(a.get(i));
-           }
-*/
            return props;
 
         } catch (Error | NotFoundException e) {
@@ -199,6 +196,27 @@ public class ListingController{
         } catch (Error | NotFoundException e) {
             System.out.println(e);
             return null;
+        }
+    }
+
+    //rent
+    @PostMapping("/{propertyid}")
+    @ApiOperation(value = "Rent Listing", notes="Rent Listing")
+    public Boolean rentOutListing(@PathVariable("propertyid") int propertyid, @RequestBody int groupid, @RequestHeader("Authorization") String authString) throws ValidationException {
+        try {
+            User user = userPermissionService.loadUserByJWT(authString);
+            if (!userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
+                return false;
+            }
+                Properties property = propertyService.getById(propertyid);
+                TenantGroups group = tenantGroupsService.findById(groupid);
+                property.setGroup(group);
+                propertiesRepository.save(property);
+                return true;
+
+        } catch (Error | NotFoundException e) {
+            System.out.println(e);
+            return false;
         }
     }
 

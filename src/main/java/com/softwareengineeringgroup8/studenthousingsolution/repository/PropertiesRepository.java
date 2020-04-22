@@ -37,6 +37,9 @@ public interface PropertiesRepository extends JpaRepository<Properties, Integer>
     @Query("Select p FROM Properties p WHERE p.group = ?1")
     List<Properties> findByTenantGroup(TenantGroups tg);
 
+  //  @Query("Select p FROM Properties p WHERE p.amenities.amenityid = ?1")
+  //  List<Properties> findByAmenityId(int id);
+
 
     @Query("SELECT p FROM Properties p LEFT JOIN" +
             " Properties p2 ON p.id > p2.id AND p.amenities = p2.amenities " +
