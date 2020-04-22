@@ -54,6 +54,8 @@ public class ListingController{
     @Autowired
     private PropertiesRepository propertiesRepository;
 
+    @Autowired
+    private NotificationService notificationService;
 
 
     @GetMapping("/viewLease/{propertyID}")
@@ -78,6 +80,10 @@ public class ListingController{
     public List<Properties> listProperties(@RequestHeader("Authorization") String authString) {
         try {
             User landlord = userPermissionService.loadUserByJWT(authString);
+            if (landlord == null) {
+                throw new ValidationException("User could be found.");
+
+            }
             if (!userPermissionService.assertPermission(landlord, UserRoles.ROLE_LANDLORD)) {
                 throw new ValidationException("User is not a landlord");
             }
@@ -97,6 +103,11 @@ public class ListingController{
     public Boolean newListing(@RequestBody ListingRequest request, @RequestHeader("Authorization") String str) throws ValidationException {
         try {
             User landlord = userPermissionService.loadUserByJWT(str);
+            if (landlord == null) {
+                throw new ValidationException("User could be found.");
+
+            }
+
             if (!userPermissionService.assertPermission(landlord, UserRoles.ROLE_LANDLORD)) {
                 throw new ValidationException("User is not a landlord");
             }
@@ -115,6 +126,11 @@ public class ListingController{
     public Properties viewListingData(@PathVariable("propertyid") int propertyid, @RequestHeader("Authorization") String authString) {
         try {
             User user = userPermissionService.loadUserByJWT(authString);
+            if (user == null) {
+                throw new ValidationException("User could be found.");
+
+            }
+
             Properties property=propertyService.getPropertyById(propertyid);
 
             if (userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
@@ -141,6 +157,10 @@ public class ListingController{
     public Boolean updateRequest(@RequestBody ListingUpdate update, @RequestHeader("Authorization") String authString) throws ValidationException {
         try {
             User user = userPermissionService.loadUserByJWT(authString);
+            if (user == null) {
+                throw new ValidationException("User could be found.");
+
+            }
             if (!userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
                 return false;
             }
@@ -158,6 +178,10 @@ public class ListingController{
     public Boolean deleteListing(@PathVariable("deleteID") int deleteID, @RequestHeader("Authorization") String authString) throws ValidationException {
         try {
             User user = userPermissionService.loadUserByJWT(authString);
+            if (user == null) {
+                throw new ValidationException("User could be found.");
+
+            }
             Properties property=propertyService.getById(deleteID);
 
             if (userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
@@ -186,6 +210,10 @@ public class ListingController{
     public List<TenantGroups> ListTenantGroups(@RequestParam String username, @RequestHeader("Authorization") String authString) throws ValidationException {
         try {
             User user = userPermissionService.loadUserByJWT(authString);
+            if (user == null) {
+                throw new ValidationException("User could be found.");
+
+            }
             if (!userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
                 return null;
             }
@@ -203,6 +231,10 @@ public class ListingController{
     public Boolean rentOutListing(@PathVariable("propertyid") int propertyid, @RequestBody int groupid, @RequestHeader("Authorization") String authString) throws ValidationException {
         try {
             User user = userPermissionService.loadUserByJWT(authString);
+            if (user == null) {
+                throw new ValidationException("User could be found.");
+
+            }
             if (!userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
                 return false;
             }
@@ -210,7 +242,13 @@ public class ListingController{
                 TenantGroups group = tenantGroupsService.findById(groupid);
                 property.setGroup(group);
                 propertiesRepository.save(property);
-                return true;
+
+
+                notificationService.createNotification(user, "You have rented your property " + property.getLocation().getAddress() + " to " + group.getName() + ".", "GENERAL", "");
+                notificationService.createNotification(group.getLeadTenant(), "Your group has now rented " + property.getLocation().getAddress() + ".", "GENERAL", "");
+
+
+            return true;
 
         } catch (Error | NotFoundException e) {
             System.out.println(e);

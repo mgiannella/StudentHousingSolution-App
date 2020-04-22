@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
 import javax.validation.Valid;
+import javax.validation.Validation;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -66,6 +67,11 @@ public class ScheduleController{
     public ScheduleView landlordViewSchedule(@RequestParam String viewStart,@RequestParam String viewEnd, @RequestHeader("Authorization") String str) throws ValidationException {
         try {
             User landlord = userPermissionService.loadUserByJWT(str);
+            if (landlord == null) {
+                throw new ValidationException("User could be found.");
+
+            }
+
             if (!userPermissionService.assertPermission(landlord, UserRoles.ROLE_LANDLORD)) {
                 throw new ValidationException("You are not a landlord.");
             }
@@ -91,9 +97,14 @@ public class ScheduleController{
     public Boolean newSchedule(@RequestBody ScheduleRequest request, @RequestHeader("Authorization") String str) throws ValidationException {
         try {
             User landlord = userPermissionService.loadUserByJWT(str);
-            if (!userPermissionService.assertPermission(landlord, UserRoles.ROLE_LANDLORD)) {
-                return false;
+            if (landlord == null) {
+                throw new ValidationException("User could be found.");
+
             }
+            if (!userPermissionService.assertPermission(landlord, UserRoles.ROLE_LANDLORD)) {
+                throw new ValidationException("You aren't a landlord");
+            }
+
             scheduleService.createSchedule(request,landlord);
             //test();
             return true;
@@ -120,6 +131,10 @@ public class ScheduleController{
     public ScheduleTenantTimes listTimes(@RequestHeader("Authorization") String str, @PathVariable("landlordid") int landlordid) throws ValidationException {
         try {
             User tenant = userPermissionService.loadUserByJWT(str);
+            if (tenant == null) {
+                throw new ValidationException("User could be found.");
+
+            }
             if (!userPermissionService.assertPermission(tenant, UserRoles.ROLE_TENANT)) {
                 throw new ValidationException("You are not a tenant.");
             }
@@ -150,6 +165,11 @@ public class ScheduleController{
     public Boolean makeBooking(@RequestBody ScheduleBooking booking, @RequestHeader("Authorization") String str) throws ValidationException {
         try {
             User tenant = userPermissionService.loadUserByJWT(str);
+            if (tenant == null) {
+                throw new ValidationException("User could be found.");
+
+            }
+
             if (!userPermissionService.assertPermission(tenant, UserRoles.ROLE_TENANT)) {
                 return false;
             }
