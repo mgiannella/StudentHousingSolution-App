@@ -11,6 +11,8 @@ public class TenantGroupResponse implements Serializable {
 
     private List<TenantGroupMembers> members;
 
+    private Properties prop;
+
     public TenantGroupResponse(){
 
     }
@@ -35,6 +37,10 @@ public class TenantGroupResponse implements Serializable {
     public void setGroup(TenantGroups group){
         this.group = group;
     }
+
+    public Properties getProp(){return this.prop;}
+
+    public void setProp(Properties prop){this.prop = prop;}
 
     @Override
     public boolean equals(Object o) {

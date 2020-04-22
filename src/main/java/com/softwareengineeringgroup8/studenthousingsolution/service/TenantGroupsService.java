@@ -152,6 +152,7 @@ public class TenantGroupsService {
             for(int i =0; i<groupList.size(); i++){
                 TenantGroupResponse temp = new TenantGroupResponse(groupList.get(i));
                 List<TenantGroupMembers> members = findByGroup(groupList.get(i));
+                temp.setProp(propertyService.getPropertyByGroup(temp.getGroup()));
                 for(int j = 0; j< members.size(); j++){
                     temp.addMember(members.get(j));
                 }
@@ -171,6 +172,7 @@ public class TenantGroupsService {
             for(int i =0; i<groupList.size(); i++){
                 TenantGroupResponse temp = new TenantGroupResponse(groupList.get(i));
                 List<TenantGroupMembers> members = findByGroup(groupList.get(i));
+                temp.setProp(propertyService.getPropertyByGroup(temp.getGroup()));
                 for(int j = 0; j< members.size(); j++){
                     temp.addMember(members.get(j));
                 }
