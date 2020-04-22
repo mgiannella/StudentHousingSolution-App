@@ -296,11 +296,11 @@ public class PaymentController {
 
     @PostMapping("/create-charge/{id}")
     @ApiOperation(value = "Complete Pending Payment Request")
-    public Boolean createCharge(@PathVariable("id") int paymentRecordId, @RequestHeader("Authorization") String str, @RequestBody ChargeRequest req) throws StripeException {
+    public String createCharge(@PathVariable("id") int paymentRecordId, @RequestHeader("Authorization") String str, @RequestBody ChargeRequest req) throws StripeException {
         try {
             User tenant = userPermissionService.loadUserByJWT(str);
             if (!userPermissionService.assertPermission(tenant, UserRoles.ROLE_TENANT)) {
-                return false;
+                return "false";
                 //;
             }
             //listingService.createListingRequest(request,landlord);
@@ -320,19 +320,27 @@ public class PaymentController {
 
 
             if (paymentDate != null) {
-                return false;
+                return "false";
             } else {
                 String chargeId = stripeClient.createCharge(req.getName_card(), req.getEmail(), req.getCard_num(), req.getMonthNum(), req.getYearNum(), req.getCcv(), req.getFirstName(), req.getLastName(), req.getAddress(), req.getCity(), req.getState(), req.getZip(), req.getCountry(), req.getPhone(), paymentRecord);
 
+                Charge charge =Charge.retrieve(chargeId);
+                String chargeURL=charge.getReceiptUrl();
                 String transferId = stripeClient.transferCharge(paymentRecord);
                 if (chargeId == null || transferId == null) {
                     //return "An error occurred while trying to create a charge.";
-                    return false;
+                    return "false";
                 }else{
                     String description="Your tenant" + " " + tenant.getFullname() + " " + "has fulfilled"+ " " +"their"+ " "+ paymentTypeDecription+ " " + "payment";
                     Boolean notification= notificationService.createNotification(landLord, description, "PAYMENT", "");
-                    return notification;
-                }
+                    //return notification;
+            /*
+                    if (notification==false){
+                        return "A notification cannot be sent";
+                    }
+            */
+                    return chargeURL;
+            }
 
                 /*
                 else {
@@ -345,7 +353,7 @@ public class PaymentController {
             //return true;
         } catch (Error | NotFoundException e) {
             System.out.println(e);
-            return false;
+            return "false";
             //return "error";
         }
     }
