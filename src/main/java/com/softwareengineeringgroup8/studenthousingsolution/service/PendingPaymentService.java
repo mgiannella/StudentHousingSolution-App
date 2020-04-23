@@ -57,7 +57,7 @@ public class PendingPaymentService {
         User tenant = userRepository.findById(tenantID);
 
 
-        PaymentRecord paymentRecord = new PaymentRecord(null, property, tenant, paymentTypeRepository.findBypTypeDesc(ptype), new BigDecimal(a),dDate);
+        PaymentRecord paymentRecord = new PaymentRecord(null, property, tenant, paymentTypeRepository.findBypTypeDesc(ptype), new BigDecimal(a),dDate,null);
         paymentRecordRepository.save(paymentRecord);
 
         if (paymentRecord==null){
