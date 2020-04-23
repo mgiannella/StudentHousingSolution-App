@@ -406,7 +406,7 @@ public class PaymentController {
             if(accountId==null){
                 return false;
             }
-            
+
             return true;
         } catch (Error | NotFoundException e) {
             System.out.println(e);

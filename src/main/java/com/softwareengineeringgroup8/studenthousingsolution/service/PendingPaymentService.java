@@ -51,13 +51,13 @@ public class PendingPaymentService {
 
         Date dDate=Date.valueOf(dueDate);
 
-        Float a = Float.valueOf(amount);
+        //Float a = Float.valueOf(amount);
         //Double am=Double.valueOf(a);
         Properties property = propertiesRepository.findByPropertyID(propID);
         User tenant = userRepository.findById(tenantID);
 
 
-        PaymentRecord paymentRecord = new PaymentRecord(null, property, tenant, paymentTypeRepository.findBypTypeDesc(ptype), new BigDecimal(a),dDate,null);
+        PaymentRecord paymentRecord = new PaymentRecord(null, property, tenant, paymentTypeRepository.findBypTypeDesc(ptype), new BigDecimal(amount),dDate,null);
         paymentRecordRepository.save(paymentRecord);
 
         if (paymentRecord==null){
