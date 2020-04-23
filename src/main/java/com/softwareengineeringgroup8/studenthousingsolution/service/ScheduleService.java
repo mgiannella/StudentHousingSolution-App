@@ -142,29 +142,7 @@ public class ScheduleService {
               }
              scheduleRepository.save(new Schedule(landlord,null,meetingTimes.get(i),null));
          }
-
-
-         /*
-        List<Schedule> LLSched = new ArrayList<Schedule>();
-        for (int i=0;i<meetingTimes.size();i++) {
-            if (scheduleRepository.existsByTimeLandlordTenant(meetingTimes.get(i)) don't add this time bc its a booking) {
-                continue;
-                }
         }
-        */
-
-
-
-
-
-
-
-        }
-
-
-
-
-
 
 
     public ScheduleTenantTimes ListTimes(User landlord) {
