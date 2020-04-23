@@ -1,3 +1,7 @@
+//written by: Rishi Shah
+//tested by: Rishi Shah
+//debugged by: Rishi Shah
+
 package com.softwareengineeringgroup8.studenthousingsolution.model;
 
 import io.swagger.annotations.ApiModelProperty;

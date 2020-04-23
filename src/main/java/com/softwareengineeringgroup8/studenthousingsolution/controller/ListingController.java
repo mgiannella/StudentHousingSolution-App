@@ -1,3 +1,7 @@
+//written by: Rishi Shah
+//tested by: Rishi Shah
+//debugged by: Rishi Shah
+
 package com.softwareengineeringgroup8.studenthousingsolution.controller;
 
 
@@ -267,7 +271,7 @@ public class ListingController{
 
     @GetMapping("/rent/{propertyid}")
     @ApiOperation(value = "View Tenant Group on property", notes="View tenant group on property")
-    public TenantGroups viewRentTenant(@PathVariable("propertyid") int propertyid, @RequestHeader("Authorization") String authString) throws ValidationException {
+    public TenantGroupResponse viewRentTenant(@PathVariable("propertyid") int propertyid, @RequestHeader("Authorization") String authString) throws ValidationException {
         try {
             User user = userPermissionService.loadUserByJWT(authString);
             if (user == null) {
@@ -277,12 +281,20 @@ public class ListingController{
                 throw new ValidationException("User is not a landlord.");
             }
 
+
             TenantGroups tenantGroup = propertyService.getPropertyById(propertyid).getGroup();
             if (tenantGroup==null) {
                 throw new ValidationException("No tenant group residing at property.");
             }
+            List<TenantGroupResponse> response = tenantGroupsService.getGroupsByLeadTenant(tenantGroup.getLeadTenant());
+            for (int i = 0; i<response.size();i++) {
+                if (tenantGroup.getId()==response.get(i).getGroup().getId()) {
+                    return response.get(i);
+                }
+            }
 
-            return tenantGroup;
+
+            return null;
 
         } catch (Error | NotFoundException e) {
             System.out.println(e);
