@@ -37,13 +37,24 @@ public class ReviewsService {
 
     public Boolean createReview(String reviewDescription, float cleanlinessRating, float securityRating, float communicationRating, float locationRating, float totalRating, User tenant, int propID) throws Exception{
 
+        Properties property= propertiesRepository.findByPropertyID(propID);
+
+        List<Reviews>r=reviewsRepository.findByPropAndTenant(property,tenant);
+
+        if(r.size()!=0){
+            return false;
+        }
+
+
+
         String clR= String.valueOf(cleanlinessRating);
         String sR= String.valueOf(securityRating);
         String cR= String.valueOf(communicationRating);
         String lR= String.valueOf(locationRating);
         String tR= String.valueOf(totalRating);
-// cannot be null nor greater than 5
+
         try {
+            // cannot be null nor greater than 5
 
             if (clR == null || sR == null || cR == null || lR == null || tR == null) {
                 return false;
@@ -57,7 +68,7 @@ public class ReviewsService {
 
         }
 
-        Properties property= propertiesRepository.findByPropertyID(propID);
+
 
         Reviews reviews = new Reviews(property, tenant,reviewDescription, cleanlinessRating, securityRating, communicationRating,  locationRating,  totalRating );
         reviewsRepository.save(reviews);
