@@ -175,14 +175,14 @@ public class StripeClient {
         }
 
         if ((checkCardPayments.equals("inactive")) & (checkTransfers.equals("inactive"))) {
-            return"Your Account is Restricted. An email has been sent containing a link, please click link to add and verify additional information.";
+            return"Your Payment Account is Restricted.";
         } else if ((checkCardPayments.equals("pending")) & (checkTransfers.equals("pending"))) {
             return"Your Account is pending, please wait one-two business days for verification.";
         } else if ((checkCardPayments.equals("active")) & (checkTransfers.equals("active"))) {
-            return "Your Account is now active";
+            return "Congratulations, your Account is now active!";
         }
         else{
-            return "There is an error in your account";
+            return "There is an error in your account. Please contact customer service.";
         }
 
 
