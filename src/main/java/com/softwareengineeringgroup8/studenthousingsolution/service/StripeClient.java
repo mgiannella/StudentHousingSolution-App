@@ -10,7 +10,23 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
 import com.stripe.model.Customer;
 import com.stripe.model.Token;
-import com.stripe.model.*;
+//import com.stripe.model.*;
+import com.stripe.model.Account;
+import com.stripe.model.Account.Capabilities;
+import com.stripe.model.AccountLink;
+import com.stripe.model.Charge;
+import com.stripe.model.Customer;
+import com.stripe.model.Address;
+import com.stripe.model.BankAccount;
+import com.stripe.model.Card;
+import com.stripe.model.CustomerCollection;
+import com.stripe.model.ExternalAccountCollection;
+import com.stripe.model.PaymentIntent;
+import com.stripe.model.PaymentSourceCollection;
+import com.stripe.model.StripeObject;
+import com.stripe.model.Token;
+import com.stripe.model.Transfer;
+import com.stripe.param.AccountCreateParams;
 
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -54,11 +70,13 @@ public class StripeClient {
 
 
 
-    public String createLandlordAcct(String email, User landlord) throws StripeException {
+    public String createLandlordAcct(String email, User landlord, String account_holder_name, String routing_number, String account_number ) throws StripeException {
 
         String accountId = null;
         //creating a landlord account
         try {
+
+            // Creates the account
             ArrayList<Object> requestedCapabilities =new ArrayList<>();
             requestedCapabilities.add("card_payments");
             requestedCapabilities.add("transfers");
@@ -85,6 +103,28 @@ public class StripeClient {
 
             acct.update(parameter);
 
+            //Connects a bank account
+            Account a= Account.retrieve(accountId);
+            Map<String, Object> tokenParam = new HashMap<>();
+            Map <String, Object> bankAccountParam=new HashMap<>();
+
+            bankAccountParam.put("country", "US");
+            bankAccountParam.put("currency", "usd");
+            bankAccountParam.put("account_holder_name", account_holder_name);
+            bankAccountParam.put("account_holder_type", "individual");
+            bankAccountParam.put("routing_number", routing_number );
+            bankAccountParam.put("account_number", account_number);
+            tokenParam.put("bank_account", bankAccountParam);
+            Token token = Token.create(tokenParam);
+
+            String bankToken=token.getId();
+
+            Map<String, Object> acctParams = new HashMap<>();
+            acctParams.put("external_account", bankToken);
+
+            BankAccount bankAccount = (BankAccount) a.getExternalAccounts().create(acctParams);
+
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -96,6 +136,28 @@ public class StripeClient {
         return accountId;
     }
 
+    public String verificationLink(String acctID) throws StripeException {
+        String verification_link=null;
+
+        //URL link verification for personal information
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("account", acctID);
+            params.put("failure_url", "https://example.com/failure");
+            params.put("success_url", "localhost:3000/dashboard#");
+            params.put("type", "custom_account_verification");
+
+            AccountLink accountLink = AccountLink.create(params);
+
+            verification_link=accountLink.getUrl();
+
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return verification_link;
+    }
 
     public String checkRestrictionAccount(String acctID) throws StripeException {
         Account account = Account.retrieve(acctID);

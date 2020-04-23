@@ -386,6 +386,7 @@ public class PaymentController {
         }
     }
 
+
     @PostMapping("/create-landlord acct")
     @ApiOperation(value = "Create Landlord's Stripe Account")
     public Boolean createLandAcct(@RequestBody StripeLandlordRequest req, @RequestHeader("Authorization") String str) throws StripeException {
@@ -396,7 +397,7 @@ public class PaymentController {
                 //;
             }
             //listingService.createListingRequest(request,landlord);
-            String accountId = stripeClient.createLandlordAcct(req.getEmail(), landlord);
+            String accountId = stripeClient.createLandlordAcct(req.getEmail(), landlord, req.getAccount_holder_name(), req.getRouting_number(),req.getAccount_number());
 
             //return "Success! Your account has been created;
 
@@ -405,6 +406,27 @@ public class PaymentController {
             System.out.println(e);
             return false;
             //return "error";
+        }
+    }
+
+    @GetMapping("/get-verification-link")
+    @ApiOperation(value="Prints out verification link")
+    public String getVerificationLink(@RequestHeader("Authorization") String str)throws StripeException{
+        try {
+            User landlord = userPermissionService.loadUserByJWT(str);
+            if (!userPermissionService.assertPermission(landlord, UserRoles.ROLE_LANDLORD)) {
+                return null;
+            }
+
+            LandlordAccounts landlordAccounts = landlordAccountsRepository.findByUser(landlord);
+            String stripeAcct = landlordAccounts.getStripeID();
+
+            String updateURL=stripeClient.verificationLink(stripeAcct);
+
+            return updateURL;
+        } catch (Error | NotFoundException e) {
+            System.out.println(e);
+            return "false";
         }
     }
 
