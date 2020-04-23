@@ -20,6 +20,7 @@ import com.stripe.model.Charge;
 import com.stripe.model.Token;
 
 import javassist.NotFoundException;
+import org.hibernate.type.descriptor.sql.VarcharTypeDescriptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -470,7 +471,7 @@ public class PaymentController {
                 return "false";
                 //;
             }
-            LandlordAccounts landlordAccounts = landlordAccountsRepository.findByUser(landlord);
+            LandlordAccounts landlordAccounts = stripeClient.getByUser(landlord);
             String stripeAcct = landlordAccounts.getStripeID();
             String checkVerify = stripeClient.checkRestrictionAccount(stripeAcct);
 

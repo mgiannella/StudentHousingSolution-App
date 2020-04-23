@@ -144,7 +144,7 @@ public class StripeClient {
             Map<String, Object> params = new HashMap<>();
             params.put("account", acctID);
             params.put("failure_url", "https://example.com/failure");
-            params.put("success_url", "localhost:3000/dashboard#");
+            params.put("success_url", "https://example.com/success");
             params.put("type", "custom_account_verification");
 
             AccountLink accountLink = AccountLink.create(params);
@@ -161,29 +161,32 @@ public class StripeClient {
 
     public String checkRestrictionAccount(String acctID) throws StripeException {
         Account account = Account.retrieve(acctID);
+        Account.Capabilities a = account.getCapabilities();
+        String checkCardPayments=null;
+        String checkTransfers = null;
 
-        String checkCardPayments = null;
-        String checkTransfers=null;
 
-        try {
-            Account.Capabilities a = account.getCapabilities();
-            checkTransfers = a.getTransfers();
+        try{
             checkCardPayments = a.getCardPayments();
+            checkTransfers = a.getTransfers();
 
-
-
-
-        } catch (Exception ex) {
+        }catch(Exception ex) {
             ex.printStackTrace();
         }
 
-        if (checkCardPayments == "inactive" || checkTransfers == "inactive") {
-            return "Your Account is Restricted. An email has been sent containing a link, please click link to add and verify additional information.";
-        } else if (checkCardPayments == "pending" || checkTransfers == "pending") {
+        if ((checkCardPayments.equals("inactive")) & (checkTransfers.equals("inactive"))) {
+            return"Your Account is Restricted. An email has been sent containing a link, please click link to add and verify additional information.";
+        } else if ((checkCardPayments.equals("pending")) & (checkTransfers.equals("pending"))) {
             return"Your Account is pending, please wait one-two business days for verification.";
-        } else {
+        } else if ((checkCardPayments.equals("active")) & (checkTransfers.equals("active"))) {
             return "Your Account is now active";
         }
+        else{
+            return "There is an error in your account";
+        }
+
+
+
 
     }
 
@@ -336,10 +339,9 @@ public class StripeClient {
 
     }
 
-       /* public String bankCharge(String email, String firstName, String lastName, String address, String city, String state, String zip, String country, String phone, User tenant,String name_bank, String account_num, String routing_num) throws StripeException {
-         return null;
-        }*/
-
+      public LandlordAccounts getByUser(User landLord){
+        return landlordAccountsRepository.findByUser(landLord);
+      }
 
 }
 
