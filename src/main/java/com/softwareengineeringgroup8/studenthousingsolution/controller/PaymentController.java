@@ -49,7 +49,6 @@ import java.util.List;
 
 @RestController
 @ApiModel(description="Handles all Charges made in Checkout page")
-@CrossOrigin(origins="http://localhost:3000")
 @RequestMapping("/payment")
 public class PaymentController {
 /*
