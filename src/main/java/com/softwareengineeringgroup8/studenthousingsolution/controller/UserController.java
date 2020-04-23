@@ -100,14 +100,16 @@ public class UserController {
 
     @PutMapping("/{id}/password")
     @ApiOperation(value="Change Password", notes="Updates user's password")
-    public User changePassword(@PathVariable("id") int id, @RequestHeader("Authorization") String authString, @RequestParam String oldPass, @RequestParam String newPass){
+    public User changePassword(@PathVariable("id") int id, @RequestHeader("Authorization") String authString, @RequestParam String oldPass, @RequestParam String newPass) throws ValidationException{
         try{
             User x = userPermissionService.loadUserByJWT(authString);
             User y = userService.getUserById(id);
             if(y == null || x == null || !y.getUsername().equals(x.getUsername())){
                 throw new ValidationException("JWT does not match ID, check ID/JWT");
             }
-            userService.changePassword(y, oldPass, newPass);
+            if(!userService.changePassword(y, oldPass, newPass)){
+                throw new ValidationException("Incorrect password, please try again.");
+            };
             y = userService.getUserById(id);
             return y;
         }catch(NotFoundException e){
