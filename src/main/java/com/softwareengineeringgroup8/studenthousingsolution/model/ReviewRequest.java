@@ -1,3 +1,6 @@
+//written by: Srinivasniranjan Nukala
+//tested by: Srinivasniranjan Nukala
+//debugged by: Srinivasniranjan Nukala
 package com.softwareengineeringgroup8.studenthousingsolution.model;
 import com.stripe.model.Review;
 
