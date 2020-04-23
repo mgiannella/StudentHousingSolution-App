@@ -89,6 +89,10 @@ public class ListingController{
                 throw new ValidationException("User is not a landlord");
             }
            List<Properties> props = propertyService.getPropertiesByLandlord(landlord);
+            if (props.isEmpty()) {
+                throw new ValidationException("Landlord has no properties.");
+            }
+
            return props;
 
         } catch (Error | NotFoundException e) {

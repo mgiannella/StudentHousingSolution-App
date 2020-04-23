@@ -224,9 +224,6 @@ public class ScheduleController{
             notificationService.createNotification(landlord, "Housing Tour Meeting at: " + property.getLocation().getAddress() + " with " + tenant.getFullname() + " has been cancelled.", "SCHEDULE", "");
             notificationService.createNotification(tenant, "Housing Tour Meeting at: " + property.getLocation().getAddress() + " with " + landlord.getFullname() + " has been cancelled.", "SCHEDULE", "");
 
-
-
-
             return true;
 
         }
