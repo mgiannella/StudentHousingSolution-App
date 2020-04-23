@@ -74,6 +74,10 @@ public class HousingAgreementService {
         }
         TenantGroups group = prop.getGroup();
         TenantGroupMembers member = tgmRepository.findTenantGroupMembersByUserAndGroup(tenant, group);
+        //has already signed lease
+        if(member.isSignedLease()){
+            throw new ValidationException("Lease has been signed");
+        }
 
         //for notification
         User landlord = prop.getLandlord();
