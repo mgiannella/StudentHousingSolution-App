@@ -400,13 +400,20 @@ public class PaymentController {
             String accountId = stripeClient.createLandlordAcct(req.getEmail(), landlord, req.getAccount_holder_name(), req.getRouting_number(),req.getAccount_number());
 
             //return "Success! Your account has been created;
+            String descriptionAccount="You have successfully created a payment account!";
+            Boolean notification= notificationService.createNotification(landlord, descriptionAccount, "PAYMENT", "");
 
+            if(accountId==null){
+                return false;
+            }
+            
             return true;
         } catch (Error | NotFoundException e) {
             System.out.println(e);
             return false;
             //return "error";
         }
+
     }
 
     @GetMapping("/get-verification-link")
@@ -422,6 +429,7 @@ public class PaymentController {
             String stripeAcct = landlordAccounts.getStripeID();
 
             String updateURL=stripeClient.verificationLink(stripeAcct);
+
 
             return updateURL;
         } catch (Error | NotFoundException e) {
@@ -473,6 +481,8 @@ public class PaymentController {
             LandlordAccounts landlordAccounts = stripeClient.getByUser(landlord);
             String stripeAcct = landlordAccounts.getStripeID();
             String checkVerify = stripeClient.checkRestrictionAccount(stripeAcct);
+
+
 
             return checkVerify;
         } catch (Error | NotFoundException e) {
