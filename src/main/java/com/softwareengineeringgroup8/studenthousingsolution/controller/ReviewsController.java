@@ -307,7 +307,7 @@ public class ReviewsController {
                 return false;
             }
             else{
-                String description="A review has been create on Property:"+ " " + streetAddress+ ".";
+                String description="A review has been created on Property:"+ " " + streetAddress+ ".";
                 Boolean notification= notificationService.createNotification(landLord, description, "GENERAL", "");
                 return true;
             }
