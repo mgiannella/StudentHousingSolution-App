@@ -62,6 +62,11 @@ public class UserService {
         UserType type = userTypeRepository.findByType(changes.getUserType());
         user.setType(type);
         userRepository.save(user);
+        if(changes.getPhoto().equals("")){
+            return;
+        }
+        userPhotosRepository.deleteById(user.getPhoto().getId());
+        userPhotosRepository.save(new UserPhotos(user, changes.getPhoto()));
     }
     // change password
     public boolean changePassword(User user, String oldPass, String newPass){
