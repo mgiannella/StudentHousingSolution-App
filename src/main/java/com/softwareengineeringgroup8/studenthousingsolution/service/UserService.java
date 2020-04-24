@@ -65,7 +65,9 @@ public class UserService {
         if(changes.getPhoto().equals("")){
             return;
         }
-        userPhotosRepository.deleteById(user.getPhoto().getId());
+        if(userPhotosRepository.existsById(user.getPhoto().getId())) {
+            userPhotosRepository.deleteById(user.getPhoto().getId());
+        }
         userPhotosRepository.save(new UserPhotos(user, changes.getPhoto()));
     }
     // change password
