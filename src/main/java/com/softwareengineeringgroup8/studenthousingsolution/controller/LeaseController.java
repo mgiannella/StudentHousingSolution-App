@@ -95,8 +95,7 @@ public class LeaseController {
             if (!userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)) {
                 throw new ValidationException("User is not a landlord");
             }
-            Properties prop = propertyService.getPropertyById(propertyID);
-            return agreementService.getTenants(prop);
+            return agreementService.getTenants(propertyID);
         } catch (Error | NotFoundException e) {
             System.out.println(e);
             return null;
@@ -112,6 +111,21 @@ public class LeaseController {
                 throw new ValidationException("User is not a tenant");
             }
             return agreementService.leaseSigned(tenant, propertyID);
+        } catch (Error | NotFoundException e) {
+            System.out.println(e);
+            throw new ValidationException("Error");
+        }
+    }
+
+    @GetMapping("/signedTenants/{propertyID}")
+    @ApiOperation(value = "Tenants Who Signed Lease")
+    public List<TenantGroupMembers> signedTenants(@RequestHeader("Authorization") String authString, @PathVariable int propertyID){
+        try {
+            User landlord = userPermissionService.loadUserByJWT(authString);
+            if(!userPermissionService.assertPermission(landlord, UserRoles.ROLE_LANDLORD)) {
+                throw new ValidationException("User is not a tenant");
+            }
+            return agreementService.getTenants(propertyID);
         } catch (Error | NotFoundException e) {
             System.out.println(e);
             throw new ValidationException("Error");

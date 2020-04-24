@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import java.sql.Date;
@@ -36,10 +37,17 @@ public class HousingAgreementService {
         return agreementRepository.findByProperty(property);
     }
 
-    public List<TenantGroupMembers> getTenants(Properties property){
+    public List<TenantGroupMembers> getTenants(int propertyID){
+        Properties property = propRepository.findById(propertyID);
         TenantGroups group = property.getGroup();
         List<TenantGroupMembers> tenants = tgmRepository.findTenantGroupMembersByGroup(group);
-        return tenants;
+        List<TenantGroupMembers> signedTenants = new ArrayList<TenantGroupMembers>();
+        for(int i = 0; i < tenants.size(); i++){
+            if(tenants.get(i).isSignedLease()){
+                signedTenants.add(tenants.get(i));
+            }
+        }
+        return signedTenants;
     }
 
     public void uploadLease(LeaseUpdate data){
@@ -122,4 +130,6 @@ public class HousingAgreementService {
         }
         return false;
     }
+
+
 }
