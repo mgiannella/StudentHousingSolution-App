@@ -13,5 +13,6 @@ import java.util.List;
 
 @Repository
 public interface EmailAmenitiesRepository extends JpaRepository<EmailAmenities,Integer> {
+    public EmailAmenities findById(int id);
 
 }
