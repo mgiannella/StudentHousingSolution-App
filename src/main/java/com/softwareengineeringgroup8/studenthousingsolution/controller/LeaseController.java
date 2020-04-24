@@ -102,4 +102,19 @@ public class LeaseController {
             return null;
         }
     }
+
+    @GetMapping("/signedLease/{propertyID}")
+    @ApiOperation(value="Check if tenant signed lease")
+    public Boolean leaseCheck(@RequestHeader("Authorization") String authString, @PathVariable("propertyID") int propertyID) {
+        try {
+            User tenant = userPermissionService.loadUserByJWT(authString);
+            if(!userPermissionService.assertPermission(tenant, UserRoles.ROLE_TENANT)) {
+                throw new ValidationException("User is not a tenant");
+            }
+            return agreementService.leaseSigned(tenant, propertyID);
+        } catch (Error | NotFoundException e) {
+            System.out.println(e);
+            throw new ValidationException("Error");
+        }
+    }
 }
