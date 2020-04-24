@@ -5,6 +5,8 @@ import com.softwareengineeringgroup8.studenthousingsolution.model.*;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.HousingAgreementRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.PropertiesRepository;
 import com.softwareengineeringgroup8.studenthousingsolution.repository.TenantGroupMembersRepository;
+import com.softwareengineeringgroup8.studenthousingsolution.repository.TenantGroupsRepository;
+import com.softwareengineeringgroup8.studenthousingsolution.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +26,8 @@ public class HousingAgreementService {
     private TenantGroupMembersRepository tgmRepository;
     @Autowired
     private NotificationService notifService;
+    @Autowired
+    private TenantGroupsRepository groupsRepository;
 
     public HousingAgreement getHousingAgreement(Properties property){
         if(!agreementRepository.existsByProperty(property)){
@@ -107,5 +111,15 @@ public class HousingAgreementService {
             member.setSignedLease(false);
             tgmRepository.save(member);
         }
+    }
+
+    public Boolean leaseSigned(User tenant, int propID){
+        Properties prop = propRepository.findById(propID);
+        TenantGroups group = prop.getGroup();
+        TenantGroupMembers member = tgmRepository.findTenantGroupMembersByUserAndGroup(tenant,group);
+        if(member.isSignedLease()){
+            return true;
+        }
+        return false;
     }
 }
