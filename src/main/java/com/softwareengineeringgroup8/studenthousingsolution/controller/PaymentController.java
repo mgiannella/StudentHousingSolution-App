@@ -333,7 +333,7 @@ public class PaymentController {
                 }else{
                     String description="Your tenant" + " " + tenant.getFullname() + " " + "has fulfilled"+ " " +"their"+ " "+ paymentTypeDecription+ " " + "payment";
                     Boolean notification= notificationService.createNotification(landLord, description, "PAYMENT", "");
-                    return notification;
+                    return true;
             /*
                     if (notification==false){
                         return "A notification cannot be sent";
@@ -508,7 +508,7 @@ public class PaymentController {
             }else{
                 String description="Your landlord" + " " + landlord.getFullname() + " " + "has requested a payment";
                 Boolean notification= notificationService.createNotification(tenant, description, "PAYMENT", "");
-                return notification;
+                return true;
             }
             //return true;
         } catch (Error | NotFoundException e) {
