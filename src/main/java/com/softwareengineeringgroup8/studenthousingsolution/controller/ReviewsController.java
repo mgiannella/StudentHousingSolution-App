@@ -85,6 +85,43 @@ public class ReviewsController {
         }
     }
 
+    @GetMapping("/viewReviews-with-Properties/{propertiesList}")
+    @ApiOperation(value = "Returns review information on each property")
+    public ArrayList listReviewsWithProperties(@PathVariable("propertiesList") List<Properties> propertiesList, @RequestHeader("Authorization") String str) throws ValidationException{
+
+        try {
+            User user = userPermissionService.loadUserByJWT(str);
+
+            if (!userPermissionService.assertPermission(user, UserRoles.ROLE_TENANT)) {
+                return null;
+                //;
+            }
+
+            ArrayList arraylist = new ArrayList();
+
+
+            int size=propertiesList.size();
+
+            for (int i = 0; i < size; i++) {
+            int propID=propertiesList.get(i).getId();
+            List<Reviews> reviews=reviewsRepository.findByProperty(propertiesList.get(i));
+            ArrayList reviewAndProp= new ArrayList();
+
+            reviewAndProp.add(propID);
+            reviewAndProp.add(reviews);
+
+            arraylist.add(reviewAndProp);
+            }
+
+            return arraylist;
+        }catch (Error | NotFoundException e) {
+
+            System.out.println(e);
+            return null;
+        }
+
+    }
+
     @GetMapping("/{propId}")
     @ApiOperation(value= "Display selected property")
     public Properties displayProperty(@PathVariable("propId") int propId, @RequestHeader("Authorization") String str) throws ValidationException {
