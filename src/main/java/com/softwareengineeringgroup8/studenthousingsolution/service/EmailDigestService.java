@@ -99,4 +99,12 @@ public class EmailDigestService {
             throw new ValidationException("Couldn't retrieve subscriber's preferences.");
         }
     }
+
+    public boolean checkSub(User user) throws ValidationException{
+        try{
+            return emailSubscribersRepository.existsByUser(user);
+        }catch(Exception e){
+            throw new ValidationException("Couldn't check users subscription status");
+        }
+    }
 }
