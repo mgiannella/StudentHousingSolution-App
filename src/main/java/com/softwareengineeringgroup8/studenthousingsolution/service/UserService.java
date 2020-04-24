@@ -65,7 +65,7 @@ public class UserService {
         if(changes.getPhoto().equals("")){
             return;
         }
-        if(userPhotosRepository.existsById(user.getPhoto().getId())) {
+        if(userPhotosRepository.existsByUser(user)) {
             userPhotosRepository.deleteById(user.getPhoto().getId());
         }
         userPhotosRepository.save(new UserPhotos(user, changes.getPhoto()));
