@@ -212,7 +212,7 @@ public class ScheduleService {
 
         List<Schedule> scheds = scheduleRepository.findTimesByLandlord(landlord);
 
-        boolean foundEqual = false;
+        //boolean foundEqual = false;
 
         for (int i=0; i<scheds.size();i++) {
             if (meeting.equals(scheds.get(i).getMeetingTimes())) {
@@ -233,15 +233,15 @@ public class ScheduleService {
                 //Reminder
                 notificationService.createNotification(landlord, "Housing Tour Meeting at: " + property.getLocation().getAddress() + " with " + tenant.getFullname(), "SCHEDULE", scheds.get(i).getMeetingTimes().toString());
                 notificationService.createNotification(tenant, "Housing Tour Meeting at: " + property.getLocation().getAddress() + " with " + landlord.getFullname(), "SCHEDULE", scheds.get(i).getMeetingTimes().toString());
-                foundEqual=true;
+                //foundEqual=true;
                 break;
             }
         }
-
+/*
         if (!foundEqual) {
             throw new ValidationException("Could not find available time that matched with selected time");
         }
-
+*/
 
 
 
