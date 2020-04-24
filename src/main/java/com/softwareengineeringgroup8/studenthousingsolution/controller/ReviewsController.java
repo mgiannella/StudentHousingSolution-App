@@ -57,7 +57,7 @@ public class ReviewsController {
         this.reviewsService = reviewsService;
     }
 
-
+/*
     @GetMapping("/viewTenantProperties")
     @ApiOperation(value = "View Tenant's Properties")
     public List<Properties> listProperties(@RequestHeader("Authorization") String authString) throws ValidationException {
@@ -85,43 +85,44 @@ public class ReviewsController {
         }
     }
 
-    @GetMapping("/viewReviews-with-Properties/{propertiesList}")
-    @ApiOperation(value = "Returns review information on each property")
-    public ArrayList listReviewsWithProperties(@PathVariable("propertiesList") List<Properties> propertiesList, @RequestHeader("Authorization") String str) throws ValidationException{
+ */
+@GetMapping("/viewTenantProperties")
+@ApiOperation(value = "View Tenant's Properties")
+public ArrayList listProperties(@RequestHeader("Authorization") String authString) throws ValidationException {
+    try {
+        User user = userPermissionService.loadUserByJWT(authString);
 
-        try {
-            User user = userPermissionService.loadUserByJWT(str);
-
-            if (!userPermissionService.assertPermission(user, UserRoles.ROLE_TENANT)) {
-                return null;
-                //;
-            }
-
-            ArrayList arraylist = new ArrayList();
-
-
-            int size=propertiesList.size();
-
-            for (int i = 0; i < size; i++) {
-            int propID=propertiesList.get(i).getId();
-            List<Reviews> reviews=reviewsRepository.findByProperty(propertiesList.get(i));
-            ArrayList reviewAndProp= new ArrayList();
-
-            reviewAndProp.add(propID);
-            reviewAndProp.add(reviews);
-
-            arraylist.add(reviewAndProp);
-            }
-
-            return arraylist;
-        }catch (Error | NotFoundException e) {
-
-            System.out.println(e);
+        if (!userPermissionService.assertPermission(user, UserRoles.ROLE_TENANT)) {
             return null;
+            //;
         }
+        ArrayList<Object> reviewsWithProp=new ArrayList();
 
+
+        //List<Properties> propertiesList = new ArrayList<Properties>();
+        List<TenantGroups> tenantGroupsList = tenantGroupsService.getGroupByTenant(user);
+        int size = tenantGroupsList.size();
+        for (int i = 0; i < size; i++) {
+            TenantGroups tg = tenantGroupsList.get(i);
+            List<Properties> propList = propertiesRepository.findByTenantGroup(tg);
+            //propertiesList.add(propList.get(0));
+
+            ArrayList<Object> rP=new ArrayList();
+            List<Reviews> reviews=reviewsRepository.findByProperty(propList.get(0));
+
+            rP.add(propList.get(0));
+            rP.add(reviews);
+
+            reviewsWithProp.add(rP);
+
+        }
+        return reviewsWithProp;
+    } catch (Error | NotFoundException e) {
+
+        System.out.println(e);
+        return null;
     }
-
+}
     @GetMapping("/{propId}")
     @ApiOperation(value= "Display selected property")
     public Properties displayProperty(@PathVariable("propId") int propId, @RequestHeader("Authorization") String str) throws ValidationException {
