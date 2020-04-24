@@ -175,11 +175,10 @@ public class ScheduleController{
             }
 
             if (!userPermissionService.assertPermission(tenant, UserRoles.ROLE_TENANT)) {
-                return false;
+                throw new ValidationException("You aren't a tenant.");
             }
             scheduleService.makeBooking(booking,tenant);
             return true;
-
 
         }
 
