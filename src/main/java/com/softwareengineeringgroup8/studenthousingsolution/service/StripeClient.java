@@ -148,16 +148,17 @@ public class StripeClient {
 
     public String verificationLink(String acctID) throws StripeException {
         String verification_link=null;
+        Map<String, Object> params = new HashMap<>();
+        params.put("account", acctID);
+        params.put("failure_url", "http://localhost:3000/login");
+        params.put("success_url", "http://localhost:3000/login");
+        params.put("type", "custom_account_verification");
+
+        AccountLink accountLink = AccountLink.create(params);
 
         //URL link verification for personal information
         try {
-            Map<String, Object> params = new HashMap<>();
-            params.put("account", acctID);
-            params.put("failure_url", "http://localhost:3000/login");
-            params.put("success_url", "http://localhost:3000/login");
-            params.put("type", "custom_account_verification");
 
-            AccountLink accountLink = AccountLink.create(params);
 
             verification_link=accountLink.getUrl();
 
@@ -218,14 +219,15 @@ public class StripeClient {
 
         String transactionId = null;
 
+        Map<String, Object> transferParam = new HashMap<>();
+        transferParam.put("amount", amountToLong);
+        transferParam.put("currency", "usd");
+        //transferParam.put("description", "Payment transferred from" + email);
+        transferParam.put("destination", accountId);
+        transferParam.put("transfer_group", "testTrans");
+        Transfer transfer = Transfer.create(transferParam);
         try {
-            Map<String, Object> transferParam = new HashMap<>();
-            transferParam.put("amount", amountToLong);
-            transferParam.put("currency", "usd");
-            //transferParam.put("description", "Payment transferred from" + email);
-            transferParam.put("destination", accountId);
-            transferParam.put("transfer_group", "testTrans");
-            Transfer transfer = Transfer.create(transferParam);
+
 
             transactionId = transfer.getId();
 
@@ -298,44 +300,24 @@ public class StripeClient {
 
         //charging a customer
         String chargeId = null;
+        //Stripe.apiKey = "sk_test_OmrxXx3SrMP0kubI9Mmkm5rP00UhLqD8c7";
+        Map<String, Object> chargeParam = new HashMap<String, Object>();
+        chargeParam.put("amount", amountToLong);
+        chargeParam.put("currency", "usd");
+        chargeParam.put("customer", CustomerId);
+
+
+        //create a charge
+        Charge charge = Charge.create(chargeParam);
         try {
 
-            //Stripe.apiKey = "sk_test_OmrxXx3SrMP0kubI9Mmkm5rP00UhLqD8c7";
-            Map<String, Object> chargeParam = new HashMap<String, Object>();
-            chargeParam.put("amount", amountToLong);
-            chargeParam.put("currency", "usd");
-            chargeParam.put("customer", CustomerId);
 
-
-            //create a charge
-            Charge charge = Charge.create(chargeParam);
             chargeId = charge.getId();
-
-            //Stores amount into long variable
-            //payamount= charge.getAmount();
-
 
         }catch (Exception ex) {
             ex.printStackTrace();
 
         }
-
-
-        //List<TenantGroups> tglist = tenantGroupsService.getGroupByTenant(tenant);
-        //List<Properties> propList = propertiesRepository.findByTenantGroup(tglist.get(0));
-
-        //Properties x=propList.get(0);
-
-
-
-        //String ptypeDesc = "TENANT_MONTHLY";
-
-        //Properties property= propertiesRepository.findByPropertyID(propID);
-
-
-        //PaymentRecord paymentRecord = new PaymentRecord(new Date(new java.util.Date().getTime()), property, tenant, paymentTypeRepository.findBypTypeDesc(ptypeDesc), new BigDecimal(1245));
-
-        //paymentRecordRepository.save(paymentRecord);
 
 
         if(chargeId!=null){

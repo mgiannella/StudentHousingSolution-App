@@ -315,7 +315,7 @@ public class PaymentController {
             User landLord=prop.getLandlord();
 
             PaymentType paymentType =paymentRecord.getPaymentTypeId();
-            String paymentTypeDecription= paymentType.getpTypeDesc();
+            String paymentTypeDescription= paymentType.getpTypeDesc();
 
 
 
@@ -331,7 +331,7 @@ public class PaymentController {
                     //return "An error occurred while trying to create a charge.";
                     return false;
                 }else{
-                    String description="Your tenant" + " " + tenant.getFullname() + " " + "has fulfilled"+ " " +"their"+ " "+ paymentTypeDecription+ " " + "payment.";
+                    String description="Your tenant" + " " + tenant.getFullname() + " " + "has fulfilled"+ " " +"their"+ " "+ paymentTypeDescription+ " " + "payment.";
                     Boolean notification= notificationService.createNotification(landLord, description, "PAYMENT", "");
                     return true;
             /*
