@@ -20,6 +20,7 @@ import com.stripe.model.Charge;
 import com.stripe.model.Token;
 
 import javassist.NotFoundException;
+import org.hibernate.type.descriptor.sql.VarcharTypeDescriptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -48,7 +49,6 @@ import java.util.List;
 
 @RestController
 @ApiModel(description="Handles all Charges made in Checkout page")
-@CrossOrigin(origins="http://localhost:3000")
 @RequestMapping("/payment")
 public class PaymentController {
 /*
@@ -315,7 +315,7 @@ public class PaymentController {
             User landLord=prop.getLandlord();
 
             PaymentType paymentType =paymentRecord.getPaymentTypeId();
-            String paymentTypeDecription= paymentType.getpTypeDesc();
+            String paymentTypeDescription= paymentType.getpTypeDesc();
 
 
 
@@ -324,15 +324,23 @@ public class PaymentController {
             } else {
                 String chargeId = stripeClient.createCharge(req.getName_card(), req.getEmail(), req.getCard_num(), req.getMonthNum(), req.getYearNum(), req.getCcv(), req.getFirstName(), req.getLastName(), req.getAddress(), req.getCity(), req.getState(), req.getZip(), req.getCountry(), req.getPhone(), paymentRecord);
 
+                Charge charge =Charge.retrieve(chargeId);
+                String chargeURL=charge.getReceiptUrl();
                 String transferId = stripeClient.transferCharge(paymentRecord);
                 if (chargeId == null || transferId == null) {
                     //return "An error occurred while trying to create a charge.";
                     return false;
                 }else{
-                    String description="Your tenant" + " " + tenant.getFullname() + " " + "has fulfilled"+ " " +"their"+ " "+ paymentTypeDecription+ " " + "payment";
+                    String description="Your tenant" + " " + tenant.getFullname() + " " + "has fulfilled"+ " " +"their"+ " "+ paymentTypeDescription+ " " + "payment.";
                     Boolean notification= notificationService.createNotification(landLord, description, "PAYMENT", "");
-                    return notification;
-                }
+                    return true;
+            /*
+                    if (notification==false){
+                        return "A notification cannot be sent";
+                    }
+            */
+                    //return chargeURL;
+            }
 
                 /*
                 else {
@@ -350,6 +358,35 @@ public class PaymentController {
         }
     }
 
+    @GetMapping("/get-receipt-URL/{id}")
+    @ApiOperation(value="Shows payment Receipt")
+    public String getReceipt(@PathVariable("id") int paymentRecordId,@RequestHeader("Authorization") String str)throws StripeException{
+        try {
+            User tenant = userPermissionService.loadUserByJWT(str);
+            if (!userPermissionService.assertPermission(tenant, UserRoles.ROLE_TENANT)) {
+                return null;
+                //;
+            }
+
+            PaymentRecord paymentRecord = pendingPaymentService.getPaymentRecordById(paymentRecordId);
+
+            String chargeId= paymentRecord.getChargeID();
+
+            Charge charge=Charge.retrieve(chargeId);
+
+            String receiptURL=charge.getReceiptUrl();
+
+            return receiptURL;
+
+
+
+        } catch(Error | NotFoundException e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+
+
     @PostMapping("/create-landlord acct")
     @ApiOperation(value = "Create Landlord's Stripe Account")
     public Boolean createLandAcct(@RequestBody StripeLandlordRequest req, @RequestHeader("Authorization") String str) throws StripeException {
@@ -360,15 +397,44 @@ public class PaymentController {
                 //;
             }
             //listingService.createListingRequest(request,landlord);
-            String accountId = stripeClient.createLandlordAcct(req.getEmail(), landlord);
+            String accountId = stripeClient.createLandlordAcct(req.getEmail(), landlord, req.getAccount_holder_name(), req.getRouting_number(),req.getAccount_number());
 
             //return "Success! Your account has been created;
+            String descriptionAccount="You have successfully created a payment account!";
+            Boolean notification= notificationService.createNotification(landlord, descriptionAccount, "PAYMENT", "");
+
+            if(accountId==null){
+                return false;
+            }
 
             return true;
         } catch (Error | NotFoundException e) {
             System.out.println(e);
             return false;
             //return "error";
+        }
+
+    }
+
+    @GetMapping("/get-verification-link")
+    @ApiOperation(value="Prints out verification link")
+    public String getVerificationLink(@RequestHeader("Authorization") String str)throws StripeException{
+        try {
+            User landlord = userPermissionService.loadUserByJWT(str);
+            if (!userPermissionService.assertPermission(landlord, UserRoles.ROLE_LANDLORD)) {
+                return null;
+            }
+
+            LandlordAccounts landlordAccounts = landlordAccountsRepository.findByUser(landlord);
+            String stripeAcct = landlordAccounts.getStripeID();
+
+            String updateURL=stripeClient.verificationLink(stripeAcct);
+
+
+            return updateURL;
+        } catch (Error | NotFoundException e) {
+            System.out.println(e);
+            return "false";
         }
     }
 
@@ -412,9 +478,11 @@ public class PaymentController {
                 return "false";
                 //;
             }
-            LandlordAccounts landlordAccounts = landlordAccountsRepository.findByUser(landlord);
+            LandlordAccounts landlordAccounts = stripeClient.getByUser(landlord);
             String stripeAcct = landlordAccounts.getStripeID();
             String checkVerify = stripeClient.checkRestrictionAccount(stripeAcct);
+
+
 
             return checkVerify;
         } catch (Error | NotFoundException e) {
@@ -438,9 +506,9 @@ public class PaymentController {
             if (payRequest == false) {
                 return false;
             }else{
-                String description="Your landlord" + " " + landlord.getFullname() + " " + "has requested a payment";
+                String description="Your landlord" + " " + landlord.getFullname() + " " + "has requested a payment.";
                 Boolean notification= notificationService.createNotification(tenant, description, "PAYMENT", "");
-                return notification;
+                return true;
             }
             //return true;
         } catch (Error | NotFoundException e) {

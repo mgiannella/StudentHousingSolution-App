@@ -1,3 +1,6 @@
+//written by: Srinivasniranjan Nukala
+//tested by: Srinivasniranjan Nukala
+//debugged by: Srinivasniranjan Nukala
 package com.softwareengineeringgroup8.studenthousingsolution.service;
 
 
@@ -10,7 +13,23 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
 import com.stripe.model.Customer;
 import com.stripe.model.Token;
-import com.stripe.model.*;
+//import com.stripe.model.*;
+import com.stripe.model.Account;
+import com.stripe.model.Account.Capabilities;
+import com.stripe.model.AccountLink;
+import com.stripe.model.Charge;
+import com.stripe.model.Customer;
+import com.stripe.model.Address;
+import com.stripe.model.BankAccount;
+import com.stripe.model.Card;
+import com.stripe.model.CustomerCollection;
+import com.stripe.model.ExternalAccountCollection;
+import com.stripe.model.PaymentIntent;
+import com.stripe.model.PaymentSourceCollection;
+import com.stripe.model.StripeObject;
+import com.stripe.model.Token;
+import com.stripe.model.Transfer;
+import com.stripe.param.AccountCreateParams;
 
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -54,74 +73,131 @@ public class StripeClient {
 
 
 
-    public String createLandlordAcct(String email, User landlord) throws StripeException {
+    public String createLandlordAcct(String email, User landlord, String account_holder_name, String routing_number, String account_number ) throws StripeException {
 
         String accountId = null;
+        String bankId= null;
+
         //creating a landlord account
+        ArrayList<Object> requestedCapabilities =new ArrayList<>();
+        requestedCapabilities.add("card_payments");
+        requestedCapabilities.add("transfers");
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("type", "custom");
+        params.put("country", "US");
+        params.put("email", email);
+        params.put("requested_capabilities", Arrays.asList("card_payments", "transfers"));
+
+        Account account = Account.create(params);
+        accountId=account.getId();
+
+
+        //Accepting terms of agreement
+        Account acct = Account.retrieve(accountId);
+
+        Map<String, Object> tosAcceptanceParams = new HashMap<>();
+        tosAcceptanceParams.put("date", (long) System.currentTimeMillis() / 1000L);
+        tosAcceptanceParams.put("ip", "137.36.251.66"); // We're not using a proxy
+
+        Map<String, Object> parameter = new HashMap<>();
+        parameter.put("tos_acceptance", tosAcceptanceParams);
+
+        acct.update(parameter);
+
+        //Connects a bank account
+        Account a= Account.retrieve(accountId);
+        Map<String, Object> tokenParam = new HashMap<>();
+        Map <String, Object> bankAccountParam=new HashMap<>();
+
+        bankAccountParam.put("country", "US");
+        bankAccountParam.put("currency", "usd");
+        bankAccountParam.put("account_holder_name", account_holder_name);
+        bankAccountParam.put("account_holder_type", "individual");
+        bankAccountParam.put("routing_number", routing_number );
+        bankAccountParam.put("account_number", account_number);
+        tokenParam.put("bank_account", bankAccountParam);
+        Token token = Token.create(tokenParam);
+
+        String bankToken=token.getId();
+
+        Map<String, Object> acctParams = new HashMap<>();
+        acctParams.put("external_account", bankToken);
+
+        BankAccount bankAccount = (BankAccount) a.getExternalAccounts().create(acctParams);
+
+
         try {
-            ArrayList<Object> requestedCapabilities =new ArrayList<>();
-            requestedCapabilities.add("card_payments");
-            requestedCapabilities.add("transfers");
-
-            Map<String, Object> params = new HashMap<>();
-            params.put("type", "custom");
-            params.put("country", "US");
-            params.put("email", email);
-            params.put("requested_capabilities", Arrays.asList("card_payments", "transfers"));
-
-            Account account = Account.create(params);
-            accountId=account.getId();
 
 
-            //Accepting terms of agreement
-            Account acct = Account.retrieve(accountId);
-
-            Map<String, Object> tosAcceptanceParams = new HashMap<>();
-            tosAcceptanceParams.put("date", (long) System.currentTimeMillis() / 1000L);
-            tosAcceptanceParams.put("ip", "137.36.251.66"); // We're not using a proxy
-
-            Map<String, Object> parameter = new HashMap<>();
-            parameter.put("tos_acceptance", tosAcceptanceParams);
-
-            acct.update(parameter);
+            bankId=bankAccount.getId();
 
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
 
-        LandlordAccounts landlordAccounts= new LandlordAccounts(landlord, accountId);
-        landlordAccountsRepository.save(landlordAccounts);
-
+        if(accountId!=null|| bankId!=null) {
+            LandlordAccounts landlordAccounts = new LandlordAccounts(landlord, accountId);
+            landlordAccountsRepository.save(landlordAccounts);
+        }else{
+            return null;
+        }
         return accountId;
     }
 
+    public String verificationLink(String acctID) throws StripeException {
+        String verification_link=null;
+        Map<String, Object> params = new HashMap<>();
+        params.put("account", acctID);
+        params.put("failure_url", "http://localhost:3000/login");
+        params.put("success_url", "http://localhost:3000/login");
+        params.put("type", "custom_account_verification");
 
-    public String checkRestrictionAccount(String acctID) throws StripeException {
-        Account account = Account.retrieve(acctID);
+        AccountLink accountLink = AccountLink.create(params);
 
-        String checkCardPayments = null;
-        String checkTransfers=null;
-
+        //URL link verification for personal information
         try {
-            Account.Capabilities a = account.getCapabilities();
-            checkTransfers = a.getTransfers();
-            checkCardPayments = a.getCardPayments();
 
 
+            verification_link=accountLink.getUrl();
 
 
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
-        if (checkCardPayments == "inactive" || checkTransfers == "inactive") {
-            return "Your Account is Restricted. An email has been sent containing a link, please click link to add and verify additional information.";
-        } else if (checkCardPayments == "pending" || checkTransfers == "pending") {
-            return"Your Account is pending, please wait one-two business days for verification.";
-        } else {
-            return "Your Account is now active";
+        return verification_link;
+    }
+
+    public String checkRestrictionAccount(String acctID) throws StripeException {
+        Account account = Account.retrieve(acctID);
+        Account.Capabilities a = account.getCapabilities();
+        String checkCardPayments=null;
+        String checkTransfers = null;
+
+
+        try{
+            checkCardPayments = a.getCardPayments();
+            checkTransfers = a.getTransfers();
+
+        }catch(Exception ex) {
+            ex.printStackTrace();
         }
+
+        if ((checkCardPayments.equals("inactive")) & (checkTransfers.equals("inactive"))) {
+            return"Your Payment Account is Restricted.";
+        } else if ((checkCardPayments.equals("pending")) & (checkTransfers.equals("pending"))) {
+            return"Your Account is pending, please wait one-two business days for verification.";
+        } else if ((checkCardPayments.equals("active")) & (checkTransfers.equals("active"))) {
+            return "Congratulations, your Account is now active!";
+        }
+        else{
+            return "There is an error in your account. Please contact customer service.";
+        }
+
+
+
 
     }
 
@@ -143,14 +219,15 @@ public class StripeClient {
 
         String transactionId = null;
 
+        Map<String, Object> transferParam = new HashMap<>();
+        transferParam.put("amount", amountToLong);
+        transferParam.put("currency", "usd");
+        //transferParam.put("description", "Payment transferred from" + email);
+        transferParam.put("destination", accountId);
+        transferParam.put("transfer_group", "testTrans");
+        Transfer transfer = Transfer.create(transferParam);
         try {
-            Map<String, Object> transferParam = new HashMap<>();
-            transferParam.put("amount", amountToLong);
-            transferParam.put("currency", "usd");
-            //transferParam.put("description", "Payment transferred from" + email);
-            transferParam.put("destination", accountId);
-            transferParam.put("transfer_group", "testTrans");
-            Transfer transfer = Transfer.create(transferParam);
+
 
             transactionId = transfer.getId();
 
@@ -223,22 +300,19 @@ public class StripeClient {
 
         //charging a customer
         String chargeId = null;
+        //Stripe.apiKey = "sk_test_OmrxXx3SrMP0kubI9Mmkm5rP00UhLqD8c7";
+        Map<String, Object> chargeParam = new HashMap<String, Object>();
+        chargeParam.put("amount", amountToLong);
+        chargeParam.put("currency", "usd");
+        chargeParam.put("customer", CustomerId);
+
+
+        //create a charge
+        Charge charge = Charge.create(chargeParam);
         try {
 
-            //Stripe.apiKey = "sk_test_OmrxXx3SrMP0kubI9Mmkm5rP00UhLqD8c7";
-            Map<String, Object> chargeParam = new HashMap<String, Object>();
-            chargeParam.put("amount", amountToLong);
-            chargeParam.put("currency", "usd");
-            chargeParam.put("customer", CustomerId);
 
-
-            //create a charge
-            Charge charge = Charge.create(chargeParam);
             chargeId = charge.getId();
-
-            //Stores amount into long variable
-            //payamount= charge.getAmount();
-
 
         }catch (Exception ex) {
             ex.printStackTrace();
@@ -246,26 +320,9 @@ public class StripeClient {
         }
 
 
-        //List<TenantGroups> tglist = tenantGroupsService.getGroupByTenant(tenant);
-        //List<Properties> propList = propertiesRepository.findByTenantGroup(tglist.get(0));
-
-        //Properties x=propList.get(0);
-
-
-
-        //String ptypeDesc = "TENANT_MONTHLY";
-
-        //Properties property= propertiesRepository.findByPropertyID(propID);
-
-
-        //PaymentRecord paymentRecord = new PaymentRecord(new Date(new java.util.Date().getTime()), property, tenant, paymentTypeRepository.findBypTypeDesc(ptypeDesc), new BigDecimal(1245));
-
-        //paymentRecordRepository.save(paymentRecord);
-
-
         if(chargeId!=null){
             paymentRecord.setPaymentDate(new Date(new java.util.Date().getTime()));
-
+            paymentRecord.setChargeID(chargeId);
             paymentRecordRepository.save(paymentRecord);
         }
 
@@ -274,10 +331,9 @@ public class StripeClient {
 
     }
 
-       /* public String bankCharge(String email, String firstName, String lastName, String address, String city, String state, String zip, String country, String phone, User tenant,String name_bank, String account_num, String routing_num) throws StripeException {
-         return null;
-        }*/
-
+      public LandlordAccounts getByUser(User landLord){
+        return landlordAccountsRepository.findByUser(landLord);
+      }
 
 }
 

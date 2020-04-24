@@ -1,3 +1,6 @@
+//written by: Srinivasniranjan Nukala
+//tested by: Srinivasniranjan Nukala
+//debugged by: Srinivasniranjan Nukala
 package com.softwareengineeringgroup8.studenthousingsolution.model;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.context.PayloadApplicationEvent;
@@ -40,6 +43,9 @@ public class PaymentRecord {
 
     @Column(name="PaymentDueDate")
     private Date paymentDueDate;
+
+    @Column(name="ChargeID")
+    private String chargeID;
 
 
     public int getId() {
@@ -94,15 +100,24 @@ public class PaymentRecord {
 
     public void setPaymentDueDate(Date paymentDueDate) { this.paymentDueDate = paymentDueDate; }
 
+    public String getChargeID() {
+        return chargeID;
+    }
+
+    public void setChargeID(String chargeID) {
+        this.chargeID = chargeID;
+    }
+
     public PaymentRecord() { }
 
 
-    public PaymentRecord(Date paymentDate, Properties prop, User tenant, PaymentType paymentTypeId, BigDecimal paymentAmount, Date paymentDueDate) {
+    public PaymentRecord(Date paymentDate, Properties prop, User tenant, PaymentType paymentTypeId, BigDecimal paymentAmount, Date paymentDueDate, String chargeID) {
         this.paymentDate = paymentDate;
         this.prop = prop;
         this.tenant = tenant;
         this.paymentTypeId = paymentTypeId;
         this.paymentAmount = paymentAmount;
         this.paymentDueDate = paymentDueDate;
+        this.chargeID=chargeID;
     }
 }
