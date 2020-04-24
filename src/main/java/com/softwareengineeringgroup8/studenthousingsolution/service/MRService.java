@@ -51,6 +51,7 @@ public class MRService {
             if (tenantGroupsList.get(i) == prop.getGroup()) {
                 mrRepository.save(new MaintenanceRequest(status, prop, date, notes, tenant));
                 notifService.createNotification(landlord, msg, "MAINTENANCE", dateString);
+                notifService.createNotification(tenant, "Your maintenance request for " + address + " has been sent.", "MAINTENANCE", dateString);
                 return;
             }
         }
