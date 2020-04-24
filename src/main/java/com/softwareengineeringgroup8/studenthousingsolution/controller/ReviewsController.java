@@ -57,7 +57,7 @@ public class ReviewsController {
         this.reviewsService = reviewsService;
     }
 
-/*
+
     @GetMapping("/viewTenantProperties")
     @ApiOperation(value = "View Tenant's Properties")
     public List<Properties> listProperties(@RequestHeader("Authorization") String authString) throws ValidationException {
@@ -85,8 +85,8 @@ public class ReviewsController {
         }
     }
 
- */
-@GetMapping("/viewTenantProperties")
+ 
+/*@GetMapping("/viewTenantProperties")
 @ApiOperation(value = "View Tenant's Properties")
 public ArrayList listProperties(@RequestHeader("Authorization") String authString) throws ValidationException {
     try {
@@ -122,7 +122,7 @@ public ArrayList listProperties(@RequestHeader("Authorization") String authStrin
         System.out.println(e);
         return null;
     }
-}
+}*/
     @GetMapping("/{propId}")
     @ApiOperation(value= "Display selected property")
     public Properties displayProperty(@PathVariable("propId") int propId, @RequestHeader("Authorization") String str) throws ValidationException {
