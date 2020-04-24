@@ -146,8 +146,8 @@ public class StripeClient {
         try {
             Map<String, Object> params = new HashMap<>();
             params.put("account", acctID);
-            params.put("failure_url", "https://example.com/failure");
-            params.put("success_url", "local host:3000/login");
+            params.put("failure_url", "http://localhost:3000/login");
+            params.put("success_url", "http://localhost:3000/login");
             params.put("type", "custom_account_verification");
 
             AccountLink accountLink = AccountLink.create(params);
