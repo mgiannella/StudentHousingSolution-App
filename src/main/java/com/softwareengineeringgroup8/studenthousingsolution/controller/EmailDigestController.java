@@ -71,6 +71,21 @@ public class EmailDigestController {
         }
     }
 
+    @GetMapping("/checksubscription")
+    @ApiOperation(value="Check subscription status", notes="Get boolean response")
+    public boolean checkSub(@RequestHeader("Authorization") String authString) throws ValidationException{
+        try {
+            User user = userPermissionService.loadUserByJWT(authString);
+            if (user == null){
+                throw new ValidationException("User does not exist");
+            }
+            return emailDigestService.checkSub(user);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new ValidationException(e.getMessage());
+        }
+    }
+
     @GetMapping("/api/subscribers/{id}/properties")
     @ApiOperation(value="Get Properties by Subscriber", notes="Returns properties that fit subscribers query from previous week")
     public List<Properties> getProperties(@RequestParam("key") String apiKey, @PathVariable("id") int id) throws ValidationException {
