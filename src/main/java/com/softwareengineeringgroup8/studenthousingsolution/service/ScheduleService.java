@@ -137,12 +137,23 @@ public class ScheduleService {
              scheduleRepository.delete(deleteThese.get(i));
          }
 
-        // List<Schedule> LLSched = new ArrayList<>();
-         //int j=0;
+         List<Schedule> remains = scheduleRepository.findTimesByLandlord(landlord); //returns the rest of the times
+         List<Timestamp>  remainingTimes = new ArrayList<>();
+
+         for (int i =0;i<remains.size();i++) {
+             Timestamp addThis = Timestamp.valueOf(remains.get(i).getMeetingTimes().toString());
+             remainingTimes.add(addThis);
+         }
+
          for (int i = 0; i<meetingTimes.size();i++) {
               User tenant = scheduleRepository.findTenantByThese(meetingTimes.get(i),landlord);
               if (tenant!=null) { //this means its booked so don't delete and don't add this time
                   continue;
+              }
+              if (!remainingTimes.isEmpty()) {
+                  if (remainingTimes.contains(meetingTimes.get(i))) { //if time is already contained in db
+                      continue;
+                  }
               }
              scheduleRepository.save(new Schedule(landlord,null,meetingTimes.get(i),null));
          }
