@@ -185,7 +185,7 @@ public class ScheduleController{
 
         catch (Error | NotFoundException e) {
             System.out.println(e);
-            return null;
+            return false;
         }
     }
 
