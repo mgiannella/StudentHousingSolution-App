@@ -61,9 +61,13 @@ public class EmailDigestService {
         }
         try{
             EmailSubscribers es = emailSubscribersRepository.findByUser(user);
-            // this might not work, might have to do another query, try it first though
-            emailAmenitiesRepository.delete(es.getEmailAmenities());
+            if(es == null){
+                throw new ValidationException("Not subscribed to email digest");
+            }
+            //EmailAmenities ea = emailAmenitiesRepository.findById(es.getEmailAmenities().getId());
             emailSubscribersRepository.delete(es);
+            emailAmenitiesRepository.delete(es.getEmailAmenities());
+
         }catch(Exception e){
             throw new ValidationException("Couldn't unsubscribe from digest, try again.");
         }

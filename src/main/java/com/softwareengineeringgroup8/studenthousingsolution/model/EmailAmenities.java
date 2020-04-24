@@ -56,6 +56,9 @@ public class EmailAmenities {
         this.zip = zip;
     }
 
+    public int getId(){
+        return id;
+    }
     public int getMinBed() {
         return minBed;
     }
