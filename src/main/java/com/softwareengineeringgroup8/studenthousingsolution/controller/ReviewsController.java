@@ -75,7 +75,12 @@ public class ReviewsController {
             for (int i = 0; i < size; i++) {
                 TenantGroups tg = tenantGroupsList.get(i);
                 List<Properties> propList = propertiesRepository.findByTenantGroup(tg);
-                propertiesList.add(propList.get(0));
+
+                if (propList.isEmpty()) {
+                    propList.clear();
+                } else {
+                    propertiesList.add(propList.get(0));
+                }
             }
             return propertiesList;
         } catch (Error | NotFoundException e) {
@@ -108,27 +113,32 @@ public ArrayList checkReviewsOnProp(@RequestHeader("Authorization") String authS
             //propertiesList.add(propList.get(0));
 
             ArrayList<Object> rP=new ArrayList();
-            List<Reviews> reviews=reviewsRepository.findByProperty(propList.get(0));
+            List<Reviews> reviews=new ArrayList<>();
 
-            ArrayList<Object> reviewIDS=new ArrayList<>();
-            int reviewId;
-
-            if(reviews.isEmpty()) {
-                reviewIDS.clear();
-
-            }else{
-                reviewId = reviews.get(0).getId();
-                reviewIDS.add(reviewId);
+            if(propList.isEmpty()){
+                propList.clear();
             }
 
+            else {
+                reviews = reviewsRepository.findByProperty(propList.get(0));
+
+                ArrayList<Object> reviewIDS = new ArrayList<>();
+                int reviewId;
+
+                if (reviews.isEmpty()) {
+                    reviewIDS.clear();
+
+                } else {
+                    reviewId = reviews.get(0).getId();
+                    reviewIDS.add(reviewId);
+                }
 
 
+                rP.add(propList.get(0));
+                rP.add(reviewIDS);
 
-            rP.add(propList.get(0));
-            rP.add(reviewIDS);
-
-            reviewsWithProp.add(rP);
-
+                reviewsWithProp.add(rP);
+            }
         }
         return reviewsWithProp;
     } catch (Error | NotFoundException e) {
