@@ -57,7 +57,7 @@ public class ReviewsController {
         this.reviewsService = reviewsService;
     }
 
-/*
+
     @GetMapping("/viewTenantProperties")
     @ApiOperation(value = "View Tenant's Properties")
     public List<Properties> listProperties(@RequestHeader("Authorization") String authString) throws ValidationException {
@@ -84,11 +84,11 @@ public class ReviewsController {
             return null;
         }
     }
-*/
 
-@GetMapping("/viewTenantProperties")
-@ApiOperation(value = "View Tenant's Properties")
-public ArrayList listProperties(@RequestHeader("Authorization") String authString) throws ValidationException {
+
+@GetMapping("/checkReviewsOnProperties")
+@ApiOperation(value = "Check Reviews on Properties")
+public ArrayList checkReviewsOnProp(@RequestHeader("Authorization") String authString) throws ValidationException {
     try {
         User user = userPermissionService.loadUserByJWT(authString);
 
