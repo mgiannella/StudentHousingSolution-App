@@ -57,7 +57,7 @@ public class ReviewsController {
         this.reviewsService = reviewsService;
     }
 
-
+/*
     @GetMapping("/viewTenantProperties")
     @ApiOperation(value = "View Tenant's Properties")
     public List<Properties> listProperties(@RequestHeader("Authorization") String authString) throws ValidationException {
@@ -84,9 +84,9 @@ public class ReviewsController {
             return null;
         }
     }
+*/
 
- 
-/*@GetMapping("/viewTenantProperties")
+@GetMapping("/viewTenantProperties")
 @ApiOperation(value = "View Tenant's Properties")
 public ArrayList listProperties(@RequestHeader("Authorization") String authString) throws ValidationException {
     try {
@@ -110,8 +110,22 @@ public ArrayList listProperties(@RequestHeader("Authorization") String authStrin
             ArrayList<Object> rP=new ArrayList();
             List<Reviews> reviews=reviewsRepository.findByProperty(propList.get(0));
 
+            ArrayList<Object> reviewIDS=new ArrayList<>();
+            int reviewId;
+
+            if(reviews.isEmpty()) {
+                reviewIDS.clear();
+
+            }else{
+                reviewId = reviews.get(0).getId();
+                reviewIDS.add(reviewId);
+            }
+
+
+
+
             rP.add(propList.get(0));
-            rP.add(reviews);
+            rP.add(reviewIDS);
 
             reviewsWithProp.add(rP);
 
@@ -122,7 +136,9 @@ public ArrayList listProperties(@RequestHeader("Authorization") String authStrin
         System.out.println(e);
         return null;
     }
-}*/
+}
+
+
     @GetMapping("/{propId}")
     @ApiOperation(value= "Display selected property")
     public Properties displayProperty(@PathVariable("propId") int propId, @RequestHeader("Authorization") String str) throws ValidationException {
