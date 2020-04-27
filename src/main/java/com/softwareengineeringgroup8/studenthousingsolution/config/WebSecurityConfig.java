@@ -61,11 +61,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         httpSecurity.csrf().disable()
 
-                .authorizeRequests().antMatchers("/authenticate","/user").permitAll().
+                .authorizeRequests().antMatchers("/property/**", "/digest/api/**","/auth/authenticate","/user/register", "/swagger-ui.html","/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**", "/reviews/display-reviews/{propId}").permitAll(). // add endpoints to the list if you want them to not need authentication token
 
                 anyRequest().authenticated().and().
 
-                exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
+        exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
 
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 

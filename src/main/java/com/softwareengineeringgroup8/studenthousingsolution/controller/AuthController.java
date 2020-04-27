@@ -14,7 +14,8 @@ import com.softwareengineeringgroup8.studenthousingsolution.config.JwtToken;
 import org.springframework.security.authentication.AuthenticationManager;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins="http://localhost:3000")
+@RequestMapping("/auth")
 public class AuthController {
 
     @Autowired

@@ -1,8 +1,11 @@
 package com.softwareengineeringgroup8.studenthousingsolution.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name="Users")
@@ -11,35 +14,45 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="userid")
+    @JsonView(PropertyView.Compare.class)
     private int id;
 
     @Column(name="username")
+    @JsonView(PropertyView.Compare.class)
     private String username;
 
     @Column(name="userpass")
+    @JsonIgnore
     private String password;
 
     @Column(name="email")
+    @JsonView(PropertyView.ViewProperty.class)
     private String email;
 
     @Column(name="firstname")
+    @JsonView(PropertyView.Compare.class)
     private String firstName;
 
     @Column(name="lastname")
+    @JsonView(PropertyView.Compare.class)
     private String lastName;
 
     @Column(name="phone")
+    @JsonView(PropertyView.ViewProperty.class)
     private String phone;
 
-    @Column(name="countrycode")
+    @Column(name="countrycode", length=2)
+    @JsonView(PropertyView.ViewProperty.class)
     private String phoneCode;
 
-    @Column(name="photoid")
-    private int photoID;
+    @ManyToOne
+    @JoinColumn(name="usertypeid")
+    @JsonView(PropertyView.ExtendedInfo.class)
+    private UserType type;
 
-    @Column(name="usertypeid")
-    private int userTypeID;
-
+    @OneToOne(mappedBy = "user")
+    @JsonView(PropertyView.ViewProperty.class)
+    private UserPhotos photo;
 
     public User() {
     }
@@ -88,25 +101,35 @@ public class User {
         this.lastName = lastName;
     }
 
-    public String getPhone(){
-        return '+'+phoneCode+phone;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setPhone(String phoneNumber){
-        this.phone = phoneNumber.substring(3);
-        this.phoneCode = phoneNumber.substring(0,3);
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
-    public int getPhotoID(){
-        return photoID;
+    public String getPhoneCode() {
+        return phoneCode;
     }
 
-    public void setPhotoID(int photoID){
-        // create new photo and then setID, this is placeholder rn
-        this.photoID = photoID;
+    public void setPhoneCode(String phoneCode) {
+        this.phoneCode = phoneCode;
     }
 
-    public User(String username, String password, String email, String firstName, String lastName, String phone, String phoneCode) {
+    public UserType getType(){ return this.type; }
+
+    public void setType(UserType type) {this.type = type;}
+
+    public UserPhotos getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(UserPhotos photo) {
+        this.photo = photo;
+    }
+
+    public User(String username, String password, String email, String firstName, String lastName, String phone, String phoneCode, UserType type) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -114,7 +137,7 @@ public class User {
         this.lastName = lastName;
         this.phone = phone;
         this.phoneCode = phoneCode;
-        this.userTypeID = 1;
+        this.type = type;
     }
 
     public String getFullname() {
@@ -124,5 +147,18 @@ public class User {
     public void setFullname(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
