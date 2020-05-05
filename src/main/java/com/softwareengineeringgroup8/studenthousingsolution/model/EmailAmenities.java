@@ -38,7 +38,7 @@ public class EmailAmenities {
     private int maxSleeps;
 
     @Column(name="zip")
-    private String zip;
+    private String zip; // change to uni
 
     private EmailAmenities(){
 

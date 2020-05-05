@@ -24,14 +24,11 @@ public interface PropertiesRepository extends JpaRepository<Properties, Integer>
     @Query("SELECT prop FROM Properties prop WHERE prop.id = ?1")
     Properties findByPropertyID(int id);
 
-    @Query("SELECT p FROM Properties p LEFT JOIN" +
-    " Properties p2 ON p.id > p2.id AND p.amenities = p2.amenities " +
-    " WHERE (p2.amenities is null) and (p.group is null) and (p.location in ?2) and (p.amenities in ?1)")
+    @Query("SELECT p FROM Properties p WHERE (p.group is null) and (p.location in ?2) and (p.amenities in ?1)")
     List<Properties> findByAmenityAndLocation(List<Amenities> a, List<PropertyLocations> pl);
 
-    @Query("SELECT p FROM Properties p LEFT JOIN" +
-            " Properties p2 ON p.id > p2.id AND p.amenities = p2.amenities " +
-            " WHERE (p2.amenities is null) and (p.group is null) and (p.location in ?1)")
+    @Query("SELECT p FROM Properties p WHERE "
+    + "(p.group is null) and (p.location in ?1)")
     List<Properties> findByLocations(List<PropertyLocations> pl);
 
     @Query("Select p FROM Properties p WHERE p.group = ?1")
@@ -41,9 +38,7 @@ public interface PropertiesRepository extends JpaRepository<Properties, Integer>
     List<Properties> findByAmenityId(int id);
 
 
-    @Query("SELECT p FROM Properties p LEFT JOIN" +
-            " Properties p2 ON p.id > p2.id AND p.amenities = p2.amenities " +
-            " WHERE (p2.amenities is null) and (p.group is null) and (p.amenities.price>= :#{#ea.minPrice} and p.amenities.price<= :#{#ea.maxPrice})"
+    @Query("SELECT p FROM Properties p WHERE (p.group is null) and (p.amenities.price>= :#{#ea.minPrice} and p.amenities.price<= :#{#ea.maxPrice})"
             + "and (p.amenities.sleeps>= :#{#ea.minSleeps} and p.amenities.sleeps<= :#{#ea.maxSleeps}) "
             + "and (p.amenities.numBedrooms>= :#{#ea.minBed} and p.amenities.numBedrooms<= :#{#ea.maxBed}) "
             + "and (p.amenities.numBathrooms>= :#{#ea.minBath} and p.amenities.numBathrooms <= :#{#ea.maxBath}) "

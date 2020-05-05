@@ -45,6 +45,22 @@ public class PropertyService {
         return null;
     }
 
+    public Properties getByIdWithLandlord(int id, User user){
+        Properties prop = propertyRepository.findById(id);
+        if(prop != null && (prop.getGroup() == null || prop.getLandlord().equals(user))){
+            return prop;
+        }
+        return null;
+    }
+
+    public Properties getByIdWithGroup(int id, List<TenantGroups> groups){
+        Properties prop = propertyRepository.findById(id);
+        if(prop != null && (prop.getGroup() == null || groups.contains(prop.getGroup()))){
+            return prop;
+        }
+        return null;
+    }
+
     public Properties getPropertyById(int id){
         return propertyRepository.findById(id);
     }
@@ -57,11 +73,24 @@ public class PropertyService {
   
 
     // returns all properties within a certain zip code
+
+    public List<Properties> removeDuplicates(List<Properties> props){
+        Amenities prevAmen = null;
+        for(int i =0; i < props.size(); i++){
+            if (props.get(i).getAmenities() == prevAmen){
+                props.remove(i);
+                i--;
+                continue;
+            }
+            prevAmen = props.get(i).getAmenities();
+        }
+        return props;
+    }
     public List<Properties> getByZip(String zip) throws ValidationException{
         try{
             List<PropertyLocations> propertyLocationsList = propertyLocationsRepository.findByZip(zip);
             List<Properties> properties = propertyRepository.findByLocations(propertyLocationsList);
-            return properties;
+            return removeDuplicates(properties);
         }catch(Error e){
             throw new ValidationException("Invalid input");
         }
@@ -73,7 +102,7 @@ public class PropertyService {
             List<PropertyLocations> propertyLocationsList = propertyLocationsRepository.findByZip(values.getZip());
             List<Amenities> amenitiesList = amenitiesRepository.filterSearch(values);
             List<Properties> properties = propertyRepository.findByAmenityAndLocation(amenitiesList, propertyLocationsList);
-            return properties;
+            return removeDuplicates(properties);
         }catch(Error e){
             throw new ValidationException("Invalid input, check filters and try again");
         }

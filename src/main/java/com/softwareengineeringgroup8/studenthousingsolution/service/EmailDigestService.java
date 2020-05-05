@@ -27,6 +27,9 @@ public class EmailDigestService {
     @Autowired
     private PropertiesRepository propertiesRepository;
 
+    @Autowired
+    private PropertyService propertyService;
+
     @Value("${serverApiKeyEmailDigest}")
     private String serverApiKey;
 
@@ -79,7 +82,8 @@ public class EmailDigestService {
             Timestamp currentDT = new Timestamp(cal.getTime().getTime());
             cal.add(Calendar.DAY_OF_YEAR, -7);
             Timestamp weekAgo = new Timestamp(cal.getTime().getTime());
-            List<Properties> props = propertiesRepository.emailDigestSearch(ea, weekAgo, currentDT);
+            List<Properties> properties = propertiesRepository.emailDigestSearch(ea, weekAgo, currentDT);
+            List<Properties> props = propertyService.removeDuplicates(properties);
             if(props == null){
                 return props;
             }
