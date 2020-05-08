@@ -1,3 +1,8 @@
+/*
+written by: Sneh Shah
+tested by: Sneh Shah
+debugged by: Sneh Shah
+*/
 package com.softwareengineeringgroup8.studenthousingsolution.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;

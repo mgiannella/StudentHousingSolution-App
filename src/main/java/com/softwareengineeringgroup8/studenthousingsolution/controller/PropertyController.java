@@ -1,3 +1,6 @@
+//written by: Michael Giannella
+//tested by: Michael Giannella
+//debugged by: Michael Giannella
 package com.softwareengineeringgroup8.studenthousingsolution.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -33,14 +36,27 @@ public class PropertyController {
     @GetMapping("/view/{id}")
     @ApiOperation(value="Property Information", notes="Gets all information about a property")
     @JsonView(PropertyView.ViewProperty.class)
-    public Properties viewProperty(@PathVariable("id") int id) throws ValidationException {
+    public Properties viewProperty(@RequestHeader("Authorization") String authString, @PathVariable("id") int id) throws ValidationException {
         try{
-            Properties prop = propertyService.getById(id);
+            User user = null;
+            try {
+                user = userPermissionService.loadUserByJWT(authString);
+            }catch(Exception e){
+            }
+            Properties prop = null;
+            if(user == null) {
+                prop = propertyService.getById(id);
+            } else if(userPermissionService.assertPermission(user, UserRoles.ROLE_TENANT)){
+                List<TenantGroups> groups = tenantGroupsService.getGroupByTenant(user);
+                prop = propertyService.getByIdWithGroup(id, groups);
+            } else if(userPermissionService.assertPermission(user, UserRoles.ROLE_LANDLORD)){
+                prop = propertyService.getByIdWithLandlord(id, user);
+            }
             if(prop == null){
                 throw new ValidationException("Invalid ID");
             }
             return prop;
-        }catch(Error e){
+        }catch(Exception e){
             throw new ValidationException("Invalid input, try again.");
         }
     }
@@ -59,7 +75,7 @@ public class PropertyController {
     @PostMapping("/search")
     @ApiOperation(value="Search By Filters and Zip Code", notes="Gets all properties within a certain zip code with filters applied")
     @JsonView(PropertyView.Search.class)
-    public List<Properties> searchByZip(@RequestBody SearchFilterRequest req) throws ValidationException{
+    public List<Properties> filterSearch(@RequestBody SearchFilterRequest req) throws ValidationException{
         try{
             return propertyService.filterSearch(req);
         }catch(Error e){

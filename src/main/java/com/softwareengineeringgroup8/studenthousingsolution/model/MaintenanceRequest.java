@@ -1,3 +1,9 @@
+/*
+written by: Sneh Shah
+tested by: Sneh Shah
+debugged by: Sneh Shah
+*/
+
 package com.softwareengineeringgroup8.studenthousingsolution.model;
 
 import javax.persistence.*;
