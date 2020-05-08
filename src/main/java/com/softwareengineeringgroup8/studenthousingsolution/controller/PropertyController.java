@@ -1,3 +1,6 @@
+//written by: Michael Giannella
+//tested by: Michael Giannella
+//debugged by: Michael Giannella
 package com.softwareengineeringgroup8.studenthousingsolution.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -72,7 +75,7 @@ public class PropertyController {
     @PostMapping("/search")
     @ApiOperation(value="Search By Filters and Zip Code", notes="Gets all properties within a certain zip code with filters applied")
     @JsonView(PropertyView.Search.class)
-    public List<Properties> searchByZip(@RequestBody SearchFilterRequest req) throws ValidationException{
+    public List<Properties> filterSearch(@RequestBody SearchFilterRequest req) throws ValidationException{
         try{
             return propertyService.filterSearch(req);
         }catch(Error e){

@@ -1,3 +1,6 @@
+//written by: Michael Giannella
+//tested by: Michael Giannella
+//debugged by: Michael Giannella
 package com.softwareengineeringgroup8.studenthousingsolution.model;
 
 import org.hibernate.annotations.ColumnDefault;
